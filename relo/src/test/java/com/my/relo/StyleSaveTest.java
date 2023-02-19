@@ -1,7 +1,5 @@
 package com.my.relo;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
@@ -70,23 +68,38 @@ class StyleSaveTest {
 	@Test
 	void testAllSave() {
 		
-		Style s = new Style();
-		Optional<Member> optM = mr.findById(1L);
-		Member m = optM.get();
-		s.setMember(m);
-		sr.save(s);
+		Style s1 = new Style();
+		Optional<Member> optM1 = mr.findById(1L);
+		Member m1 = optM1.get();
+		s1.setMember(m1);
+		sr.save(s1);
 		
-		List<StyleTag> tagList = new ArrayList<>();
 		for(int i = 1; i < 3; i++) {
-			StyleTag tag = new StyleTag();
-			StyleTagEmbedded ste = new StyleTagEmbedded();
-			ste.setHashName("태그"+i);
-			tag.setSte(ste);
-			Optional<Style> optS=sr.findById(s.getStyleNum());
-			Style s1 = optS.get();
-			tag.setStyle(s1);
-			str.save(tag);
-			tagList.add(tag);
+			StyleTag tag1 = new StyleTag();
+			StyleTagEmbedded ste1 = new StyleTagEmbedded();
+			ste1.setHashName("태그"+i);
+			tag1.setSte(ste1);
+			Optional<Style> optS1=sr.findById(s1.getStyleNum());
+			Style style1 = optS1.get();
+			tag1.setStyle(style1);
+			str.save(tag1);
+		}
+		
+		Style s2 = new Style();
+		Optional<Member> optM2 = mr.findById(2L);
+		Member m2 = optM2.get();
+		s2.setMember(m2);
+		sr.save(s2);
+		
+		for(int i = 1; i < 5; i++) {
+			StyleTag tag2 = new StyleTag();
+			StyleTagEmbedded ste2 = new StyleTagEmbedded();
+			ste2.setHashName("스타일"+i);
+			tag2.setSte(ste2);
+			Optional<Style> optS2=sr.findById(s2.getStyleNum());
+			Style style2 = optS2.get();
+			tag2.setStyle(style2);
+			str.save(tag2);
 		}
 	}
 	@DisplayName("좋아요+1 등록 테스트")
@@ -109,37 +122,81 @@ class StyleSaveTest {
 	@Test
 	void testReplySave() {
 		
-		Reply r = new Reply();
+		Reply r1 = new Reply();
 		
-		Optional<Style> optS= sr.findById(2L);
-		Style s = optS.get();
+		Optional<Style> optS1= sr.findById(1L);
+		Style s1 = optS1.get();
 		
-		Optional<Member> optM=mr.findById(1L);
-		Member m = optM.get();
+		Optional<Member> optM1=mr.findById(2L);
+		Member m1 = optM1.get();
 		
-		r.setStyle(s);
-		r.setMember(m);
-		r.setRepContent("테스트댓글2");
-		rr.save(r);
+		r1.setStyle(s1);
+		r1.setMember(m1);
+		r1.setRepContent("테스트댓글1");
+		rr.save(r1);
+		
+		Reply r2 = new Reply();
+		
+		Optional<Style> optS2= sr.findById(2L);
+		Style s2 = optS2.get();
+		
+		Optional<Member> optM2=mr.findById(1L);
+		Member m2 = optM2.get();
+		
+		r2.setStyle(s2);
+		r2.setMember(m2);
+		r2.setRepContent("테스트댓글2");
+		rr.save(r2);
 	}
 	@DisplayName("대댓글 등록 테스트")
 	@Test
 	void testReplyParentSave() {
-		Reply r = new Reply();
-		Optional<Style> optS= sr.findById(2L);
-		Style s = optS.get();
+		Reply r1 = new Reply();
+		Optional<Style> optS1= sr.findById(1L);
+		Style s1 = optS1.get();
 		
-		Optional<Member> optM=mr.findById(1L);
-		Member m = optM.get();
+		Optional<Member> optM1=mr.findById(1L);
+		Member m1 = optM1.get();
 		
-		Optional<Reply> optR= rr.findById(3L);
-		Reply parentR = optR.get();
+		Optional<Reply> optR1= rr.findById(1L);
+		Reply parentR1 = optR1.get();
 		
-		r.setStyle(s);
-		r.setMember(m);
-		r.setReplyParent(parentR);
-		r.setRepContent("테스트 대댓글2-1");
-		rr.save(r);
+		r1.setStyle(s1);
+		r1.setMember(m1);
+		r1.setReplyParent(parentR1);
+		r1.setRepContent("테스트 대댓글1-1");
+		rr.save(r1);
 		
+		Reply r2 = new Reply();
+		Optional<Style> optS2= sr.findById(1L);
+		Style s2 = optS2.get();
+		
+		Optional<Member> optM2=mr.findById(2L);
+		Member m2 = optM2.get();
+		
+		Optional<Reply> optR2= rr.findById(1L);
+		Reply parentR2 = optR2.get();
+		
+		r2.setStyle(s2);
+		r2.setMember(m2);
+		r2.setReplyParent(parentR2);
+		r2.setRepContent("테스트 대댓글1-2");
+		rr.save(r2);
+		
+		Reply r3 = new Reply();
+		Optional<Style> optS3= sr.findById(2L);
+		Style s3 = optS3.get();
+		
+		Optional<Member> optM3=mr.findById(2L);
+		Member m3 = optM3.get();
+		
+		Optional<Reply> optR3= rr.findById(2L);
+		Reply parentR3 = optR3.get();
+		
+		r3.setStyle(s3);
+		r3.setMember(m3);
+		r3.setReplyParent(parentR3);
+		r3.setRepContent("테스트 대댓글2-1");
+		rr.save(r3);
 	}
 }

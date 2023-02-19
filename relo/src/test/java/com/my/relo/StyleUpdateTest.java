@@ -13,8 +13,6 @@ import com.my.relo.entity.Reply;
 import com.my.relo.entity.Style;
 import com.my.relo.entity.StyleTag;
 import com.my.relo.entity.StyleTagEmbedded;
-import com.my.relo.repository.LikesRepository;
-import com.my.relo.repository.MemberRepository;
 import com.my.relo.repository.ReplyRepository;
 import com.my.relo.repository.StyleRepository;
 import com.my.relo.repository.StyleTagRepository;
@@ -24,13 +22,7 @@ class StyleUpdateTest {
 	private StyleRepository sr;
 	
 	@Autowired
-	private MemberRepository mr;
-	
-	@Autowired
 	private StyleTagRepository str;
-	
-	@Autowired
-	private LikesRepository lr;
 	
 	@Autowired
 	private ReplyRepository rr;
@@ -55,9 +47,9 @@ class StyleUpdateTest {
 	@DisplayName("댓글 업데이트 테스트")
 	@Test
 	void testReplyUpdate() {
-		Optional<Reply> reply =rr.findById(2L);
+		Optional<Reply> reply =rr.findById(3L);
 		Reply r =reply.get();
-		r.setRepContent("수정 대댓글");
+		r.setRepContent("수정 대댓글1-1");
 		rr.save(r);
 	}
 

@@ -12,12 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Sort;
 
-import com.my.relo.entity.Member;
 import com.my.relo.entity.Reply;
 import com.my.relo.entity.Style;
 import com.my.relo.entity.StyleTag;
-import com.my.relo.repository.LikesRepository;
-import com.my.relo.repository.MemberRepository;
 import com.my.relo.repository.ReplyRepository;
 import com.my.relo.repository.StyleRepository;
 import com.my.relo.repository.StyleTagRepository;
@@ -27,13 +24,7 @@ class StyleFindTest {
 	private StyleRepository sr;
 	
 	@Autowired
-	private MemberRepository mr;
-	
-	@Autowired
 	private StyleTagRepository str;
-	
-	@Autowired
-	private LikesRepository lr;
 	
 	@Autowired
 	private ReplyRepository rr;
@@ -45,11 +36,11 @@ class StyleFindTest {
 		List<Style> list = sr.findAll(Sort.by(Sort.Direction.DESC,"styleNum"));
 		for(Style s : list) {
 			List <StyleTag> tagList = str.findByStyleNum(s.getStyleNum());
+			log.info("글번호 : "+s.getStyleNum()+" 작성자 : "+s.getMember().getId()+ " 작성일: "+ s.getStyleDate());
+			log.info("좋아요 개수 : "+s.getStyleLikes()+" 조회수 : " + s.getStyleCnt());
 			for(StyleTag t : tagList) {
 				log.info("태그 : " + t.getSte().getHashName());
 			}
-			log.info("글번호 : "+s.getStyleNum()+" 작성자 : "+s.getMember().getId()+ " 작성일: "+ s.getStyleDate());
-			log.info("좋아요 개수 : "+s.getStyleLikes()+" 조회수 : " + s.getStyleCnt());
 		}
 	}
 	@DisplayName("게시판 상세보기 테스트")
