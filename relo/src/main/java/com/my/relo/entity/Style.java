@@ -51,7 +51,7 @@ public class Style {
 	@JoinColumn(name = "m_num", nullable = false)
 	private Member member;
 
-	@JsonFormat(timezone = "Asia/Seoul", pattern = "yy-MM-dd")
+	@JsonFormat(timezone = "Asia/Seoul", pattern = "yyyy-MM-dd HH:mm:ss")
 	@Column(name = "style_date")
 	@CreationTimestamp
 	private Date styleDate;
@@ -65,14 +65,17 @@ public class Style {
 	private int styleCnt;
 	
 	@OneToMany(mappedBy = "style",
-				orphanRemoval = true)
+				cascade = CascadeType.REMOVE
+				)
 	private List<Reply> repList;
 	
 	@OneToMany(mappedBy = "style",
-				orphanRemoval = true)
+			cascade = CascadeType.REMOVE
+			)
 	private List<StyleTag> tagList;
 	
 	@OneToMany(mappedBy = "style",
-				orphanRemoval = true)
+			cascade = CascadeType.REMOVE
+				)
 	private List<Likes> likeList;
 }

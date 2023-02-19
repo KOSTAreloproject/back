@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -56,7 +57,7 @@ public class Reply {
 	@Column(name = "rep_content", nullable = false)
 	private String repContent;
 	
-	@JsonFormat(timezone = "Asia/Seoul", pattern = "yy-MM-dd")
+	@JsonFormat(timezone = "Asia/Seoul", pattern = "yyyy-MM-dd HH:mm:ss")
 	@Column(name = "rep_date")
 	@CreationTimestamp
 	private Date repDate;
@@ -66,7 +67,10 @@ public class Reply {
 	@ColumnDefault(value = "0")
 	private Reply replyParent;
 	
-	@OneToMany(mappedBy = "replyParent",orphanRemoval=true)
+	@OneToMany(mappedBy = "replyParent",
+				cascade = CascadeType.REMOVE
+//				orphanRemoval=true
+				)
 	private List<Reply> children = new ArrayList<>();
 	
 }
