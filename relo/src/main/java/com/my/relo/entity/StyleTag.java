@@ -1,10 +1,11 @@
 package com.my.relo.entity;
 
-import javax.persistence.Column;
+import javax.persistence.CascadeType;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -21,11 +22,11 @@ public class StyleTag {
 	/**
 	 * 스타일 태그 
 	 */
-	@Id
-	@Column(name = "hash_name")
-	private String hashName;
+	@EmbeddedId
+	StyleTagEmbedded ste = new StyleTagEmbedded();
 	
-	@ManyToOne
-	@JoinColumn(name = "style_num")
+	@MapsId("styleNum")
+	@ManyToOne(cascade = CascadeType.REMOVE)
+	@JoinColumn(name = "style_num", nullable = false)
 	private Style style;
 }

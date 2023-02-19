@@ -1,12 +1,11 @@
 package com.my.relo.entity;
 
-import java.io.Serializable;
-
-import javax.persistence.Column;
+import javax.persistence.CascadeType;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -19,17 +18,21 @@ import lombok.ToString;
 @ToString
 @Entity 
 @Table(name = "likes")
-public class Likes implements Serializable{
+public class Likes {
 	/**
 	 * 좋아요 
 	 */
-	@Id
-	@ManyToOne
-	@JoinColumn(name = "style_num")
-	private Style styleLike;
 	
-	@Id
+	@EmbeddedId
+	private LikesEmbedded le = new LikesEmbedded();
+	
+	@MapsId("styleNum")
+	@ManyToOne(cascade = CascadeType.REMOVE)
+	@JoinColumn(name = "style_num", nullable = false)
+	private Style style;
+	
+	@MapsId("mNum")
 	@ManyToOne
-	@JoinColumn(name = "m_num")
-	private Member memberLike;
+	@JoinColumn(name = "m_num", nullable = false)
+	private Member member;
 }

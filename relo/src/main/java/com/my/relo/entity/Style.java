@@ -3,8 +3,10 @@ package com.my.relo.entity;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,6 +16,13 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +31,7 @@ import lombok.ToString;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 @ToString
+@DynamicUpdate
 @Entity 
 @Table(name = "style")
 @SequenceGenerator(name = "style_sequence_generator",
@@ -33,29 +43,36 @@ public class Style {
 	 * 스타일 게시판 
 	 */
 	@Id
-	@Column(name = "style_num")
+	@Column(name = "style_num", nullable = false)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator= "style_sequence_generator")
 	private Long styleNum;
 	
 	@ManyToOne
-	@JoinColumn(name = "m_num")
+	@JoinColumn(name = "m_num", nullable = false)
 	private Member member;
 
+	@JsonFormat(timezone = "Asia/Seoul", pattern = "yy-MM-dd")
 	@Column(name = "style_date")
+	@CreationTimestamp
 	private Date styleDate;
 	
 	@Column(name = "style_likes")
+	@ColumnDefault(value = "0")
 	private int styleLikes;
 	
 	@Column(name = "style_cnt")
+	@ColumnDefault(value = "0")
 	private int styleCnt;
 	
-	@OneToMany(mappedBy = "styleRep")
+	@OneToMany(mappedBy = "style",
+				orphanRemoval = true)
 	private List<Reply> repList;
 	
-	@OneToMany(mappedBy = "style")
+	@OneToMany(mappedBy = "style",
+				orphanRemoval = true)
 	private List<StyleTag> tagList;
 	
-	@OneToMany(mappedBy = "styleLike")
+	@OneToMany(mappedBy = "style",
+				orphanRemoval = true)
 	private List<Likes> likeList;
 }
