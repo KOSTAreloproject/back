@@ -10,6 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
@@ -50,8 +52,9 @@ public class Product {
     @JoinColumn(name = "s_num")
     private Stock stock;
     
-    @Column(name = "m_num")
-    private Long mNum;
+	@ManyToOne(targetEntity = Member.class)
+	@JoinColumn(name = "m_num", nullable = false)
+	private Long mNum;
     
 	@OneToMany(mappedBy ="aNum" , fetch = FetchType.LAZY)
 	private List<Auction> Auction;
