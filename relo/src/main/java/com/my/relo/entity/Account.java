@@ -1,48 +1,34 @@
 package com.my.relo.entity;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+
+@EqualsAndHashCode
 @Entity
-@ToString
 @Table(name = "account")
 public class Account {
-//	@Id
-//	@Column(name = "m_num")
-//	private Long mNum;
-//
-//	@OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-//	@MapsId
-//	@JoinColumn(name = "m_num", nullable = false)
-//	private Member member;
 
 	@Id
-	@Column(name = "m_num")
-	private Long mNum;
+	@Column(name = "m_num", nullable = false)
+	private Long mNum; // 멤버번호
 
-	@OneToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(name = "m_num", referencedColumnName = "m_num", nullable = false)
-	private Member member;
-
-	@Column(name = "bank_account", nullable = false)
+	@Column(name = "bank_account")
 	private String bankAccount; // 계좌번호
 
-	@Column(name = "bank_code", nullable = false)
+	@Column(name = "bank_code")
 	private String bankCode; // 은행코드
 
 }
