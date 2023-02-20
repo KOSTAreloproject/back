@@ -62,9 +62,6 @@ public class Stock {
     
     @Column(name = "s_grade")
     private String sGrade;
-
-    @Column(name = "s_file", nullable = false)
-    private String sFile;
     
     @Column(name = "s_hope_days", nullable = false)
     private Integer sHopeDays;
