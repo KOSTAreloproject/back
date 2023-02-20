@@ -1,5 +1,7 @@
 package com.my.relo.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,8 +27,8 @@ import lombok.Setter;
 @EqualsAndHashCode
 @Entity
 @Table(name = "account")
-public class Account {
-
+public class Account implements Serializable{
+	@Id
 	@OneToOne(targetEntity = Member.class)
 	@JoinColumn(name = "m_num", nullable = false)
 	private Long mNum;
