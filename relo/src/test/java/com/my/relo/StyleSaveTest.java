@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.my.relo.entity.Likes;
+import com.my.relo.entity.LikesEmbedded;
 import com.my.relo.entity.Member;
 import com.my.relo.entity.Reply;
 import com.my.relo.entity.Style;
@@ -108,15 +109,19 @@ class StyleSaveTest {
 		
 		Optional<Style> optS=sr.findById(1L);
 		Style s = optS.get();
-		Optional<Member> optM=mr.findById(2L);
-		Member m = optM.get();
 		
 		Likes like = new Likes();
+		LikesEmbedded le = new LikesEmbedded();
+		Optional<Member> optM = mr.findById(1L);
+	
+		le.setMNum(optM.get().getMNum());
+		le.setStyleNum(s.getStyleNum());
+		like.setLe(le);
 		like.setStyle(s);
-		like.setMember(m);
+		
 		lr.save(like);
 		
-		sr.updateLikes(s.getStyleNum());
+		
 	}
 	@DisplayName("댓글 등록 테스트")
 	@Test

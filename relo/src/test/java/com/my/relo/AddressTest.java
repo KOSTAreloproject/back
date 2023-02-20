@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.my.relo.entity.Address;
 import com.my.relo.entity.Member;
@@ -28,8 +29,10 @@ class AddressTest {
 	void testAddrSave() {
 		Optional<Member> optM1 = mr.findById(1L);
 		Member m1 = optM1.get();
+		log.info("회원번호 : "+m1.getMNum());
+		Long num = m1.getMNum();
 		Address a1 = new Address();
-		a1.setMember(m1);
+		a1.setMNum(num);
 		a1.setAddrPostNum("17091");
 		a1.setAddrName("이현민");
 		a1.setAddrTel("333-333");
@@ -41,7 +44,7 @@ class AddressTest {
 		Optional<Member> optM2 = mr.findById(1L);
 		Member m2 = optM2.get();
 		Address a2 = new Address();
-		a2.setMember(m2);
+		a2.setMNum(m2.getMNum());
 		a2.setAddrPostNum("17092");
 		a2.setAddrName("이로운");
 		a2.setAddrTel("222-222");
@@ -53,7 +56,9 @@ class AddressTest {
 	@DisplayName("해당 아이디에 맞는 주소리스트 찾기 테스트")
 	@Test
 	void testAddrFind() {
-		List<Address> addrList= ar.findBymNum(1L);
+		Optional<Member> optM1 = mr.findById(1L);
+		Member m1 = optM1.get();
+		List<Address> addrList= ar.findBymNum(m1.getMNum());
 		for(Address a : addrList) {
 			log.info("주소 : "+ a.getAddr());
 		}

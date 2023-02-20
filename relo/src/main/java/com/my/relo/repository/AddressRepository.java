@@ -13,4 +13,6 @@ public interface AddressRepository extends CrudRepository<Address, Long> {
 			+ "FROM ADDRESS\n"
 			+ "WHERE M_NUM = ?1", nativeQuery = true)
 	List<Address> findBymNum(Long mNum);
+	
+	 //		+ "VALUES (addr_seq.nextval,'경기도 용인시 처인구','중부대로1144','이현민','17091','기본주소','111-111',1,1)", nativeQuery = trueList<Address> findByAddr(String addr);)
 }

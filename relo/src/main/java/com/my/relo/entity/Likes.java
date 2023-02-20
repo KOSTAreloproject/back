@@ -29,9 +29,5 @@ public class Likes {
 	@ManyToOne
 	@JoinColumn(name = "style_num", nullable = false)
 	private Style style;
-	
-	@MapsId("mNum")
-	@ManyToOne
-	@JoinColumn(name = "m_num", nullable = false)
-	private Member member;
+
 }

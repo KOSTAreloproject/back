@@ -55,10 +55,6 @@ public class Style {
 	@CreationTimestamp
 	private Date styleDate;
 	
-	@Column(name = "style_likes")
-	@ColumnDefault(value = "0")
-	private int styleLikes;
-	
 	@Column(name = "style_cnt")
 	@ColumnDefault(value = "0")
 	private int styleCnt;
@@ -67,15 +63,16 @@ public class Style {
 				cascade = CascadeType.REMOVE
 				)
 	private List<Reply> repList;
-	
+	                
 	@OneToMany(mappedBy = "style",
 			cascade = CascadeType.REMOVE,
 			fetch = FetchType.EAGER
 			)
 	private List<StyleTag> tagList;
 	
-	@OneToMany(mappedBy = "style",
-			cascade = CascadeType.REMOVE
-				)
-	private List<Likes> likeList;
+//	@OneToMany(mappedBy = "style",
+//			cascade = CascadeType.REMOVE
+//				)
+//	@JoinColumn(name = "style_num")
+//	private List<Likes> likeList;
 }

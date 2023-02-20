@@ -6,7 +6,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -42,9 +41,8 @@ public class Address {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "address_sequence_generator")
 	private Long addrNum; 
 	
-	@ManyToOne
-	@JoinColumn(name = "m_num", nullable = false)
-	private Member member;
+	@JoinColumn(name = "m_num", nullable = false,referencedColumnName="m_num")
+	private Long mNum;
 	
 	@Column(name = "addr_name", nullable = false)
 	private String addrName; 

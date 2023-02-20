@@ -32,7 +32,7 @@ class StyleUpdateTest {
 	@Test
 	void testUpdate() {
 		
-		Optional<Style> style = sr.findById(1L);
+		Optional<Style> style = sr.findById(2L);
 		Style s = style.get();
 		str.deleteByStyleNum(s.getStyleNum());
 		StyleTag tag = new StyleTag();

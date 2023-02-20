@@ -1,5 +1,6 @@
 package com.my.relo;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
@@ -9,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.my.relo.entity.Likes;
 import com.my.relo.entity.Member;
 import com.my.relo.entity.Style;
 import com.my.relo.repository.LikesRepository;
@@ -37,10 +39,9 @@ class StyleDeleteTest {
 	void testLikesRemove() {
 		Optional<Style> style = sr.findById(1L);
 		Style s = style.get();
-		Optional<Member> member = mr.findById(2L);
+		Optional<Member> member = mr.findById(1L);
 		Member m = member.get();
 		lr.deleteLikes(s.getStyleNum(), m.getMNum());
-		sr.deleteLikes(s.getStyleNum());
 	}
 	
 	@DisplayName("댓글 삭제 테스트 -> 부모댓글 삭제되면 자식댓글 삭제")
@@ -51,7 +52,13 @@ class StyleDeleteTest {
 	@DisplayName("게시물 삭제 테스트 -> 게시물 삭제되면 댓글,좋아요,태그 삭제")
 	@Test
 	void testStyleRemove() {
-		sr.deleteById(1L);
+		Long styleNum = 2L;
+		List<Likes> likeList = lr.ListByStyleNum(styleNum);
+		for(Likes l : likeList) {
+			log.info("리스트 "+ l.getLe().getMNum());
+			lr.delete(l);
+		}
+		sr.deleteById(styleNum);
 	}
 
 }

@@ -1,5 +1,7 @@
 package com.my.relo.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -15,4 +17,7 @@ public interface LikesRepository extends CrudRepository<Likes, Style> {
 	@Transactional
 	@Query(value ="DELETE FROM likes l WHERE l.style_num = :styleNum AND l.m_num = :mNum",nativeQuery = true)
 	void deleteLikes(@Param("styleNum")Long styleNum,@Param("mNum")Long mNum);
+	
+	@Query(value ="SELECT * FROM likes l WHERE l.style_num = :styleNum",nativeQuery = true)
+	List<Likes> ListByStyleNum(@Param("styleNum")Long styleNum);
 }
