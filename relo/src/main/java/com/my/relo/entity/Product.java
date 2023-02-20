@@ -1,15 +1,16 @@
 package com.my.relo.entity;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -49,8 +50,11 @@ public class Product {
     @JoinColumn(name = "s_num")
     private Stock stock;
     
-    @ManyToOne
-    @JoinColumn(name = "m_num")
-    private Member member;
+    @Column(name = "m_num")
+    private Long mNum;
+    
+	@OneToMany(mappedBy ="aNum" , fetch = FetchType.LAZY)
+	private List<Auction> Auction;
+    
     
 }
