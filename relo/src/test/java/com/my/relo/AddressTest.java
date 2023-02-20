@@ -32,13 +32,13 @@ class AddressTest {
 		a1.setMember(m1);
 		a1.setAddrPostNum("17091");
 		a1.setAddrName("이현민");
-		a1.setAddrTel("111-111");
+		a1.setAddrTel("333-333");
 		a1.setAddr("경기도 용인시 처인구");
 		a1.setAddrDetail("중부대로 1144");
 		a1.setAddrRecipient("우리집");
 		ar.save(a1);
 		
-		Optional<Member> optM2 = mr.findById(2L);
+		Optional<Member> optM2 = mr.findById(1L);
 		Member m2 = optM2.get();
 		Address a2 = new Address();
 		a2.setMember(m2);
@@ -61,7 +61,7 @@ class AddressTest {
 	@DisplayName("선택 주소 수정 테스트")
 	@Test
 	void testAddrUpdate() {
-		Optional<Address> optA = ar.findById(1L);
+		Optional<Address> optA = ar.findById(2L);
 		Address a = optA.get();
 		a.setAddrType(0);
 		a.setAddrName("본인");

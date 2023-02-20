@@ -17,14 +17,10 @@ import com.my.relo.entity.Style;
 import com.my.relo.entity.StyleTag;
 import com.my.relo.repository.ReplyRepository;
 import com.my.relo.repository.StyleRepository;
-import com.my.relo.repository.StyleTagRepository;
 @SpringBootTest
 class StyleFindTest {
 	@Autowired
 	private StyleRepository sr;
-	
-	@Autowired
-	private StyleTagRepository str;
 	
 	@Autowired
 	private ReplyRepository rr;
@@ -35,7 +31,7 @@ class StyleFindTest {
 	void styleFindTest() {
 		List<Style> list = sr.findAll(Sort.by(Sort.Direction.DESC,"styleNum"));
 		for(Style s : list) {
-			List <StyleTag> tagList = str.findByStyleNum(s.getStyleNum());
+			List <StyleTag> tagList = s.getTagList();
 			log.info("글번호 : "+s.getStyleNum()+" 작성자 : "+s.getMember().getId()+ " 작성일: "+ s.getStyleDate());
 			log.info("좋아요 개수 : "+s.getStyleLikes()+" 조회수 : " + s.getStyleCnt());
 			for(StyleTag t : tagList) {
@@ -49,7 +45,7 @@ class StyleFindTest {
 		Optional<Style> optS= sr.findById(1L);
 		Style s = optS.get();
 		String id = s.getMember().getId();
-		List<StyleTag> tagList = str.findByStyleNum(s.getStyleNum());
+		List<StyleTag> tagList = s.getTagList();
 		Date date = s.getStyleDate();
 		int likeCnt = s.getStyleLikes();
 		int styleCnt = s.getStyleCnt();

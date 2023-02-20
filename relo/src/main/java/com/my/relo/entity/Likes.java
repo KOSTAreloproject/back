@@ -1,6 +1,5 @@
 package com.my.relo.entity;
 
-import javax.persistence.CascadeType;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -27,7 +26,7 @@ public class Likes {
 	private LikesEmbedded le = new LikesEmbedded();
 	
 	@MapsId("styleNum")
-	@ManyToOne(cascade = CascadeType.REMOVE)
+	@ManyToOne
 	@JoinColumn(name = "style_num", nullable = false)
 	private Style style;
 	

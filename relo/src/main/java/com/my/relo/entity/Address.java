@@ -41,7 +41,7 @@ public class Address {
 	@Column(name = "addr_num", nullable = false)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "address_sequence_generator")
 	private Long addrNum; 
-
+	
 	@ManyToOne
 	@JoinColumn(name = "m_num", nullable = false)
 	private Member member;

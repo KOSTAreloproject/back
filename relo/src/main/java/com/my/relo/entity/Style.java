@@ -18,7 +18,6 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -70,7 +69,8 @@ public class Style {
 	private List<Reply> repList;
 	
 	@OneToMany(mappedBy = "style",
-			cascade = CascadeType.REMOVE
+			cascade = CascadeType.REMOVE,
+			fetch = FetchType.EAGER
 			)
 	private List<StyleTag> tagList;
 	

@@ -26,7 +26,7 @@ public class StyleTag {
 	StyleTagEmbedded ste = new StyleTagEmbedded();
 	
 	@MapsId("styleNum")
-	@ManyToOne(cascade = CascadeType.REMOVE)
+	@ManyToOne
 	@JoinColumn(name = "style_num", nullable = false)
 	private Style style;
 }

@@ -9,7 +9,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.my.relo.entity.Member;
 import com.my.relo.entity.Style;
 
 public interface StyleRepository extends CrudRepository<Style, Long>{
@@ -18,7 +17,12 @@ public interface StyleRepository extends CrudRepository<Style, Long>{
 	@Transactional
 	@Query("update Style s set s.styleLikes = s.styleLikes+1 where s.styleNum= :styleNum")
 	void updateLikes(@Param("styleNum") Long styleNum);
-
+	
+	@Modifying
+	@Transactional
+	@Query("update from Style s set s.styleLikes = s.styleLikes-1 where s.styleNum= :styleNum")
+	void deleteLikes(@Param("styleNum") Long styleNum);
+	
 	List<Style> findAll(Sort by);
 	
 	@Query(value="SELECT * FROM style s WHERE m_num =?1 ORDER BY s.style_num desc",nativeQuery = true)
