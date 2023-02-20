@@ -2,7 +2,6 @@ package com.my.relo.entity;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 import lombok.AllArgsConstructor;
@@ -19,7 +18,6 @@ import lombok.Setter;
 @Embeddable
 public class ZzimEmbedded implements Serializable {
 
-	@Column(name = "m_num")
 	private Long mNum;
 
 	// @Column(name = "p_num" )

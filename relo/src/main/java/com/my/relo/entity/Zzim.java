@@ -2,6 +2,7 @@ package com.my.relo.entity;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
@@ -27,5 +28,10 @@ public class Zzim {
 	@ManyToOne
 	@JoinColumn(name = "p_num")
 	private Product product; // 상품번호
+
+	@MapsId("mNum")
+	@ManyToOne(targetEntity = Member.class, fetch = FetchType.EAGER)
+	@JoinColumn(name = "m_num", nullable = false)
+	private Long mNum;
 
 }
