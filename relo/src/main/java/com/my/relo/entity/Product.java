@@ -55,6 +55,9 @@ public class Product {
     
 	@OneToMany(mappedBy ="aNum" , fetch = FetchType.LAZY)
 	private List<Auction> Auction;
+	
+	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+	private List<Zzim> Zzim;
     
     
 }
