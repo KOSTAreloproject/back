@@ -19,6 +19,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,6 +33,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Table(name = "product")
 @DynamicInsert
+@DynamicUpdate
 @SequenceGenerator(name = "product_sequence_generator", // 제너레이터명
 sequenceName = "product_seq", // 시퀀스명
 initialValue = 1, // 시작 값
