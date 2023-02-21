@@ -1,6 +1,8 @@
 package com.my.relo.entity;
 
-import java.util.Date;
+import java.time.LocalDate;
+
+
 import java.util.List;
 
 import javax.persistence.Column;
@@ -20,6 +22,8 @@ import javax.persistence.Table;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -45,12 +49,14 @@ public class Product {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_sequence_generator")
     private Long pNum;
     
+    @JsonFormat(timezone = "Asia/Seoul", pattern = "yyyy-MM-dd")
     @Column(name = "p_start_date")
     @ColumnDefault(value = "SYSDATE")
-    private Date pStartDate;
+    private LocalDate pStartDate;
     
+    @JsonFormat(timezone = "Asia/Seoul", pattern = "yyyy-MM-dd")
     @Column(name = "p_end_date")
-    private Date pEndDate;
+    private LocalDate pEndDate;
     
     @Column(name = "p_status")
     private Integer pStatus;

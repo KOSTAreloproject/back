@@ -1,5 +1,6 @@
 package com.my.relo.entity;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -52,6 +53,6 @@ public class StockReturn {
 	
 	@ColumnDefault(value = "SYSDATE")
 	@Column(name = "std_start_date", nullable = false)
-	private Date stdStartDate;
+	private LocalDate stdStartDate;
 	
 }
