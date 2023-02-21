@@ -9,12 +9,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @Table(name = "sizes")
 public class Sizes {
     @Id
@@ -23,4 +25,5 @@ public class Sizes {
 
     @Column(name = "size_category_name")
     private String sizeCategoryName;
+    
 }

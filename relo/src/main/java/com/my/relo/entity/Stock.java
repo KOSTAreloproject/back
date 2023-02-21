@@ -12,6 +12,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,12 +26,14 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@DynamicInsert
 @SequenceGenerator(name = "stock_sequence_generator", // 제너레이터명
 sequenceName = "stock_seq", // 시퀀스명
 initialValue = 1, // 시작 값
 allocationSize = 1 // 할당할 범위 사이즈
 )
 public class Stock {
+	
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stock_sequence_generator")
     @Column(name = "s_num")
@@ -72,6 +77,7 @@ public class Stock {
     @Column(name = "manager_comment")
     private String managerComment;
     
+    @ColumnDefault(value = "1")
     @Column(name = "s_status")
     private Integer sStatus;
 }

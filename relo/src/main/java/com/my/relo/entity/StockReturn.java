@@ -11,6 +11,9 @@ import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +24,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@DynamicInsert
 @Table(name = "stock_return")
 public class StockReturn {
 
@@ -36,13 +40,16 @@ public class StockReturn {
 	@OneToOne
 	@JoinColumn(name = "addr_num")
 	private Address addr;
-
+	
+	@ColumnDefault(value = "0")
 	@Column(name = "std_status", nullable = false)
 	private Integer stdStatus;
 
 	@Column(name = "std_tracking_info", nullable = false)
 	private String stdTrackingInfo;
-
+	
+	@ColumnDefault(value = "SYSDATE")
 	@Column(name = "std_start_date", nullable = false)
 	private Date stdStartDate;
+	
 }

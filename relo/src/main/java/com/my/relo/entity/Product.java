@@ -17,6 +17,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,6 +31,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "product")
+@DynamicInsert
 @SequenceGenerator(name = "product_sequence_generator", // 제너레이터명
 sequenceName = "product_seq", // 시퀀스명
 initialValue = 1, // 시작 값
@@ -40,6 +44,7 @@ public class Product {
     private Long pNum;
     
     @Column(name = "p_start_date")
+    @ColumnDefault(value = "SYSDATE")
     private Date pStartDate;
     
     @Column(name = "p_end_date")
@@ -52,8 +57,7 @@ public class Product {
     @JoinColumn(name = "s_num")
     private Stock stock;
     
-	@ManyToOne(targetEntity = Member.class)
-	@JoinColumn(name = "m_num", nullable = false)
+	@JoinColumn(name = "m_num", nullable = false,referencedColumnName="m_num")
 	private Long mNum;
     
 	@OneToMany(mappedBy ="aNum" , fetch = FetchType.LAZY)
