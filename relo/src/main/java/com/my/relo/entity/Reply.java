@@ -70,6 +70,6 @@ public class Reply {
 	@OneToMany(mappedBy = "replyParent",
 				cascade = CascadeType.REMOVE
 				)
-	private List<Reply> children = new ArrayList<>();
+	private List<Reply> children;
 	
 }

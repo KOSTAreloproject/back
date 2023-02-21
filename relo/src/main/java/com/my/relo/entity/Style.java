@@ -70,9 +70,8 @@ public class Style {
 			)
 	private List<StyleTag> tagList;
 	
-	@OneToMany(//mappedBy = "style",
-//			cascade = CascadeType.REMOVE
-				)
+	@OneToMany
 	@JoinColumn(name = "style_num")
 	private List<Likes> likeList;
+	
 }
