@@ -50,7 +50,7 @@ class StyleFindTest {
 	@DisplayName("게시판 상세보기 테스트")
 	@Test
 	void styleFindByStyleNumTest() {
-		Optional<Style> optS= sr.findById(3L);
+		Optional<Style> optS= sr.findById(1L);
 		Style s = optS.get();
 		String id = s.getMember().getId();
 		List<StyleTag> tagList = s.getTagList();

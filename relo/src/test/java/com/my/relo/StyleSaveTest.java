@@ -112,15 +112,12 @@ class StyleSaveTest {
 		
 		Likes like = new Likes();
 		LikesEmbedded le = new LikesEmbedded();
-		Optional<Member> optM = mr.findById(1L);
+		Optional<Member> optM = mr.findById(2L);
 	
 		le.setMNum(optM.get().getMNum());
 		le.setStyleNum(s.getStyleNum());
 		like.setLe(le);
-		like.setStyle(s);
-		
 		lr.save(like);
-		
 		
 	}
 	@DisplayName("댓글 등록 테스트")

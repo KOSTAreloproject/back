@@ -25,9 +25,9 @@ public class Likes {
 	@EmbeddedId
 	private LikesEmbedded le = new LikesEmbedded();
 	
-	@MapsId("styleNum")
-	@ManyToOne
-	@JoinColumn(name = "style_num", nullable = false)
-	private Style style;
+//	@MapsId("styleNum")
+//	@ManyToOne
+//	@JoinColumn(name = "style_num", nullable = false)
+//	private Style style;
 
 }

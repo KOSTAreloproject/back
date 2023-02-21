@@ -58,7 +58,7 @@ class StyleDeleteTest {
 			log.info("리스트 "+ l.getLe().getMNum());
 			lr.delete(l);
 		}
-		sr.deleteById(styleNum);
+		sr.deleteById(2L);
 	}
 
 }
