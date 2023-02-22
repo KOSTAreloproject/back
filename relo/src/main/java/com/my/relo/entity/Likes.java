@@ -11,14 +11,12 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
-@ToString
 @Entity 
 @Table(name = "likes")
 public class Likes {
 	/**
 	 * 좋아요 
 	 */
-	
 	@EmbeddedId
 	private LikesEmbedded le = new LikesEmbedded();
 

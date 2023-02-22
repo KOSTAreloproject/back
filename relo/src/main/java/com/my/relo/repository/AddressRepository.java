@@ -13,9 +13,9 @@ public interface AddressRepository extends CrudRepository<Address, Long> {
 	@Query(value= "SELECT ADDR_NUM, ADDR, ADDR_DETAIL, ADDR_NAME, ADDR_POST_NUM, ADDR_RECIPIENT, ADDR_TEL, ADDR_TYPE, M_NUM \n"
 			+ "FROM ADDRESS\n"
 			+ "WHERE M_NUM = ?1", nativeQuery = true)
-	List<Address> findBymNum(Long mNum);
+	public List<Address> findBymNum(Long mNum);
 	
 	//기본 주소 출력
 	@Query(value="SELECT * FROM ADDRESS WHERE M_NUM = :mNum AND ADDR_TYPE = 0", nativeQuery = true)
-	Address findByAddrType(@Param("mNum")Long mNum);
+	public Address findByAddrType(@Param("mNum")Long mNum);
 }

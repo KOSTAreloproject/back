@@ -3,6 +3,9 @@ package com.my.relo.dto;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.my.relo.entity.Member;
+import com.my.relo.entity.Reply;
+import com.my.relo.entity.Style;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,15 +18,15 @@ public class ReplyDTO {
 	
 	private Long repNum;
 	
-	private Long styleNum;
+	private Style style;
 	
-	private Long mNum;
+	private Member member;
 	
 	private String repContent;
 	
 	@JsonFormat(timezone = "Asia/Seoul", pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date repDate;
 	
-	private Long repParent;
+	private Reply replyParent;
 
 }

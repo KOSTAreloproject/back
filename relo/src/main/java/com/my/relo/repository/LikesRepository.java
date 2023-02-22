@@ -16,16 +16,16 @@ public interface LikesRepository extends CrudRepository<Likes, Style> {
 	@Modifying
 	@Transactional
 	@Query(value ="DELETE FROM likes l WHERE l.style_num = :styleNum AND l.m_num = :mNum",nativeQuery = true)
-	void deleteLikes(@Param("styleNum")Long styleNum,@Param("mNum")Long mNum);
+	public void deleteLikes(@Param("styleNum")Long styleNum,@Param("mNum")Long mNum);
 
 	//해당 게시판에 있는 좋아요 모두 삭제 
 	@Modifying
 	@Transactional
 	@Query(value = "DELETE FROM likes l WHERE style_num = :styleNum",nativeQuery = true)
-	void deleteByStyleNumList(@Param("styleNum")Long styleNum);
+	public void deleteByStyleNumList(@Param("styleNum")Long styleNum);
 	
 	//게시판별 좋아요 리스트 출력 
 	@Query(value ="SELECT * FROM likes l WHERE l.style_num = :styleNum",nativeQuery = true)
-	List<Likes> ListByStyleNum(@Param("styleNum")Long styleNum);
+	public List<Likes> ListByStyleNum(@Param("styleNum")Long styleNum);
 	
 }

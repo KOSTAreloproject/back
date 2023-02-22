@@ -15,5 +15,5 @@ public interface ReplyRepository extends CrudRepository<Reply, Long>{
 			+ "    start with rep_parent is null\n"
 			+ "    connect by prior rep_num = rep_parent\n"
 			+ "    order siblings by rep_parent desc", nativeQuery = true)
-	List<Reply> findByStyleNum(Long styleNum);
+	public List<Reply> findByStyleNum(Long styleNum);
 }
