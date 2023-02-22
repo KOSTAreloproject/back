@@ -20,6 +20,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "stock")
@@ -29,6 +30,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @DynamicInsert
 @DynamicUpdate
+@ToString
 @SequenceGenerator(name = "stock_sequence_generator", // 제너레이터명
 sequenceName = "stock_seq", // 시퀀스명
 initialValue = 1, // 시작 값
@@ -82,4 +84,6 @@ public class Stock {
     @ColumnDefault(value = "1")
     @Column(name = "s_status")
     private Integer sStatus;
+    
+    
 }

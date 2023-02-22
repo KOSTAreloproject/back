@@ -1,7 +1,8 @@
 package com.my.relo.entity;
 
 import java.time.LocalDate;
-import java.util.Date;
+
+
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
@@ -51,6 +54,7 @@ public class StockReturn {
 	@Column(name = "std_tracking_info", nullable = false)
 	private String stdTrackingInfo;
 	
+
 	@ColumnDefault(value = "SYSDATE")
 	@Column(name = "std_start_date", nullable = false)
 	private LocalDate stdStartDate;
