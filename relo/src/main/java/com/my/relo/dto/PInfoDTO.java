@@ -6,14 +6,14 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@Getter
 //@Setter
 //@AllArgsConstructor
-@NoArgsConstructor
+//@NoArgsConstructor
+@Getter
 @ToString
+@Builder
 public class PInfoDTO {
 	private String sName;
 	
@@ -34,19 +34,19 @@ public class PInfoDTO {
 	
 	private Long maxPrice;
 
-	@Builder
-	public PInfoDTO(String sName, String sizeCategoryName, Integer pStatus, Date pEndDate, Integer sHopePrice,
-			String sGrade, String sBrand, Long pNum, Long maxPrice) {
-		this.sName = sName;
-		this.sizeCategoryName = sizeCategoryName;
-		this.pStatus = pStatus;
-		this.pEndDate = pEndDate;
-		this.sHopePrice = sHopePrice;
-		this.sGrade = sGrade;
-		this.sBrand = sBrand;
-		this.pNum = pNum;
-		this.maxPrice = maxPrice;
-	}
+//	@Builder
+//	public PInfoDTO(String sName, String sizeCategoryName, Integer pStatus, Date pEndDate, Integer sHopePrice,
+//			String sGrade, String sBrand, Long pNum, Long maxPrice) {
+//		this.sName = sName;
+//		this.sizeCategoryName = sizeCategoryName;
+//		this.pStatus = pStatus;
+//		this.pEndDate = pEndDate;
+//		this.sHopePrice = sHopePrice;
+//		this.sGrade = sGrade;
+//		this.sBrand = sBrand;
+//		this.pNum = pNum;
+//		this.maxPrice = maxPrice;
+//	}
 
 
 	
