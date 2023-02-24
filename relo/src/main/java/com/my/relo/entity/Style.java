@@ -1,6 +1,6 @@
 package com.my.relo.entity;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -23,12 +23,11 @@ import org.hibernate.annotations.DynamicUpdate;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor
+@Getter @NoArgsConstructor @AllArgsConstructor
 @DynamicUpdate
 @Entity 
 @Table(name = "style")
@@ -52,7 +51,7 @@ public class Style {
 	@JsonFormat(timezone = "Asia/Seoul", pattern = "yyyy-MM-dd HH:mm:ss")
 	@Column(name = "style_date")
 	@CreationTimestamp
-	private Date styleDate;
+	private LocalDateTime styleDate;
 	
 	@Column(name = "style_cnt")
 	@ColumnDefault(value = "0")
@@ -73,4 +72,8 @@ public class Style {
 	@JoinColumn(name = "style_num")
 	private List<Likes> likeList;
 	
+	@Builder
+	public Style(Member member) {
+		this.member = member;
+	}
 }

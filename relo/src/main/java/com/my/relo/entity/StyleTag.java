@@ -10,10 +10,8 @@ import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor
+@Getter @NoArgsConstructor @AllArgsConstructor
 @Entity 
 @Table(name = "style_tag")
 public class StyleTag {
@@ -27,4 +25,5 @@ public class StyleTag {
 	@ManyToOne
 	@JoinColumn(name = "style_num", nullable = false)
 	private Style style;
+	
 }

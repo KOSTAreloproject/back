@@ -15,12 +15,11 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @DynamicInsert
@@ -34,6 +33,7 @@ allocationSize = 1 // 할당할 범위 사이즈
 )
 public class Address {
 	
+
 	/**
 	 * 주소록 번호
 	 */
@@ -77,4 +77,18 @@ public class Address {
 	@OneToOne(mappedBy = "address")
 	private OrderDelivery orderdelivery;
 	
+	@Builder
+	public Address(Long addrNum ,String addr, String addrDetail, String addrName, String addrPostNum, String addrRecipient,
+			String addrTel, Long mNum, Integer addrType) {
+		this.addrNum = addrNum;
+		this.addr = addr;
+		this.addrDetail = addrDetail;
+		this.addrName = addrName;
+		this.addrPostNum = addrPostNum;
+		this.addrRecipient = addrRecipient;
+		this.addrTel = addrTel;
+		this.mNum = mNum;
+		this.addrType = addrType;
+	}
+
 }

@@ -28,4 +28,7 @@ public interface LikesRepository extends CrudRepository<Likes, Style> {
 	@Query(value ="SELECT * FROM likes l WHERE l.style_num = :styleNum",nativeQuery = true)
 	public List<Likes> ListByStyleNum(@Param("styleNum")Long styleNum);
 	
+	//mNum , styleNum 두개 다 조회해서 해당 행 있는 지 조회
+	@Query(value = "SELECT  m_num, style_num FROM likes WHERE m_num = :mNum AND style_num = :styleNum",nativeQuery = true)
+	public Likes findBymNumAndStyleNum(@Param("mNum")Long mNum,@Param("styleNum")Long styleNum);
 }

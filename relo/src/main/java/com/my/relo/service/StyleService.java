@@ -1,5 +1,6 @@
 package com.my.relo.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.my.relo.dto.LikesDTO;
 import com.my.relo.dto.ReplyDTO;
 import com.my.relo.dto.StyleDTO;
+import com.my.relo.dto.StyleTagDTO;
 import com.my.relo.entity.Style;
 import com.my.relo.entity.StyleTag;
 import com.my.relo.entity.StyleTagEmbedded;
@@ -43,18 +45,18 @@ public class StyleService {
 	ModelMapper modelMapper;
 	
 	//게시판 추가 
-	public void write(Style style) throws AddException{
-		List<StyleTag> tagList = style.getTagList();
+	public void write(StyleDTO styleDTO) throws AddException{
+		List<StyleTagDTO> tagList = styleDTO.getTagList();
+		Style style = styleDTO.toEntity();
 		sr.save(style);
-		for(StyleTag t : tagList) {
+		Optional<Style> optS1 = sr.findById(style.getStyleNum());
+		Style s = optS1.get();
+		for(StyleTagDTO t : tagList) {
 			String hashName = t.getSte().getHashName();
 			StyleTagEmbedded ste = new StyleTagEmbedded();
 			ste.setHashName(hashName);
-			Optional<Style> optS1 = sr.findById(style.getStyleNum());
-			Style s = optS1.get();
-			t.setStyle(s);
-			t.setSte(ste);
-			str.save(t);
+			StyleTag tag= new StyleTag(ste,s);
+			str.save(tag);
 		}
 	}
 	
@@ -69,7 +71,13 @@ public class StyleService {
 		List<Style> styleList = sr.findAll(Sort.by(Sort.Direction.DESC,"styleNum"));
 		List<StyleDTO> styleDTOList = 
 				styleList.stream().map(style -> modelMapper.map(style, StyleDTO.class)).collect(Collectors.toList());
-		return styleDTOList;
+		List<StyleDTO> list = new ArrayList<>();
+		for(StyleDTO dto : styleDTOList) {
+			List<LikesDTO> likeList = ls.listByStyleNum(dto.getStyleNum());
+			dto.setLikesList(likeList);
+			list.add(dto);
+		}
+		return list;
 	}
 	
 	//게시판 해시태그별 리스트 출력
@@ -77,7 +85,13 @@ public class StyleService {
 		List<Style> styleList = sr.listByHashName(hashName);
 		List<StyleDTO> styleDTOList = 
 				styleList.stream().map(style -> modelMapper.map(style, StyleDTO.class)).collect(Collectors.toList());
-		return styleDTOList;
+		List<StyleDTO> list = new ArrayList<>();
+		for(StyleDTO dto : styleDTOList) {
+			List<LikesDTO> likeList = ls.listByStyleNum(dto.getStyleNum());
+			dto.setLikesList(likeList);
+			list.add(dto);
+		}
+		return list;
 	}
 	
 	//게시판 좋아요순 리스트 출력
@@ -85,7 +99,13 @@ public class StyleService {
 		List<Style> styleList = sr.listByLikes();
 		List<StyleDTO> styleDTOList = 
 				styleList.stream().map(style -> modelMapper.map(style, StyleDTO.class)).collect(Collectors.toList());
-		return styleDTOList;
+		List<StyleDTO> list = new ArrayList<>();
+		for(StyleDTO dto : styleDTOList) {
+			List<LikesDTO> likeList = ls.listByStyleNum(dto.getStyleNum());
+			dto.setLikesList(likeList);
+			list.add(dto);
+		}
+		return list;
 	}
 	
 	//게시판 조회수순 리스트 출력
@@ -93,7 +113,13 @@ public class StyleService {
 		List<Style> styleList = sr.findAll(Sort.by(Sort.Direction.DESC,"styleCnt","styleNum"));
 		List<StyleDTO> styleDTOList = 
 				styleList.stream().map(style -> modelMapper.map(style, StyleDTO.class)).collect(Collectors.toList());
-		return styleDTOList;
+		List<StyleDTO> list = new ArrayList<>();
+		for(StyleDTO dto : styleDTOList) {
+			List<LikesDTO> likeList = ls.listByStyleNum(dto.getStyleNum());
+			dto.setLikesList(likeList);
+			list.add(dto);
+		}
+		return list;
 	}
 	
 	//내가 쓴 게시판 리스트 출력
@@ -101,7 +127,13 @@ public class StyleService {
 		List<Style> styleList = sr.findBymNum(mNum);
 		List<StyleDTO> styleDTOList =
 				styleList.stream().map(style -> modelMapper.map(style, StyleDTO.class)).collect(Collectors.toList());
-		return styleDTOList;
+		List<StyleDTO> list = new ArrayList<>();
+		for(StyleDTO dto : styleDTOList) {
+			List<LikesDTO> likeList = ls.listByStyleNum(dto.getStyleNum());
+			dto.setLikesList(likeList);
+			list.add(dto);
+		}
+		return list;
 	}
 	
 	//게시판 상세보기 출력
@@ -119,20 +151,18 @@ public class StyleService {
 	}
 	
 	//게시판 수정 
-	public void edit(Style style) throws AddException{
-		Style editStyle = style;
-		Long styleNum = editStyle.getStyleNum();
-		List<StyleTag> editTagList = editStyle.getTagList();
-		Optional<Style> optS = sr.findById(styleNum);
-		Style originStyle = optS.get();
+	public void edit(List<StyleTagDTO> list) throws AddException{
+		StyleTagDTO st= list.get(0);
+		Long styleNum = st.getSte().getStyleNum();
 		str.deleteByStyleNum(styleNum);
-		StyleTag editTag = new StyleTag();
-		for(StyleTag t : editTagList) {
+		Optional<Style> optS= sr.findById(styleNum);
+		Style s = optS.get();
+		for(StyleTagDTO t : list) {
+			String hashName = t.getSte().getHashName();
 			StyleTagEmbedded ste = new StyleTagEmbedded();
-			ste.setHashName(t.getSte().getHashName());
-			editTag.setSte(ste);
-			editTag.setStyle(originStyle);
-			str.save(editTag);
+			ste.setHashName(hashName);
+			StyleTag tag= new StyleTag(ste,s);
+			str.save(tag);
 		}
 	}
 	

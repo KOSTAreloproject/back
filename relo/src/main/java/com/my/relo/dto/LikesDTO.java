@@ -1,5 +1,6 @@
 package com.my.relo.dto;
 
+import com.my.relo.entity.Likes;
 import com.my.relo.entity.LikesEmbedded;
 
 import lombok.AllArgsConstructor;
@@ -13,4 +14,7 @@ public class LikesDTO {
 	
 	private LikesEmbedded le = new LikesEmbedded();
 
+	public Likes toEntity() {
+		return Likes.builder().le(le).build();
+	}
 }

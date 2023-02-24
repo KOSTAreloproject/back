@@ -33,16 +33,21 @@ public class LikesService {
 	
 	//좋아요 +1 
 	public void plusLikes(Long mNum, Long styleNum) throws AddException{
-		Likes like = new Likes();
+		LikesDTO likeDTO = new LikesDTO();
 		LikesEmbedded le = new LikesEmbedded();
 		le.setMNum(mNum);
 		le.setStyleNum(styleNum);
-		like.setLe(le);
+		likeDTO.setLe(le);
+		Likes like = likeDTO.toEntity();
 		lr.save(like);
 	}
 	
 	//좋아요 -1
-	public void minusLikes(Long mNum, Long styleNum) throws RemoveException{
+	public void minusLikes(Long mNum, Long styleNum) throws RemoveException, FindException{
+		Likes l = lr.findBymNumAndStyleNum(mNum, styleNum);
+		if(l == null) {
+		  throw new FindException();
+		}
 		lr.deleteLikes(styleNum, mNum);
 	}
 }

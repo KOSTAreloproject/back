@@ -21,7 +21,7 @@ public interface StyleRepository extends CrudRepository<Style, Long>{
 	//좋아요 순으로 게시판 목록 출력하기 
 	@Query(value = "select s.*\n"
 			+ "from style s \n"
-			+ "    inner join(\n"
+			+ "    left join(\n"
 			+ "        select l.style_num\n"
 			+ "        from likes l\n"
 			+ "        group by l.style_num\n"
@@ -45,4 +45,5 @@ public interface StyleRepository extends CrudRepository<Style, Long>{
 	@Transactional
 	@Query(value = "UPDATE style s SET s.style_cnt=s.style_cnt+1 WHERE s.style_num=:styleNum", nativeQuery = true)
 	public void updateCnt(Long styleNum);
+
 }

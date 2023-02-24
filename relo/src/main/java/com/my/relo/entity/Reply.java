@@ -1,6 +1,6 @@
 package com.my.relo.entity;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -22,12 +22,11 @@ import org.hibernate.annotations.DynamicUpdate;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor
+@Getter @NoArgsConstructor @AllArgsConstructor
 @DynamicUpdate
 @Entity 
 @Table(name = "reply")
@@ -56,9 +55,9 @@ public class Reply {
 	private String repContent;
 	
 	@JsonFormat(timezone = "Asia/Seoul", pattern = "yyyy-MM-dd HH:mm:ss")
-	@Column(name = "rep_date")
 	@CreationTimestamp
-	private Date repDate;
+	@Column(name = "rep_date")
+	private LocalDateTime repDate;
 	
 	@ManyToOne
 	@JoinColumn(name = "rep_parent")
@@ -70,4 +69,13 @@ public class Reply {
 				)
 	private List<Reply> children;
 	
+	@Builder
+	public Reply(Long repNum, Style style, Member member, String repContent, Reply replyParent,LocalDateTime repDate) {
+		this.repNum = repNum;
+		this.style = style;
+		this.member = member;
+		this.repContent = repContent;
+		this.replyParent = replyParent;
+		this.repDate = repDate;
+	}
 }

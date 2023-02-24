@@ -23,17 +23,17 @@ public class AddressService {
 	@Autowired
 	ModelMapper modelMapper;
 	
-	//주소 추가
-	public void write(Address address) throws AddException{
-		Integer type = address.getAddrType();
+	//주소 추가 - 수정 
+	public void write(AddressDTO addrDTO) throws AddException{
+		Integer type = addrDTO.getAddrType();
 		if(type == 0) {
-			Address defaultaddr = ar.findByAddrType(address.getMNum());
+			Address defaultaddr = ar.findByAddrType(addrDTO.getMNum());
 			if(defaultaddr != null) {
-				defaultaddr.setAddrType(1);
-				ar.save(defaultaddr);
+				ar.updateAddrType(defaultaddr.getAddrNum());
 			}
 		}
-		ar.save(address);
+		Address a = addrDTO.toEntity();
+		ar.save(a);
 	}
 	
 	//해당 주소 삭제 
@@ -41,29 +41,6 @@ public class AddressService {
 		ar.deleteById(addrNum);
 	}
 	
-	//주소 수정
-	public void updateByAddrNum(Address address) throws FindException{
-		Optional<Address> optA = ar.findById(address.getAddrNum());
-		Address a = optA.get();
-		
-		a.setAddr(address.getAddr());
-		a.setAddrDetail(address.getAddrDetail());
-		a.setAddrName(address.getAddrName());
-		a.setAddrPostNum(address.getAddrPostNum());
-		a.setAddrRecipient(address.getAddrRecipient());
-		a.setAddrTel(address.getAddrTel());
-		a.setAddrType(address.getAddrType());
-		Integer type = a.getAddrType();
-		if(type == 0) {
-			Address defaultaddr = ar.findByAddrType(a.getMNum());
-			if(defaultaddr != null) {
-				defaultaddr.setAddrType(1);
-				ar.save(defaultaddr);
-			}
-		}
-		ar.save(a);
-	}
-
 	//해당 회원 주소록 리스트 출력 
 	public List<AddressDTO> findByMNum(Long mNum) throws FindException{
 		List<Address> addrList = ar.findBymNum(mNum);
@@ -75,7 +52,8 @@ public class AddressService {
 	//주소 번호로 해당 주소 출력
 	public AddressDTO findByAddrNum(Long addrNum) throws FindException{
 		Optional<Address> addr = ar.findById(addrNum);
-		AddressDTO addrDTO = modelMapper.map(addr, AddressDTO.class);
+		Address a = addr.get();
+		AddressDTO addrDTO = modelMapper.map(a, AddressDTO.class);
 		return addrDTO;
 	}
 	

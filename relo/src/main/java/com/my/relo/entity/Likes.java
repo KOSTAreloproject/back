@@ -4,13 +4,11 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor
+@Getter @NoArgsConstructor
 @Entity 
 @Table(name = "likes")
 public class Likes {
@@ -19,5 +17,9 @@ public class Likes {
 	 */
 	@EmbeddedId
 	private LikesEmbedded le = new LikesEmbedded();
-
+	
+	@Builder
+	public Likes(LikesEmbedded le) {
+		this.le = le;
+	}
 }
