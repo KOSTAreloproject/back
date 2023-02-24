@@ -27,34 +27,61 @@ public class ZzimController {
 	@Autowired
 	private ZzimService service;
 
-//	@GetMapping(value = "list", produces = MediaType.APPLICATION_JSON_VALUE)
-//	public ResponseEntity<?> myZzimList(@RequestParam Long mNum) throws FindException {
-//		List<ZzimDTO> list = service.readZzimList(mNum);
-//		return new ResponseEntity<>(list, HttpStatus.OK);
-//	}
-
+	// 찜 목록 보기
 	@GetMapping(value = "list", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> MyZzimList(HttpSession session) throws FindException {
-		Long mNum = (Long) session.getAttribute("logined");
+	public ResponseEntity<?> myZzimList(@RequestParam Long mNum) throws FindException {
 		List<ZzimDTO> list = service.readZzimList(mNum);
 		return new ResponseEntity<>(list, HttpStatus.OK);
 	}
 
-	@PostMapping(value = "list", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> addMyZzimList(HttpSession session, @RequestParam Long pNum) throws AddException {
+//	@GetMapping(value = "list", produces = MediaType.APPLICATION_JSON_VALUE)
+//	public ResponseEntity<?> MyZzimList(HttpSession session) throws FindException {
+//		Long mNum = (Long) session.getAttribute("logined");
+//		List<ZzimDTO> list = service.readZzimList(mNum);
+//		return new ResponseEntity<>(list, HttpStatus.OK);
+//	}
+
+	// 찜 추가
+	@PostMapping(value = "add", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> addMyZzimList(HttpSession session, @RequestParam(value = "pNum") Long pNum)
+			throws AddException {
 		Long mNum = (Long) session.getAttribute("logined");
 		service.createZzimList(mNum, pNum);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@DeleteMapping(value = "delete", produces = "text/html;charset=utf-8")
+//	@PostMapping(value = "add", produces = MediaType.APPLICATION_JSON_VALUE)
+//	public ResponseEntity<?> addMyZzimList(@RequestParam(value = "mNum") Long mNum,
+//			@RequestParam(value = "pNum") Long pNum) throws AddException {
+//		System.out.println(mNum + "+" + pNum);
+//		service.createZzimList(mNum, pNum);
+//		return new ResponseEntity<>(HttpStatus.OK);
+//	}
+
+	// 찜 삭제
+	@DeleteMapping(value = "del", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> delMyZzimList(HttpSession session, @RequestParam Long pNum) throws RemoveException {
 		Long mNum = (Long) session.getAttribute("logined");
-		service.deleteZzimList(mNum, pNum);
+		try {
+			service.deleteZzimList(mNum, pNum);
+		} catch (RemoveException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	public void delZzimListAll() throws RemoveException {
-		service.deleteZzimAll();
-	}
+//	@DeleteMapping(value = "del", produces = MediaType.APPLICATION_JSON_VALUE)
+//	public ResponseEntity<?> delMyZzimList(@RequestParam(value = "mNum") Long mNum,
+//			@RequestParam(value = "pNum") Long pNum) throws AddException {
+//		System.out.println(mNum + "+" + pNum);
+//		try {
+//			service.deleteZzimList(mNum, pNum);
+//		} catch (RemoveException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return new ResponseEntity<>(HttpStatus.OK);
+//	}
+
 }

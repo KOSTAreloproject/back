@@ -12,13 +12,6 @@ import com.my.relo.entity.Zzim;
 import com.my.relo.entity.ZzimEmbedded;
 
 public interface ZzimRepository extends JpaRepository<Zzim, ZzimEmbedded> {
-	/// JPQL , 일반 SQL이 아닌 JPQL문법으로 작성
-	// SELECT 컬럼명도 DB의 테이블명이 아닌 엔터티의 멤버변수 명으로 적음
-	// FROM 엔터티명, DB의 테이블명이 아님, @Entity에 name이 지정되어 있지 않다면 클래스 이름이 자동 지정됨
-	// 대소문자 구분 : 엔터티명과 속성명은 대소문자를 구분한다 하지만 JPQL문법 키워드는 대소문자를 구분하지 않는다(SELECT, select
-	/// 특수기호 * 사용못함 엔터티명을 써주면 전체검색이 가능함 -> 엔터티에 별칭을 주고 별칭으로 전체검색
-	// nativeQuery = true 속성을 주면 일반SQL쿼리문을 사용할 수 있음
-	// NativeSQL 사용하기 : 반환형을 List타입으로 선언할수 없고 배열(Object[])형으로 선언해야함
 	/**
 	 * 나의 찜목록을 본다
 	 * 
@@ -34,6 +27,7 @@ public interface ZzimRepository extends JpaRepository<Zzim, ZzimEmbedded> {
 
 	/**
 	 * 나의 찜목록에 추가한다.
+	 * 
 	 * @param mNum : 회원번호
 	 * @param pNum : 상품번호
 	 */
@@ -44,6 +38,7 @@ public interface ZzimRepository extends JpaRepository<Zzim, ZzimEmbedded> {
 
 	/**
 	 * 나의 찜목록에서 삭제한다.
+	 * 
 	 * @param mNum : 회원번호
 	 * @param pNum : 상품번호
 	 */
@@ -51,5 +46,15 @@ public interface ZzimRepository extends JpaRepository<Zzim, ZzimEmbedded> {
 	@Transactional
 	@Query(value = "delete from zzim where m_num =:mNum and p_num=:pNum", nativeQuery = true)
 	void deleteZzim(@Param("mNum") Long mNum, @Param("pNum") Long pNum);
+
+	/**
+	 * 상품이 삭제되었을 때 모든 회원에게서 찜을 삭제한다
+	 * 
+	 * @param pNum : 상품번호
+	 */
+	@Modifying
+	@Transactional
+	@Query(value = "delete from zzim where p_num=:pNum", nativeQuery = true)
+	void deleteZzimProd(@Param("pNum") Long pNum);
 
 }
