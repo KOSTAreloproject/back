@@ -157,7 +157,7 @@ class StockRepositoryTest {
 	void selectBySReturnTest() {
 		Iterable<Stock> all = sr.findAll();
 		all.forEach((s)->{
-			Pageable pageable = PageRequest.of(0,5,Sort.by("s_num"));  //3개씩 페이징
+			Pageable pageable = PageRequest.of(0,5,Sort.by("s_num"));  //5개씩 페이징
 			List<Object[]> sList = sr.selectBySReturn(3,pageable);
 			List<StockDTO> list = new ArrayList<>();
 			for (Object[] obj : sList) {
