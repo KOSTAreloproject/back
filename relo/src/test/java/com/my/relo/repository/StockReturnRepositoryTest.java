@@ -36,22 +36,23 @@ class StockReturnRepositoryTest {
 		Optional<Stock> optS1 = sr.findById(3L);
 		Stock s1 = optS1.get();
 		
-		
-		StockReturn stockreturn = new StockReturn();
-		
-		stockreturn.setAddr(a1);
-		stockreturn.setS(s1);
-		stockreturn.setSNum(s1.getSNum());
-		
 		UUID u = UUID.randomUUID();
-		stockreturn.setStdTrackingInfo(String.valueOf(u));
+		
+		
+		StockReturn stockreturn = StockReturn.builder()
+		.sNum(s1.getSNum())
+		.s(s1)
+		.addr(a1)
+		.stdTrackingInfo(String.valueOf(u))
+		.build();
+		
 		
 		srr.save(stockreturn);	
 	}
 	
 	@Test
 	void StockReturnDelTest() {	
-		Optional<Stock> optS1 = sr.findById(1L);
+		Optional<Stock> optS1 = sr.findById(3L);
 		Stock s1 = optS1.get();
 
 		srr.deleteById(s1.getSNum());

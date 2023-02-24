@@ -27,6 +27,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -35,9 +36,7 @@ import lombok.ToString;
 @Entity
 @ToString
 @Getter
-@Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "product")
 @DynamicInsert
 @DynamicUpdate
@@ -78,6 +77,15 @@ public class Product {
 	
 	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
 	private List<Zzim> Zzim;
+
+	@Builder
+	public Product(LocalDate pEndDate, Integer pStatus, Stock stock, Long mNum) {
+		this.pEndDate = pEndDate;
+		this.pStatus = pStatus;
+		this.stock = stock;
+		this.mNum = mNum;
+	}
     
+	
     
 }

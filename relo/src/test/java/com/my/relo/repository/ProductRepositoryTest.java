@@ -40,18 +40,17 @@ class ProductRepositoryTest {
 		Member m1 = optM1.get();
 		Optional<Stock> optS1 = sr.findById(11L);
 		Stock s1 = optS1.get();
-
-		Product p = new Product();
-
-		p.setMNum(m1.getMNum());
-
+		
 		Integer sHopeDays = s1.getSHopeDays(); // 일 계산
 		LocalDate pEndDate = LocalDate.now().plusDays(sHopeDays);
-		p.setPEndDate(pEndDate);
 
-		p.setStock(s1);
+		Product p = Product.builder()
+		.pEndDate(pEndDate)
+		.pStatus(4)
+		.stock(s1)
+		.mNum(m1.getMNum())
+		.build();
 
-		p.setPStatus(4);
 
 		pr.save(p);
 	}

@@ -17,6 +17,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,9 +26,9 @@ import lombok.ToString;
 @Entity
 @Table(name = "stock")
 @Getter
-@Setter
+//@Setter
 @NoArgsConstructor
-@AllArgsConstructor
+//@AllArgsConstructor
 @DynamicInsert
 @DynamicUpdate
 @ToString
@@ -84,6 +85,39 @@ public class Stock {
     @ColumnDefault(value = "1")
     @Column(name = "s_status")
     private Integer sStatus;
+
+    @Builder
+	public Stock(Member member, Sizes sizes, String sBrand, String sName, Integer sOriginPrice, String sColor,
+			String sType, Integer sHopeDays, String sellerComment) {
+		this.member = member;
+		this.sizes = sizes;
+		this.sBrand = sBrand;
+		this.sName = sName;
+		this.sOriginPrice = sOriginPrice;
+		this.sColor = sColor;
+		this.sType = sType;
+		this.sHopeDays = sHopeDays;
+		this.sellerComment = sellerComment;
+	}
+    
+ 
+    public void UpdateStockByAdmin(String managerComment, String sGrade,Integer sStatus){
+    	this.managerComment = managerComment;
+    	this.sGrade = sGrade;
+    	this.sStatus = sStatus;
+    }
+
+    
+    
+    public void UpdateStockByMember(Integer sHopePrice, Integer sStatus){
+    	this.sHopePrice = sHopePrice;
+    	this.sStatus = sStatus;
+    }
+    
+    public void updateByCancleSStatus5(Integer sStatus){
+    	this.sStatus = sStatus;
+    }
+
     
     
 }

@@ -46,16 +46,19 @@ class StockRepositoryTest {
 		Member m1 = optM1.get();
 		Optional<Sizes> optS1 = sir.findById(120L);
 		Sizes si1 = optS1.get();
-		Stock s = new Stock();
-		s.setSBrand("나이키");
-		s.setSColor("흰색");
-		s.setSHopeDays(3);
-		s.setSName("조던1");
-		s.setSOriginPrice(5000);
-		s.setMember(m1);
-		s.setSellerComment("새제품!");
-		s.setSizes(si1);
-		s.setSType("신발");
+		
+		Stock s = Stock.builder()
+		.member(m1)
+		.sizes(si1)
+		.sBrand("나이키")
+		.sName("조던1")
+		.sOriginPrice(5000)
+		.sColor("흰색")
+		.sType("신발")
+		.sHopeDays(3)
+		.sellerComment("새제품")
+		.build();
+		
 		sr.save(s);
 	}
 	
@@ -64,19 +67,16 @@ class StockRepositoryTest {
 	void StockAdd2Test() {
 		Optional<Stock> optS1 = sr.findById(14L);
 		Stock s = optS1.get();
-		s.setManagerComment("검수결과:정품,특이사항:없음");
-		s.setSGrade("S");
-		s.setSStatus(2);
+		s.UpdateStockByAdmin("검수결과:정품,특이사항:없음", "S" ,2);
+
 		sr.save(s);
 	}
 	
 	@Test
 	void StockBulTest() {
-		Optional<Stock> optS1 = sr.findById(1L);
+		Optional<Stock> optS1 = sr.findById(14L);
 		Stock s = optS1.get();
-		s.setManagerComment("검수결과:가품");
-		s.setSGrade("불");
-		s.setSStatus(5);
+		s.UpdateStockByAdmin("검수결과:가품", "불", 5);
 		sr.save(s);
 	}
 	
@@ -84,8 +84,7 @@ class StockRepositoryTest {
 	void StockAdd3Test() {
 		Optional<Stock> optS1 = sr.findById(14L);
 		Stock s = optS1.get();
-		s.setSHopePrice(8000);
-		s.setSStatus(3);
+		s.UpdateStockByMember(8000, 3);
 		sr.save(s);
 	}
 	
@@ -198,9 +197,9 @@ class StockRepositoryTest {
 	
 	@Test
 	void updateByCancleSStatus5Test() {
-		Optional<Stock> optS1 = sr.findById(3L);
+		Optional<Stock> optS1 = sr.findById(2L);
 		Stock s = optS1.get();
-		s.setSStatus(5);
+		s.updateByCancleSStatus5(5);
 		sr.save(s);
 	}
 	

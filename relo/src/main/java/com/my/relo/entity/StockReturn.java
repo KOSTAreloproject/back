@@ -20,15 +20,14 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @DynamicInsert
 @DynamicUpdate
 @Table(name = "stock_return")
@@ -58,5 +57,14 @@ public class StockReturn {
 	@ColumnDefault(value = "SYSDATE")
 	@Column(name = "std_start_date", nullable = false)
 	private LocalDate stdStartDate;
+
+	@Builder
+	public StockReturn(Long sNum, Stock s, Address addr, String stdTrackingInfo) {
+		this.sNum = sNum;
+		this.s = s;
+		this.addr = addr;
+		this.stdTrackingInfo = stdTrackingInfo;
+	}
+	
 	
 }
