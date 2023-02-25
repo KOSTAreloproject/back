@@ -53,7 +53,7 @@ public class StyleService {
 	 * @param styleDTO
 	 * @throws AddException
 	 */
-	public void write(StyleDTO styleDTO) throws AddException{
+	public Long write(StyleDTO styleDTO) throws AddException{
 		List<StyleTagDTO> tagList = styleDTO.getTagList();
 		MemberDTO m = styleDTO.getMember();
 		Style style = styleDTO.toEntity(m);
@@ -67,6 +67,7 @@ public class StyleService {
 			StyleTag tag= new StyleTag(ste,s);
 			str.save(tag);
 		}
+		return s.getStyleNum();
 	}
 	/**
 	 * 게시판 삭제 후 나머지 댓글, 좋아요, 해시태그 삭제 

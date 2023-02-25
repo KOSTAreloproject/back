@@ -139,13 +139,6 @@ public class StyleController {
 		StyleDTO s = new StyleDTO();
 		s.setMember(m);
 		
-		String saveDirectory = "/Users/skyleeb95/Downloads/files";
-		String fileName = "s_"+logined+".jpeg";
-		
-		File file = new File(saveDirectory, fileName);
-		
-		f.transferTo(file);
-		
 		List<StyleTagDTO> tagList = new ArrayList<>();
 		StringTokenizer stk = new StringTokenizer(styleContent,"#");
 		while(stk.hasMoreTokens()) {
@@ -156,7 +149,14 @@ public class StyleController {
 			tagList.add(tag);
 			}
 		s.setTagList(tagList);
-		service.write(s);
+
+		Long styleNum = service.write(s);
+		String saveDirectory = "/Users/skyleeb95/Downloads/files";
+		String fileName = "s_"+styleNum+".jpeg";
+		
+		File file = new File(saveDirectory, fileName);
+		
+		f.transferTo(file);
 		
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
@@ -174,18 +174,19 @@ public class StyleController {
 	@PostMapping(value = "update/{styleNum}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> update(@PathVariable("styleNum")Long styleNum,
 															String styleContent,
-															@RequestPart(value = "f",required = false)MultipartFile f) throws AddException, IllegalStateException, IOException, FindException{
+															@RequestPart MultipartFile f) throws AddException, IllegalStateException, IOException, FindException{
 		Long logined = 2L;
 		
 		String saveDirectory = "/Users/skyleeb95/Downloads/files";
-		String fileName = "s_"+logined+".jpeg";
-		File file = new File(saveDirectory, fileName);
+		String originFileName = "s_"+styleNum+".jpeg";
+		File originFile = new File(saveDirectory, originFileName);
 		
-		if(file.exists()) {
-			file.delete();
+		if(originFile.exists()) {
+			originFile.delete();
 		}
-		File nFile = new File(saveDirectory, fileName);
-//		f.transferTo(nFile);
+		
+		File newFile = new File(saveDirectory, originFileName);
+		f.transferTo(newFile);
 		
 		StyleDTO s = new StyleDTO();
 		List<StyleTagDTO> tagList = new ArrayList<>();
@@ -213,6 +214,15 @@ public class StyleController {
 	 */
 	@DeleteMapping(value = "{styleNum}",produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> delete(@PathVariable("styleNum")Long styleNum) throws RemoveException, FindException{
+		
+		String saveDirectory = "/Users/skyleeb95/Downloads/files";
+		String originFileName = "s_"+styleNum+".jpeg";
+		File originFile = new File(saveDirectory, originFileName);
+		
+		if(originFile.exists()) {
+			originFile.delete();
+		}
+		
 		service.deleteByStyleNum(styleNum);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
