@@ -1,7 +1,6 @@
 package com.my.relo.service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -23,7 +22,11 @@ public class AddressService {
 	@Autowired
 	ModelMapper modelMapper;
 	
-	//주소 추가 - 수정 
+	/**
+	 * 주소 추가 OR 수정 
+	 * @param addrDTO
+	 * @throws AddException
+	 */
 	public void write(AddressDTO addrDTO) throws AddException{
 		Integer type = addrDTO.getAddrType();
 		if(type == 0) {
@@ -36,12 +39,26 @@ public class AddressService {
 		ar.save(a);
 	}
 	
-	//해당 주소 삭제 
-	public void deleteByAddrNum(Long addrNum) throws RemoveException{
+	/**
+	 * 해당 주소 삭제 
+	 * @param addrNum : 주소 번호 
+	 * @throws RemoveException
+	 * @throws FindException 
+	 */
+	public void deleteByAddrNum(Long addrNum) throws RemoveException, FindException{
+	    Address a = ar.findByAddrNum(addrNum);
+	    if(a == null) {
+	    	 throw new FindException("해당하는 주소가 없습니다.");
+	    }
 		ar.deleteById(addrNum);
 	}
 	
-	//해당 회원 주소록 리스트 출력 
+	/**
+	 * 회원 주소록 리스트 출력 
+	 * @param mNum : 회원 번호 
+	 * @return
+	 * @throws FindException
+	 */
 	public List<AddressDTO> findByMNum(Long mNum) throws FindException{
 		List<Address> addrList = ar.findBymNum(mNum);
 		List<AddressDTO> addrDTOList =
@@ -49,10 +66,17 @@ public class AddressService {
 		return addrDTOList;
 	}
 	
-	//주소 번호로 해당 주소 출력
+	/**
+	 * 해당 주소 상세 출력 
+	 * @param addrNum : 주소 번호 
+	 * @return
+	 * @throws FindException
+	 */
 	public AddressDTO findByAddrNum(Long addrNum) throws FindException{
-		Optional<Address> addr = ar.findById(addrNum);
-		Address a = addr.get();
+		Address a = ar.findByAddrNum(addrNum);
+		if(a == null) {
+		  	 throw new FindException("해당하는 주소가 없습니다.");
+		}
 		AddressDTO addrDTO = modelMapper.map(a, AddressDTO.class);
 		return addrDTO;
 	}

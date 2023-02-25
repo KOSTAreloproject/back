@@ -23,15 +23,30 @@ public class LikesService {
 	@Autowired
 	ModelMapper modelMapper;
 	
-	//게시판별 좋아요 리스트 출력
+	/**
+	 * 게시판별 좋아요 리스트 출력 
+	 * @param styleNum : 스타일 번호 
+	 * @return List<LikesDTO> 
+	 * @throws FindException
+	 */
 	public List<LikesDTO> listByStyleNum(Long styleNum) throws FindException{
 		List<Likes> likesList = lr.ListByStyleNum(styleNum);
+		
+		if(likesList == null) {
+			throw new FindException(" 존재하지 않습니다.");
+		}
+		
 		List<LikesDTO> likesDTOList = 
 				likesList.stream().map(likes -> modelMapper.map(likes, LikesDTO.class)).collect(Collectors.toList());
 		return likesDTOList;
 	}
 	
-	//좋아요 +1 
+	/**
+	 * 좋아요 +1 추가 
+	 * @param mNum : 회원 번호 
+	 * @param styleNum : 스타일 번호 
+	 * @throws AddException
+	 */
 	public void plusLikes(Long mNum, Long styleNum) throws AddException{
 		LikesDTO likeDTO = new LikesDTO();
 		LikesEmbedded le = new LikesEmbedded();
@@ -42,12 +57,19 @@ public class LikesService {
 		lr.save(like);
 	}
 	
-	//좋아요 -1
+	/**
+	 * 좋아요 삭제 
+	 * @param mNum : 회원 번호 
+	 * @param styleNum : 스타일 번호 
+	 * @throws FindException
+	 */
 	public void minusLikes(Long mNum, Long styleNum) throws RemoveException, FindException{
-		Likes l = lr.findBymNumAndStyleNum(mNum, styleNum);
-		if(l == null) {
-		  throw new FindException();
+		
+		Likes l= lr.findBymNumAndStyleNum(mNum, styleNum);
+		if(l != null) {
+			throw new FindException("존재하지 않습니다.");
 		}
+		
 		lr.deleteLikes(styleNum, mNum);
 	}
 }

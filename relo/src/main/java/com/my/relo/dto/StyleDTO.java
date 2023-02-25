@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.my.relo.entity.Member;
 import com.my.relo.entity.Style;
 
@@ -18,13 +19,14 @@ public class StyleDTO {
 	
 	private Long styleNum;
 	
-	private Member member;
+	private MemberDTO member;
 	
 	@JsonFormat(timezone = "Asia/Seoul", pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime styleDate;
 	
 	private int styleCnt;
 	
+	@JsonIgnoreProperties(value = "styleDTO")
 	private List<ReplyDTO> replyList;
 	
 	private List<StyleTagDTO> tagList;
@@ -37,7 +39,8 @@ public class StyleDTO {
 		this.date = DateTimeFormat.timesAgo(LocalDateTime);
 	}
 	
-	public Style toEntity() {
-		return Style.builder().member(member).build();
+	public Style toEntity(MemberDTO member) {
+		Member m = member.toEntity();
+		return Style.builder().member(m).build();
 	}
 }

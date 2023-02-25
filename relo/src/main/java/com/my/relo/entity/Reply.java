@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,10 +20,12 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -54,12 +57,13 @@ public class Reply {
 	@Column(name = "rep_content", nullable = false)
 	private String repContent;
 	
-	@JsonFormat(timezone = "Asia/Seoul", pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonSerialize(using = LocalDateTimeSerializer.class)
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
 	@CreationTimestamp
 	@Column(name = "rep_date")
 	private LocalDateTime repDate;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "rep_parent")
 	@ColumnDefault(value = "0")
 	private Reply replyParent;
@@ -69,13 +73,21 @@ public class Reply {
 				)
 	private List<Reply> children;
 	
-	@Builder
-	public Reply(Long repNum, Style style, Member member, String repContent, Reply replyParent,LocalDateTime repDate) {
+	public void updateReply(Long repNum, String repContent) {
 		this.repNum = repNum;
+		this.repContent = repContent;
+	}
+	
+	public Reply(Style style, Member member, String repContent) {
 		this.style = style;
 		this.member = member;
 		this.repContent = repContent;
+	}
+	
+	public Reply(Style style, Member member, Reply replyParent, String repContent) {
+		this.style = style;
+		this.member = member;
 		this.replyParent = replyParent;
-		this.repDate = repDate;
+		this.repContent = repContent;
 	}
 }

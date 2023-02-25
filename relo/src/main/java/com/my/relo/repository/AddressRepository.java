@@ -27,4 +27,8 @@ public interface AddressRepository extends CrudRepository<Address, Long> {
 	@Transactional
 	@Query(value="UPDATE ADDRESS A SET A.ADDR_TYPE = 1 WHERE ADDR_NUM = :addrNum", nativeQuery = true)
 	public void updateAddrType(@Param("addrNum")Long addrNum);
+	
+	//addrNum으로 주소 출력
+	@Query(value="SELECT * FROM address WHERE addr_num = :addrNum", nativeQuery = true)
+	public Address findByAddrNum(@Param("addrNum")Long addrNum);
 }
