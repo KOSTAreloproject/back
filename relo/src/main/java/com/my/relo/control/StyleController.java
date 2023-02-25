@@ -174,19 +174,8 @@ public class StyleController {
 	@PostMapping(value = "update/{styleNum}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> update(@PathVariable("styleNum")Long styleNum,
 															String styleContent,
-															@RequestPart MultipartFile f) throws AddException, IllegalStateException, IOException, FindException{
+															@RequestPart(value = "f",required = false) MultipartFile f) throws AddException, IllegalStateException, IOException, FindException{
 		Long logined = 2L;
-		
-		String saveDirectory = "/Users/skyleeb95/Downloads/files";
-		String originFileName = "s_"+styleNum+".jpeg";
-		File originFile = new File(saveDirectory, originFileName);
-		
-		if(originFile.exists()) {
-			originFile.delete();
-		}
-		
-		File newFile = new File(saveDirectory, originFileName);
-		f.transferTo(newFile);
 		
 		StyleDTO s = new StyleDTO();
 		List<StyleTagDTO> tagList = new ArrayList<>();
@@ -202,6 +191,18 @@ public class StyleController {
 		s.setStyleNum(styleNum);
 		service.edit(s);
 		
+		if(f != null) {
+			String saveDirectory = "/Users/skyleeb95/Downloads/files";
+			String originFileName = "s_"+styleNum+".jpeg";
+			File originFile = new File(saveDirectory, originFileName);
+
+			if(originFile.exists()) {
+				originFile.delete();
+			}
+
+			File newFile = new File(saveDirectory, originFileName);
+			f.transferTo(newFile);
+		}
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
