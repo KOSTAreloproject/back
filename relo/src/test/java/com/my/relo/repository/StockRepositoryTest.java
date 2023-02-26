@@ -1,11 +1,7 @@
 package com.my.relo.repository;
 
-import static org.junit.jupiter.api.Assumptions.*;
-
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +16,6 @@ import org.springframework.data.domain.Sort;
 
 import com.my.relo.dto.StockDTO;
 import com.my.relo.entity.Member;
-import com.my.relo.entity.Product;
 import com.my.relo.entity.Sizes;
 import com.my.relo.entity.Stock;
 
@@ -67,7 +62,7 @@ class StockRepositoryTest {
 	void StockAdd2Test() {
 		Optional<Stock> optS1 = sr.findById(14L);
 		Stock s = optS1.get();
-		s.UpdateStockByAdmin("검수결과:정품,특이사항:없음", "S" ,2);
+		s.updateStockByAdmin("검수결과:정품,특이사항:없음", "S" ,2);
 
 		sr.save(s);
 	}
@@ -76,7 +71,7 @@ class StockRepositoryTest {
 	void StockBulTest() {
 		Optional<Stock> optS1 = sr.findById(14L);
 		Stock s = optS1.get();
-		s.UpdateStockByAdmin("검수결과:가품", "불", 5);
+		s.updateStockByAdmin("검수결과:가품", "불", 5);
 		sr.save(s);
 	}
 	
@@ -84,7 +79,7 @@ class StockRepositoryTest {
 	void StockAdd3Test() {
 		Optional<Stock> optS1 = sr.findById(14L);
 		Stock s = optS1.get();
-		s.UpdateStockByMember(8000, 3);
+		s.updateStockByMember(8000, 3);
 		sr.save(s);
 	}
 	
@@ -154,9 +149,8 @@ class StockRepositoryTest {
 	@Test
 	//3. 관리자 상품등록 승인요청 목록 sStatus =2 AND 관리자 상품 최종 등록 목록  sStatus =3
 	void selectBySReturnTest() {
-		Iterable<Stock> all = sr.findAll();
-		all.forEach((s)->{
-			Pageable pageable = PageRequest.of(0,5,Sort.by("s_num"));  //5개씩 페이징
+
+			Pageable pageable = PageRequest.of(0, 5, Sort.by("s_num"));  //5개씩 페이징
 			List<Object[]> sList = sr.selectBySReturn(3,pageable);
 			List<StockDTO> list = new ArrayList<>();
 			for (Object[] obj : sList) {
@@ -171,7 +165,7 @@ class StockRepositoryTest {
 				list.add(dto);
 			}
 				logger.info(list.toString());
-		});
+
 		
 	}
 	
@@ -203,6 +197,19 @@ class StockRepositoryTest {
 		sr.save(s);
 	}
 	
-
+//	@Test
+//	void Test() {
+//		List<Object[]> sList = sr.findByMNum(2L);
+//		List<StockDTO> list = new ArrayList<>();
+//		for (Object[] obj : sList) {
+//			StockDTO dto = StockDTO.builder()
+//			.sNum(Long.valueOf(String.valueOf(obj[0])))
+//			.build();
+//				
+//			list.add(dto);
+//		}
+//		logger.info(list.toString());
+//	}
+	
 
 }

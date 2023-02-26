@@ -2,6 +2,9 @@ package com.my.relo.dto;
 
 import java.util.Date;
 
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Builder;
@@ -21,6 +24,7 @@ public class PInfoDTO {
 	
 	private Integer pStatus;
 	
+	@Temporal(TemporalType.DATE)
 	@JsonFormat(timezone = "Asia/Seoul", pattern = "yyyy-MM-dd")
 	private Date pEndDate;
 	

@@ -26,12 +26,12 @@ import lombok.ToString;
 @Entity
 @Table(name = "stock")
 @Getter
-//@Setter
 @NoArgsConstructor
-//@AllArgsConstructor
+@AllArgsConstructor
 @DynamicInsert
 @DynamicUpdate
 @ToString
+@Builder
 @SequenceGenerator(name = "stock_sequence_generator", // 제너레이터명
 sequenceName = "stock_seq", // 시퀀스명
 initialValue = 1, // 시작 값
@@ -86,22 +86,8 @@ public class Stock {
     @Column(name = "s_status")
     private Integer sStatus;
 
-    @Builder
-	public Stock(Member member, Sizes sizes, String sBrand, String sName, Integer sOriginPrice, String sColor,
-			String sType, Integer sHopeDays, String sellerComment) {
-		this.member = member;
-		this.sizes = sizes;
-		this.sBrand = sBrand;
-		this.sName = sName;
-		this.sOriginPrice = sOriginPrice;
-		this.sColor = sColor;
-		this.sType = sType;
-		this.sHopeDays = sHopeDays;
-		this.sellerComment = sellerComment;
-	}
-    
- 
-    public void UpdateStockByAdmin(String managerComment, String sGrade,Integer sStatus){
+
+    public void updateStockByAdmin(String managerComment, String sGrade,Integer sStatus){
     	this.managerComment = managerComment;
     	this.sGrade = sGrade;
     	this.sStatus = sStatus;
@@ -109,7 +95,7 @@ public class Stock {
 
     
     
-    public void UpdateStockByMember(Integer sHopePrice, Integer sStatus){
+    public void updateStockByMember(Integer sHopePrice, Integer sStatus){
     	this.sHopePrice = sHopePrice;
     	this.sStatus = sStatus;
     }

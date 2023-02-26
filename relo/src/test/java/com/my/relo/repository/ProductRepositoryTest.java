@@ -29,8 +29,6 @@ class ProductRepositoryTest {
 	@Autowired
 	private ProductRepository pr;
 
-	@Autowired
-	ModelMapper modelMapper;
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -84,11 +82,8 @@ class ProductRepositoryTest {
 		Optional<Member> optM1 = mr.findById(2L);
 		Member m1 = optM1.get();
 
-//		logger.info("m: "+m1.getId());
-
 		Optional<Product> optp1 = pr.findById(1L);
 		Product p1 = optp1.get();
-//		logger.info("p: "+p1.getPStatus());
 
 		List<Object[]> pinfo = pr.selectByIdProductDetail(m1.getMNum(), p1.getPNum());
 		List<PInfoDTO> list = new ArrayList<>();
@@ -106,9 +101,6 @@ class ProductRepositoryTest {
 			list.add(dto);
 		}
 		logger.info(list.toString());
-
-//		logger.info("pinfo: " + dto.getPStatus());
-
 	}
 
 	@Test

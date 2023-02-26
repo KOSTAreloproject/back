@@ -2,8 +2,8 @@ package com.my.relo.repository;
 
 import java.util.List;
 
-
 import org.springframework.data.domain.Pageable;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -11,6 +11,17 @@ import org.springframework.data.repository.query.Param;
 import com.my.relo.entity.Stock;
 
 public interface StockRepository extends CrudRepository<Stock, Long> {
+	
+//	@Transactional 
+//	@Modifying
+//	@Query(value = "update stock set s_grade = :sGrade, manager_comment = :managerComment,s_status=:sStatus where s_num = :sNum",nativeQuery=true)
+//	public void updateByAdmin(@Param("sGrade")String sGrade,@Param("managerComment")String managerComment,@Param("sStatus")Integer sStatus,@Param("sNum")Long sNum);
+//	
+//	@Transactional 
+//	@Modifying
+//	@Query(value = "update stock set s_hope_price = :sHopePrice,s_status=:sStatus where s_num = :sNum",nativeQuery=true)
+//	public void updateByHopePrice(@Param("sHopePrice")Integer sHopePrice,@Param("sStatus")Integer sStatus,@Param("sNum")Long sNum);
+	
 	
 	//2.판매자 마이페이지-> 판매내역 -> 판매대기
 	@Query(value = "select s.s_num,s.s_name,si.SIZE_CATEGORY_NAME ,s.s_status,s.s_grade,s.s_brand\r\n"
@@ -34,5 +45,6 @@ public interface StockRepository extends CrudRepository<Stock, Long> {
 	,nativeQuery = true)
 	public List<Object[]> selectByIdDeatil(@Param("sNum")Long sNum,@Param("mNum")Long mNum);
 	
-
+//	@Query(value = "select s_num from stock  where m_num=:mNum",nativeQuery = true)
+//	public List<Object[]> findByMNum(@Param("mNum")Long mNum);
 }
