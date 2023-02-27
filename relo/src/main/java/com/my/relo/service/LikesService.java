@@ -66,7 +66,7 @@ public class LikesService {
 	public void minusLikes(Long mNum, Long styleNum) throws RemoveException, FindException{
 		
 		Likes l= lr.findBymNumAndStyleNum(mNum, styleNum);
-		if(l != null) {
+		if(l == null) {
 			throw new FindException("존재하지 않습니다.");
 		}
 		

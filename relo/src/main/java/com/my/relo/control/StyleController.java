@@ -30,16 +30,22 @@ import com.my.relo.entity.StyleTagEmbedded;
 import com.my.relo.exception.AddException;
 import com.my.relo.exception.FindException;
 import com.my.relo.exception.RemoveException;
+import com.my.relo.repository.MemberRepository;
 import com.my.relo.repository.StyleTagRepository;
 import com.my.relo.service.StyleService;
 
 @RestController
 @RequestMapping("style/*")
 public class StyleController {
+	
 	@Autowired
 	private StyleService service;
+	
 	@Autowired
 	private StyleTagRepository str;
+	
+	@Autowired
+	private MemberRepository mr;
 	/**
 	 * 리스트 출력 
 	 * @param type 1: 최신순 2: 좋아요순 3: 조회수순 
@@ -122,22 +128,27 @@ public class StyleController {
 	 * @return
 	 * @throws AddException
 	 * @throws IOException 
+	 * @throws FindException 
 	 */
 	@PostMapping(value = "write")
 	public ResponseEntity<?> write(HttpSession session,
 									String styleContent, 
-									@RequestPart MultipartFile f) throws AddException, IOException {
+									@RequestPart(value = "f",required = false) MultipartFile f) throws AddException, IOException, FindException {
 		
 //		Long logined = (Long)session.getAttribute("logined");
 //		if(logined == null) {//로그인 안한 경우
 //			throw new AddException("로그인하세요");
 //		}
-		MemberDTO m = new MemberDTO();
+		
+		if(f == null) {
+			throw new FindException("파일이 없습니다.");
+		}
 		Long logined = 2L;
-		m.setMNum(logined);
+		MemberDTO mDTO = 
+					MemberDTO.builder().mNum(logined).build();
 		
 		StyleDTO s = new StyleDTO();
-		s.setMember(m);
+		s.setMember(mDTO);
 		
 		List<StyleTagDTO> tagList = new ArrayList<>();
 		StringTokenizer stk = new StringTokenizer(styleContent,"#");

@@ -46,9 +46,9 @@ public class ReplyController {
 //			throw new AddException("로그인하세요");
 //		}
 		Long logined = 1L;
-		
-		MemberDTO m = new MemberDTO();
-		m.setMNum(logined);
+	
+		MemberDTO m = 
+				MemberDTO.builder().mNum(logined).build();
 		ReplyDTO r = new ReplyDTO();
 		
 		StyleDTO s = new StyleDTO();

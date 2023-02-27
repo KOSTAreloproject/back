@@ -37,10 +37,19 @@ public class StyleDTO {
 	
 	public void setStyleDate(LocalDateTime LocalDateTime) {
 		this.date = DateTimeFormat.timesAgo(LocalDateTime);
-	}
+	} 
 	
 	public Style toEntity(MemberDTO member) {
-		Member m = member.toEntity();
-		return Style.builder().member(m).build();
+		Member m = Member.builder().id(member.getId())
+				.pwd(member.getPwd())
+				.birth(member.getBirth())
+				.email(member.getEmail())
+				.name(member.getName())
+				.tel(member.getTel())
+				.type(member.getType())
+				.mNum(member.getMNum())
+				.build();
+		Style entity = Style.builder().member(m).build();
+		return entity;
 	}
 }

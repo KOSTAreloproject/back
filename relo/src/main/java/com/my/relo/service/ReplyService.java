@@ -51,8 +51,7 @@ public class ReplyService {
 			rDTO.setRepContent(r.getRepContent());
 			Member m = r.getMember();
 			MemberDTO mDTO = new MemberDTO();
-			mDTO.setMNum(m.getMNum());
-			mDTO.setId(m.getId());
+			mDTO.builder().id(m.getId()).build();
 			rDTO.setMember(mDTO);
 			repDTOList.add(rDTO);
 		}

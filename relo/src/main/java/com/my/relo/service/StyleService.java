@@ -54,6 +54,7 @@ public class StyleService {
 	public Long write(StyleDTO styleDTO) throws AddException{
 		List<StyleTagDTO> tagList = styleDTO.getTagList();
 		MemberDTO m = styleDTO.getMember();
+		System.out.println("멤버 >>" +m.getMNum());
 		Style style = styleDTO.toEntity(m);
 		sr.save(style);
 		Optional<Style> optS1 = sr.findById(style.getStyleNum());
@@ -93,8 +94,13 @@ public class StyleService {
 				styleList.stream().map(style -> modelMapper.map(style, StyleDTO.class)).collect(Collectors.toList());
 		List<StyleDTO> list = new ArrayList<>();
 		for(StyleDTO dto : styleDTOList) {
+			Long styleNum = dto.getStyleNum();
+			Optional<Style> optS = sr.findById(styleNum);
+			Style s = optS.get();
+			MemberDTO mDTO = MemberDTO.builder().id(s.getMember().getId()).build();
 			List<LikesDTO> likeList = ls.listByStyleNum(dto.getStyleNum());
 			dto.setLikesList(likeList);
+			dto.setMember(mDTO);
 			list.add(dto);
 		}
 		return list;
@@ -111,8 +117,13 @@ public class StyleService {
 				styleList.stream().map(style -> modelMapper.map(style, StyleDTO.class)).collect(Collectors.toList());
 		List<StyleDTO> list = new ArrayList<>();
 		for(StyleDTO dto : styleDTOList) {
+			Long styleNum = dto.getStyleNum();
+			Optional<Style> optS = sr.findById(styleNum);
+			Style s = optS.get();
+			MemberDTO mDTO = MemberDTO.builder().id(s.getMember().getId()).build();
 			List<LikesDTO> likeList = ls.listByStyleNum(dto.getStyleNum());
 			dto.setLikesList(likeList);
+			dto.setMember(mDTO);
 			list.add(dto);
 		}
 		return list;
@@ -129,8 +140,13 @@ public class StyleService {
 				styleList.stream().map(style -> modelMapper.map(style, StyleDTO.class)).collect(Collectors.toList());
 		List<StyleDTO> list = new ArrayList<>();
 		for(StyleDTO dto : styleDTOList) {
+			Long styleNum = dto.getStyleNum();
+			Optional<Style> optS = sr.findById(styleNum);
+			Style s = optS.get();
+			MemberDTO mDTO = MemberDTO.builder().id(s.getMember().getId()).build();
 			List<LikesDTO> likeList = ls.listByStyleNum(dto.getStyleNum());
 			dto.setLikesList(likeList);
+			dto.setMember(mDTO);
 			list.add(dto);
 		}
 		return list;
@@ -147,8 +163,13 @@ public class StyleService {
 				styleList.stream().map(style -> modelMapper.map(style, StyleDTO.class)).collect(Collectors.toList());
 		List<StyleDTO> list = new ArrayList<>();
 		for(StyleDTO dto : styleDTOList) {
+			Long styleNum = dto.getStyleNum();
+			Optional<Style> optS = sr.findById(styleNum);
+			Style s = optS.get();
+			MemberDTO mDTO = MemberDTO.builder().id(s.getMember().getId()).build();
 			List<LikesDTO> likeList = ls.listByStyleNum(dto.getStyleNum());
 			dto.setLikesList(likeList);
+			dto.setMember(mDTO);
 			list.add(dto);
 		}
 		return list;
@@ -166,8 +187,13 @@ public class StyleService {
 				styleList.stream().map(style -> modelMapper.map(style, StyleDTO.class)).collect(Collectors.toList());
 		List<StyleDTO> list = new ArrayList<>();
 		for(StyleDTO dto : styleDTOList) {
+			Long styleNum = dto.getStyleNum();
+			Optional<Style> optS = sr.findById(styleNum);
+			Style s = optS.get();
+			MemberDTO mDTO = MemberDTO.builder().id(s.getMember().getId()).build();
 			List<LikesDTO> likeList = ls.listByStyleNum(dto.getStyleNum());
 			dto.setLikesList(likeList);
+			dto.setMember(mDTO);
 			list.add(dto);
 		}
 		return list;
@@ -185,9 +211,10 @@ public class StyleService {
 		Optional<Style> optS = sr.findById(styleNum);
 		Style style = optS.get();
 		StyleDTO sDTO = new StyleDTO();
-		MemberDTO mDTO1 = new MemberDTO();
-		mDTO1.setMNum(style.getMember().getMNum());
-		mDTO1.setId(style.getMember().getId());
+		MemberDTO mDTO1 = 
+				MemberDTO.builder().mNum(style.getMember().getMNum())
+						.id(style.getMember().getId()).build();
+		
 		sDTO.setMember(mDTO1);
 		sDTO.setStyleNum(style.getStyleNum());
 		sDTO.setStyleDate(style.getStyleDate());
@@ -198,13 +225,14 @@ public class StyleService {
 			ReplyDTO rDTO = new ReplyDTO();
 			
 			Member m = r.getMember();
-			MemberDTO mDTO = new MemberDTO();
-			mDTO.setId(m.getId());
+			MemberDTO mDTO =
+					MemberDTO.builder().id(m.getId()).build();
 			
 			rDTO.setRepNum(r.getRepNum());
 			rDTO.setRepContent(r.getRepContent());
 			rDTO.setRepDate(r.getRepDate());
 			rDTO.setMember(mDTO);
+			System.out.println("아이디 -> " + mDTO.getId());
 			
 			listDTO.add(rDTO);
 		}
