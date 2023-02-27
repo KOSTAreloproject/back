@@ -86,12 +86,12 @@ public class ProductController {
 	@PostMapping("EndDetailById")
 	public ResponseEntity<?> ProductEndDetailById(HttpSession session) throws FindException{
 		
-//		Long mNum = (Long) session.getAttribute("logined");
-//		if (mNum == null) {
-//			throw new FindException("로그인하세요");
-//		}
+		Long mNum = (Long) session.getAttribute("logined");
+		if (mNum == null) {
+			throw new FindException("로그인하세요");
+		}
 		
-		Long mNum = (long) 2;
+//		Long mNum = (long) 2;
 		List<PInfoDTO> list = productService.ProductEndDetailById(mNum);
 		
 	return new ResponseEntity<>(list,HttpStatus.OK);
