@@ -26,6 +26,7 @@ import com.my.relo.exception.AddException;
 import com.my.relo.exception.FindException;
 import com.my.relo.exception.RemoveException;
 import com.my.relo.repository.LikesRepository;
+import com.my.relo.repository.ReplyRepository;
 import com.my.relo.repository.StyleRepository;
 import com.my.relo.repository.StyleTagRepository;
 
@@ -39,6 +40,9 @@ public class StyleService {
 	
 	@Autowired
 	private LikesRepository lr;
+	
+	@Autowired
+	private ReplyRepository rr;
 	
 	@Autowired
 	private LikesService ls;
@@ -219,7 +223,7 @@ public class StyleService {
 		sDTO.setStyleNum(style.getStyleNum());
 		sDTO.setStyleDate(style.getStyleDate());
 		
-		List<Reply> list= style.getRepList();
+		List<Reply> list= rr.findByStyleNum(styleNum);
 		List<ReplyDTO> listDTO = new ArrayList<>();
 		for(Reply r: list) {
 			ReplyDTO rDTO = new ReplyDTO();
