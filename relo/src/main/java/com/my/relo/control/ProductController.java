@@ -1,12 +1,15 @@
 package com.my.relo.control;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,22 +41,22 @@ public class ProductController {
 	
 	}
 	
-	@PostMapping("listById")
-	public ResponseEntity<?> selectByIdProduct(HttpSession session) throws AddException{
+	@GetMapping("listById/{currentPage}")
+	public ResponseEntity<?> selectByIdProduct(HttpSession session,@PathVariable int currentPage) throws FindException{
 		
 		Long mNum = (Long) session.getAttribute("logined");
 		if (mNum == null) {
-			throw new AddException("로그인하세요");
+			throw new FindException("로그인하세요");
 		}
 		
 //		Long mNum = (long) 3;
-		List<PInfoDTO> list = productService.selectByIdProduct(mNum);
+		Map<String,Object> resultMap = productService.selectByIdProduct(mNum,currentPage);
 		
-	return new ResponseEntity<>(list,HttpStatus.OK);
+	return new ResponseEntity<>(resultMap,HttpStatus.OK);
 	
 	}
 	
-	@PostMapping("detailById")
+	@GetMapping("detailById")
 	public ResponseEntity<?> selectByIdProductDetail(HttpSession session,Long pNum) throws FindException{
 		
 		Long mNum = (Long) session.getAttribute("logined");
@@ -68,8 +71,8 @@ public class ProductController {
 	
 	}
 	
-	@PostMapping("EndListById")
-	public ResponseEntity<?> ProductEndListById(HttpSession session) throws FindException{
+	@GetMapping("EndListById/{currentPage}")
+	public ResponseEntity<?> ProductEndListById(HttpSession session,@PathVariable int currentPage) throws FindException{
 		
 		Long mNum = (Long) session.getAttribute("logined");
 		if (mNum == null) {
@@ -77,13 +80,13 @@ public class ProductController {
 		}
 		
 //		Long mNum = (long) 1;
-		List<PInfoDTO> list = productService.ProductEndListById(mNum);
+		Map<String,Object> resultMap = productService.ProductEndListById(mNum,currentPage);
 		
-	return new ResponseEntity<>(list,HttpStatus.OK);
+	return new ResponseEntity<>(resultMap,HttpStatus.OK);
 	
 	}
 	
-	@PostMapping("EndDetailById")
+	@GetMapping("EndDetailById")
 	public ResponseEntity<?> ProductEndDetailById(HttpSession session) throws FindException{
 		
 		Long mNum = (Long) session.getAttribute("logined");

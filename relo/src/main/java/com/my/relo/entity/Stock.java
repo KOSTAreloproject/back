@@ -35,7 +35,7 @@ import lombok.ToString;
 @SequenceGenerator(name = "stock_sequence_generator", // 제너레이터명
 sequenceName = "stock_seq", // 시퀀스명
 initialValue = 1, // 시작 값
-allocationSize = 1 // 할당할 범위 사이즈
+allocationSize = 1// 할당할 범위 사이즈
 )
 public class Stock {
 	

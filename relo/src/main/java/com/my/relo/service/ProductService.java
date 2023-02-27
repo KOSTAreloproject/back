@@ -3,10 +3,15 @@ package com.my.relo.service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.my.relo.dto.PInfoDTO;
@@ -69,13 +74,14 @@ public class ProductService {
 	 * @return
 	 * @throws AddException
 	 */
-	public List<PInfoDTO> selectByIdProduct(Long mNum) throws AddException {
+	public Map<String,Object> selectByIdProduct(Long mNum,int currentPage) throws FindException {
 
 		Optional<Member> optM1 = mr.findById(mNum);
 		Member m1 = optM1.get();
-
-		List<Object[]> pList = pr.selectByIdProduct(m1.getMNum());
-
+		
+		Pageable pageable = PageRequest.of(currentPage-1,10); 
+		Page<Object[]> PagePList = pr.selectByIdProduct(m1.getMNum(),pageable);
+		List<Object[]> pList = PagePList.getContent();
 		if (!pList.isEmpty()) {
 			List<PInfoDTO> list = new ArrayList<>();
 			for (Object[] obj : pList) {
@@ -85,9 +91,13 @@ public class ProductService {
 
 				list.add(dto);
 			}
-			return list;
+			Map<String,Object> resultMap = new HashMap<>();
+			resultMap.put("list", list);
+			resultMap.put("totalPageNum",PagePList.getTotalPages());
+			
+			return resultMap;
 		} else {
-			throw new AddException("등록된 상품이 없습니다.");
+			throw new FindException("등록된 상품이 없습니다.");
 		}
 	}
 
@@ -146,9 +156,11 @@ public class ProductService {
 	 * @return
 	 * @throws FindException
 	 */
-	public List<PInfoDTO> ProductEndListById(Long mNum) throws FindException {
-
-		List<Object[]> pList = pr.selectByEndProduct(mNum);
+	public Map<String,Object> ProductEndListById(Long mNum,int currentPage) throws FindException {
+		
+		Pageable pageable = PageRequest.of(currentPage-1,10);
+		Page<Object[]> pagePList = pr.selectByEndProduct(mNum,pageable);
+		List<Object[]> pList = pagePList.getContent();
 		
 		if(pList.isEmpty()) {
 			throw new FindException("등록된 상품이 없습니다.");
@@ -166,7 +178,11 @@ public class ProductService {
 			
 			list.add(dto);
 		}
-		return list;
+		Map<String,Object> resultMap = new HashMap<>();
+		resultMap.put("list", list);
+		resultMap.put("totalPageNum",pagePList.getTotalPages());
+		
+		return resultMap;
 	}
 	
 	/**

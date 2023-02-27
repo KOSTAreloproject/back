@@ -1,18 +1,19 @@
 package com.my.relo.service;
 
 import java.util.ArrayList;
-
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.my.relo.dto.StockDTO;
-
 import com.my.relo.entity.Member;
 import com.my.relo.entity.Sizes;
 import com.my.relo.entity.Stock;
@@ -39,7 +40,7 @@ public class StockService {
 	 * @param stock
 	 * @throws AddException
 	 */
-	public void StockAdd(StockDTO stock) throws AddException{
+	public Long StockAdd(StockDTO stock) throws AddException{
 		
 		Optional<Member> optM1 = mr.findById(stock.getMNum());
 		Member m = optM1.get();
@@ -59,6 +60,7 @@ public class StockService {
 				.sellerComment(stock.getSellerComment())
 				.build();
 		sr.save(s);
+		return s.getSNum();
 	}
 	
 	
@@ -70,8 +72,6 @@ public class StockService {
 	 * @throws AddException
 	 */
 	public void updateSetSStatus(StockDTO stock) throws AddException{
-		
-//		Member m = stock.getMNum();
 
 		Optional<Member> optM1 = mr.findById(stock.getMNum());
 
@@ -98,7 +98,7 @@ public class StockService {
 				}else {
 					throw new AddException("상품이 없습니다");
 				}
-			}else if(optM1.get().getType() == 2) {  //판매자
+			}else if(optM1.get().getType() == 0) {  //판매자
 				
 				if(optS1.isPresent()) {
 					
@@ -134,13 +134,16 @@ public class StockService {
 	/**
 	 * 판매자 마이페이지-> 판매내역 -> 판매대기
 	 * @param mNum
+	 * @param currentPage
 	 * @throws AddException
 	 */
-	public List<StockDTO> selectById(Long mNum) throws FindException{
+	public Map<String,Object> selectById(Long mNum,int currentPage) throws FindException{
 		Optional<Member> optM1 = mr.findById(mNum);
 		Member m1 = optM1.get();
 		
-		List<Object[]> sList = sr.selectById(m1.getMNum());
+		Pageable pageable = PageRequest.of(currentPage-1,10);  //10개씩 페이징
+		Page<Object[]> pageSList = sr.selectById(m1.getMNum(),pageable);
+		List<Object[]> sList = pageSList.getContent();
 		
 		List<StockDTO> list = new ArrayList<>();
 		for (Object[] obj : sList) {
@@ -155,7 +158,12 @@ public class StockService {
 				
 			list.add(dto);
 		}
-		return list;
+		
+		Map<String,Object> resultMap = new HashMap<>();
+		resultMap.put("list", list);
+		resultMap.put("totalPageNum",pageSList.getTotalPages());
+		
+		return resultMap;
 	}
 	
 	/**
@@ -198,12 +206,13 @@ public class StockService {
 	 * @return list
 	 * @throws AddException
 	 */
-	public List<StockDTO> selectBySstatus(Integer sStatus) throws FindException{
-		
-			Pageable pageable = PageRequest.of(0,5,Sort.by("s_num"));  //5개씩 페이징
-			List<Object[]> sList = sr.selectBySReturn(sStatus,pageable);
+	public Map<String,Object> selectBySstatus(Integer sStatus,int currentPage) throws FindException{
+			Pageable pageable = PageRequest.of(currentPage-1,10,Sort.by("s_num"));  //10개씩 페이징
+			Page<Object[]> pageSList = sr.selectBySReturn(sStatus,pageable);
+			List<Object[]> List = pageSList.getContent();
+			
 			List<StockDTO> list = new ArrayList<>();
-			for (Object[] obj : sList) {
+			for (Object[] obj : List) {
 				StockDTO dto = StockDTO.builder()
 				.sNum(Long.valueOf(String.valueOf(obj[0])))
 				.sName(String.valueOf(obj[1]))
@@ -214,8 +223,12 @@ public class StockService {
 					
 				list.add(dto);
 			}
+			
+			Map<String,Object> resultMap = new HashMap<>();
+			resultMap.put("list", list);
+			resultMap.put("totalPageNum",pageSList.getTotalPages());
 
-		return list;
+		return resultMap;
 	}
 	
 	/**
