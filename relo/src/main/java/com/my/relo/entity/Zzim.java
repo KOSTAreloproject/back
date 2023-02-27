@@ -8,13 +8,10 @@ import javax.persistence.MapsId;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -30,13 +27,8 @@ public class Zzim {
 	private Member member; // 멤버번호
 
 	@MapsId("pNum")
-	@ManyToOne()
+	@ManyToOne
 	@JoinColumn(name = "p_num")
 	private Product product; // 상품번호
 
-	@Builder
-	public Zzim(Member member, Product product) {
-		this.member = member;
-		this.product = product;
-	}
 }

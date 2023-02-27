@@ -1,14 +1,20 @@
 package com.my.relo.service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.my.relo.dto.ZzimDTO;
+import com.my.relo.dto.ZPResponseDTO;
 import com.my.relo.entity.Zzim;
 import com.my.relo.entity.ZzimEmbedded;
 import com.my.relo.exception.AddException;
@@ -29,21 +35,35 @@ public class ZzimService {
 	 * @return 회원의 찜 목록
 	 * @throws FindException
 	 */
-	public List<ZzimDTO> readZzimList(Long mNum) throws FindException {
-		List<Object[]> list = zr.findByMNum(mNum);
+	// DateTimeFormatter fm = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss",
+	// Locale.KOREA);
+//	DateTimeFormatter dtf = new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd hh:mm:ss.S")
+//			.appendValue(ChronoField.MICRO_OF_SECOND, 3).toFormatter();
+	public Map<String, Object> readZzimList(Long mNum, int currentPage) throws FindException {
+		Pageable sortedByUserIdDesc = PageRequest.of((currentPage - 1), 10);
+		Page<Object[]> resultList = zr.findByMNum(mNum, sortedByUserIdDesc);
+		List<Object[]> list = resultList.getContent();
+		int totalpage = resultList.getTotalPages();
+		System.out.println();
 		if (list.isEmpty()) {
 			throw new FindException("찜 목록이 없습니다");
 		}
-		List<ZzimDTO> dtos = new ArrayList<>();
+		List<ZPResponseDTO> dtos = new ArrayList<>();
 		for (Object[] objs : list) {
-			ZzimDTO dto = ZzimDTO.builder().mNum(Long.valueOf(String.valueOf(objs[0])))
+			ZPResponseDTO dto = ZPResponseDTO.builder().mNum(Long.valueOf(String.valueOf(objs[0])))
 					.pNum(Long.valueOf(String.valueOf(objs[1]))).sBrand((String) objs[2]).sName((String) objs[3])
 					.sType((String) objs[4]).sizeCategoryName((String) objs[5]).sColor((String) objs[6])
-					.hopePrice(Integer.parseInt(String.valueOf(objs[7]))).sGrade((String) objs[8])
-					.pEndDate((Date) objs[9]).maxPrice(Integer.parseInt(String.valueOf(objs[10]))).build();
+					.sHopePrice(Integer.parseInt(String.valueOf(objs[7]))).sGrade((String) objs[8])
+					.pendDate(LocalDateTime.parse(String.valueOf(objs[9]),
+							DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S")))
+					.maxPrice(Integer.parseInt(String.valueOf(objs[10]))).build();
 			dtos.add(dto);
 		}
-		return dtos;
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("list", dtos);
+		resultMap.put("totalpage", totalpage);
+		return resultMap;
+
 	}
 
 	/**
