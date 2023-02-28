@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -18,13 +19,14 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @ToString
-
+@Getter @NoArgsConstructor @AllArgsConstructor 
+@Builder
 @DynamicInsert @DynamicUpdate
 @Entity
 @Table(name="orders")
@@ -33,14 +35,13 @@ public class Orders implements Serializable{
 	@Column(name="a_num")
 	private Long aNum;
 	
-	@OneToOne
+	@OneToOne(optional=true, fetch = FetchType.LAZY,  cascade=CascadeType.ALL)
 	@MapsId
-	@JoinColumn(name="a_num")
+	@JoinColumn(name="a_num", referencedColumnName = "a_num")
 	private Award award;
 	
-	@ManyToOne(targetEntity = Member.class)
-	@JoinColumn(name = "m_num")
-	private Long m_num;
+	@JoinColumn(name = "m_num", nullable = false, referencedColumnName="m_num")
+	private Long mNum;
 	
 	@Column(name = "o_memo")
 	private String oMemo;
@@ -49,6 +50,6 @@ public class Orders implements Serializable{
 	@ColumnDefault(value = "SYSDATE")
 	private LocalDate oDate;
 	
-	@OneToOne(mappedBy = "orders", cascade=CascadeType.ALL)
+	@OneToOne(mappedBy = "orders", optional=true, fetch = FetchType.LAZY)
 	private OrderDelivery oDelivery;                                               
 }

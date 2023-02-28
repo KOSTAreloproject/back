@@ -2,7 +2,6 @@ package com.my.relo.entity;
 
 import java.time.LocalDate;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,17 +17,17 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@Builder
 
 @DynamicInsert @DynamicUpdate
 @Entity
@@ -57,7 +56,7 @@ public class Auction {
 	@ColumnDefault(value = "SYSDATE")
 	private LocalDate aDate;
 
-	@OneToOne(mappedBy = "auction", cascade = CascadeType.ALL)
+	@OneToOne(mappedBy = "auction")
 	private Award award;
 
 }
