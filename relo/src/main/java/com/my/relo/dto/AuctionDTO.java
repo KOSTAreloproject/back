@@ -13,6 +13,7 @@ import lombok.ToString;
 @Getter @NoArgsConstructor @AllArgsConstructor @ToString
 public class AuctionDTO {
 	private Long mNum;
+	private String id;
 	private Long aNum;
 	private Long pNum;
 	private Long sNum;
