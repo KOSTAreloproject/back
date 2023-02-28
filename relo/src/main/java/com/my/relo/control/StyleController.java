@@ -1,7 +1,11 @@
 package com.my.relo.control;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLEncoder;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +15,9 @@ import java.util.StringTokenizer;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,9 +37,10 @@ import com.my.relo.entity.StyleTagEmbedded;
 import com.my.relo.exception.AddException;
 import com.my.relo.exception.FindException;
 import com.my.relo.exception.RemoveException;
-import com.my.relo.repository.MemberRepository;
 import com.my.relo.repository.StyleTagRepository;
 import com.my.relo.service.StyleService;
+
+import net.coobird.thumbnailator.Thumbnailator;
 
 @RestController
 @RequestMapping("style/*")
@@ -43,9 +51,7 @@ public class StyleController {
 	
 	@Autowired
 	private StyleTagRepository str;
-	
-	@Autowired
-	private MemberRepository mr;
+
 	/**
 	 * 리스트 출력 
 	 * @param type 1: 최신순 2: 좋아요순 3: 조회수순 
@@ -74,7 +80,38 @@ public class StyleController {
 		}
 		return new ResponseEntity<>("", HttpStatus.NO_CONTENT);
 	}
+	/**
+	 * 리스트 출력 - 이미지 출력 
+	 * @param styleNum
+	 * @return
+	 * @throws FindException
+	 * @throws IOException
+	 */
+	@GetMapping(value="list/img/{styleNum}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getImgList(@PathVariable("styleNum")Long styleNum) throws FindException, IOException {
 
+		String saveDirectory = "/Users/skyleeb95/Downloads/files/";
+		File saveDirFile = new File(saveDirectory);
+		File[] files = saveDirFile.listFiles();
+		File file = null;
+		String fileName;
+		Resource img = null;
+		for(File thumbF : files) {
+			StringTokenizer stk = new StringTokenizer(thumbF.getName(), ".");
+			 fileName = stk.nextToken();
+			if(fileName.equals("t_s_"+styleNum)) {
+				img = new FileSystemResource(thumbF);
+				file = thumbF;
+			}
+		}
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set(HttpHeaders.CONTENT_LENGTH, ""+file.length());
+		responseHeaders.set(HttpHeaders.CONTENT_TYPE, Files.probeContentType(file.toPath()));
+		responseHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "inline; filename="+URLEncoder.encode("a","UTF-8"));
+		
+		return new ResponseEntity<>(img,responseHeaders,HttpStatus.OK);
+	}
+	
 	/**
 	 * 상세보기 출력 (상세보기 조회시 조회수 +1 증가)
 	 * @param styleNum
@@ -87,6 +124,34 @@ public class StyleController {
 		service.plusCnt(styleNum);
 		StyleDTO style= service.styleDetail(styleNum);
 		return new ResponseEntity<>(style, HttpStatus.OK);
+	}
+	
+	/**
+	 * 상세보기 - 해당 이미지 출력 
+	 * @param styleNum
+	 * @return
+	 * @throws IOException 
+	 */
+	@GetMapping(value = "detail/img/{styleNum}")
+	public ResponseEntity<?> getDetailFile(@PathVariable("styleNum")Long styleNum) throws IOException{
+		String saveDirectory = "/Users/skyleeb95/Downloads/files";
+		File saveDirFile = new File(saveDirectory);
+		File[] files = saveDirFile.listFiles();
+		Resource img = null;
+		for(File f : files) {
+			StringTokenizer stk = new StringTokenizer(f.getName(), ".");
+			String fileName = stk.nextToken();
+			if(fileName.equals("s_"+styleNum)) {
+				img = new FileSystemResource(f);
+				HttpHeaders responseHeaders = new HttpHeaders();
+				responseHeaders.set(HttpHeaders.CONTENT_LENGTH, f.length()+"");
+				responseHeaders.set(HttpHeaders.CONTENT_TYPE, Files.probeContentType(f.toPath()));
+				responseHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "inline; filename="+URLEncoder.encode("a","UTF-8"));
+				
+				return new ResponseEntity<>(img, responseHeaders, HttpStatus.OK);
+			}
+		}
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 	/**
@@ -140,7 +205,7 @@ public class StyleController {
 //			throw new AddException("로그인하세요");
 //		}
 		
-		if(f == null) {
+		if(f.getSize() == 0) {
 			throw new FindException("파일이 없습니다.");
 		}
 		Long logined = 2L;
@@ -163,9 +228,19 @@ public class StyleController {
 
 		Long styleNum = service.write(s);
 		String saveDirectory = "/Users/skyleeb95/Downloads/files";
-		String fileName = "s_"+styleNum+".jpeg";
+		String originFileName = f.getOriginalFilename();
+		String fileExtension = originFileName.substring(originFileName.lastIndexOf(".") + 1);
+		String fileName = "s_"+styleNum+"."+fileExtension;
 		
 		File file = new File(saveDirectory, fileName);
+		
+		int width = 500;
+		int height = 500;
+		String thumbFileName = "t_"+fileName;
+		File thumbFile = new File(saveDirectory, thumbFileName);
+		FileOutputStream thumbOs = new FileOutputStream(thumbFile);
+		InputStream thumbIs = f.getInputStream();
+		Thumbnailator.createThumbnail(thumbIs,thumbOs,width,height);
 		
 		f.transferTo(file);
 		
@@ -186,7 +261,6 @@ public class StyleController {
 	public ResponseEntity<?> update(@PathVariable("styleNum")Long styleNum,
 															String styleContent,
 															@RequestPart(value = "f",required = false) MultipartFile f) throws AddException, IllegalStateException, IOException, FindException{
-		Long logined = 2L;
 		
 		StyleDTO s = new StyleDTO();
 		List<StyleTagDTO> tagList = new ArrayList<>();
@@ -202,19 +276,48 @@ public class StyleController {
 		s.setStyleNum(styleNum);
 		service.edit(s);
 		
-		if(f != null) {
+		if(f.getSize() != 0 ) {
+			
 			String saveDirectory = "/Users/skyleeb95/Downloads/files";
-			String originFileName = "s_"+styleNum+".jpeg";
-			File originFile = new File(saveDirectory, originFileName);
-
-			if(originFile.exists()) {
-				originFile.delete();
+			File saveDirFile = new File(saveDirectory);
+			
+			File[] files = saveDirFile.listFiles();
+			for(File originF : files) {
+				StringTokenizer stk2 = new StringTokenizer(originF.getName(), ".");
+				String fileName = stk2.nextToken();
+				if(fileName.equals("s_"+styleNum)){
+					originF.delete();
+				}
 			}
+			for(File thumbF : files) {
+				StringTokenizer stk2 = new StringTokenizer(thumbF.getName(), ".");
+				String fileName2 = stk2.nextToken();
+				if(fileName2.equals("t_s_"+styleNum)) {
+					thumbF.delete();
+				}
+			}
+				
+			String originFileName = f.getOriginalFilename();
+			String fileExtension = originFileName.substring(originFileName.lastIndexOf(".") + 1);
+			String fileName = "s_"+styleNum+"."+fileExtension;
 
-			File newFile = new File(saveDirectory, originFileName);
-			f.transferTo(newFile);
+			File file = new File(saveDirectory, fileName);
+			
+			int width = 500;
+			int height = 500;
+			String thumbFileName = "t_"+fileName;
+			File thumbFile = new File(saveDirectory, thumbFileName);
+			FileOutputStream thumbOs = new FileOutputStream(thumbFile);
+			InputStream thumbIs = f.getInputStream();
+			Thumbnailator.createThumbnail(thumbIs,thumbOs,width,height);
+
+			f.transferTo(file);
+
+			return new ResponseEntity<>(HttpStatus.OK);
 		}
-		return new ResponseEntity<>(HttpStatus.OK);
+		else {
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
 	}
 	
 	/**
@@ -228,13 +331,24 @@ public class StyleController {
 	public ResponseEntity<?> delete(@PathVariable("styleNum")Long styleNum) throws RemoveException, FindException{
 		
 		String saveDirectory = "/Users/skyleeb95/Downloads/files";
-		String originFileName = "s_"+styleNum+".jpeg";
-		File originFile = new File(saveDirectory, originFileName);
+		File saveDirFile = new File(saveDirectory);
+		File[] files = saveDirFile.listFiles();
 		
-		if(originFile.exists()) {
-			originFile.delete();
+		for(File originF : files) {
+			StringTokenizer stk2 = new StringTokenizer(originF.getName(), ".");
+			String fileName = stk2.nextToken();
+			if(fileName.equals("s_"+styleNum)){
+				originF.delete();
+			}
 		}
-		
+		for(File thumbF : files) {
+			StringTokenizer stk2 = new StringTokenizer(thumbF.getName(), ".");
+			String fileName2 = stk2.nextToken();
+			if(fileName2.equals("t_s_"+styleNum)) {
+				thumbF.delete();
+			}
+		}
+			
 		service.deleteByStyleNum(styleNum);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

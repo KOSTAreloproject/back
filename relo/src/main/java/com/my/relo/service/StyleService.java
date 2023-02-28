@@ -291,4 +291,18 @@ public class StyleService {
 	public void plusCnt(Long styleNum) throws AddException{
 		sr.updateCnt(styleNum);
 	}
+	
+	/**
+	 * 이미지 리스트 출력 
+	 * @param list
+	 * @return List<Long>
+	 */
+	public List<Long> imgStyleNum(List<StyleDTO> list) throws FindException{
+		List<Long> imgList = new ArrayList<>();
+		for(int i = 0; i < list.size(); i++) {
+			Long styleNum = list.get(i).getStyleNum();
+			imgList.add(styleNum);
+		}
+		return imgList;
+	}
 }
