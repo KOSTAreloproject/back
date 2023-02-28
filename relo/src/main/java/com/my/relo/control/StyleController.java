@@ -37,7 +37,6 @@ import com.my.relo.entity.StyleTagEmbedded;
 import com.my.relo.exception.AddException;
 import com.my.relo.exception.FindException;
 import com.my.relo.exception.RemoveException;
-import com.my.relo.repository.StyleTagRepository;
 import com.my.relo.service.StyleService;
 
 import net.coobird.thumbnailator.Thumbnailator;
@@ -48,9 +47,6 @@ public class StyleController {
 	
 	@Autowired
 	private StyleService service;
-	
-	@Autowired
-	private StyleTagRepository str;
 
 	/**
 	 * 리스트 출력 
@@ -59,20 +55,16 @@ public class StyleController {
 	 */
 	@GetMapping(value = "list/{type}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> getList(@PathVariable("type") Long type) {
-		List<StyleDTO> list = new ArrayList<>();
-		List<String> tagList = str.ListByCnt();
 		Map map = new HashMap<>();
 		try {
 			if(type == 1) {
-				list = service.listByStyleNum();
+				map = service.listByStyleNum();
 			}else if(type == 2) {
-				list = service.listByLikes();
+				map = service.listByLikes();
 			}else if(type == 3) {
-				list = service.listBystyleCnt();
+				map = service.listBystyleCnt();
 			}
-			if(!list.isEmpty()) {
-				map.put("list", list);
-				map.put("tagList", tagList);
+			if(!map.isEmpty()) {
 				return new ResponseEntity<>(map, HttpStatus.OK);
 			}
 		} catch (FindException e) {
@@ -162,11 +154,7 @@ public class StyleController {
 	 */
 	@GetMapping(value = "myList/{mNum}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> getMyList(@PathVariable("mNum")Long mNum) throws FindException{
-		Map map = new HashMap<>();
-		List<StyleDTO> list = service.listByMNum(mNum);
-		List<String> tagList = str.ListByCnt();
-		map.put("list", list);
-		map.put("tagList", tagList);
+		Map map = service.listByMNum(mNum);
 		return new ResponseEntity<>(map, HttpStatus.OK);
 	}
 	
@@ -178,11 +166,7 @@ public class StyleController {
 	 */
 	@GetMapping(value="hashList/{hashName}",produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> getHashName(@PathVariable("hashName")String hashName) throws FindException{
-		Map map = new HashMap<>();
-		List<StyleDTO> list = service.listByHashName(hashName);
-		List<String> tagList = str.ListByCnt();
-		map.put("list", list);
-		map.put("tagList", tagList);
+		Map map = service.listByHashName(hashName);
 		return new ResponseEntity<>(map, HttpStatus.OK);
 	}
 	/**
@@ -210,7 +194,7 @@ public class StyleController {
 		}
 		Long logined = 2L;
 		MemberDTO mDTO = 
-					MemberDTO.builder().mNum(logined).build();
+					MemberDTO.builder().mnum(logined).build();
 		
 		StyleDTO s = new StyleDTO();
 		s.setMember(mDTO);
