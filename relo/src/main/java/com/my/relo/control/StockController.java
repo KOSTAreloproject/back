@@ -20,7 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -76,7 +76,7 @@ public class StockController {
 	}
 	
 	
-	@PostMapping("editSstatus")
+	@PutMapping("editSstatus")
 	public ResponseEntity<?> updateSetSStatus(HttpSession session, 
 		 StockDTO stock) throws AddException{
 		
@@ -93,7 +93,7 @@ public class StockController {
 	
 	}
 	
-	@PostMapping("editSstatus5")
+	@PutMapping("editSstatus5")
 	public ResponseEntity<?> updateByCancleSStatus5(HttpSession session, 
 		 Long sNum) throws AddException{
 		

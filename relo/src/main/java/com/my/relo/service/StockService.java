@@ -202,7 +202,7 @@ public class StockService {
 	}
 	
 	/**
-	 * 관리자 상품등록 승인요청 목록 sStatus =1 AND 관리자 상품 최종 등록 목록  sStatus =3
+	 * 관리자 상품등록 승인요청 목록 sStatus =1 AND 관리자 상품 최종 등록 목록  sStatus =3  AND 관리자 재고반송 신청 목록 sStatus =5
 	 * @return list
 	 * @throws AddException
 	 */

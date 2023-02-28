@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,6 +32,7 @@ public class ProductController {
 			PInfo product,Long sNum) throws AddException{
 		
 		Long mNum = (Long) session.getAttribute("logined");
+		
 		if (mNum == null) {
 			throw new AddException("로그인하세요");
 		}
@@ -99,5 +101,18 @@ public class ProductController {
 		
 	return new ResponseEntity<>(list,HttpStatus.OK);
 	
+	}
+	
+	@PutMapping("editPStatus8")
+	public ResponseEntity<?> updatePStatus8(HttpSession session,Long pNum) throws AddException{
+		
+		Long mNum = (Long) session.getAttribute("logined");
+		if (mNum == null) {
+			throw new AddException("로그인하세요");
+		}
+		
+		productService.updateProductStatus8(pNum);
+		
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }

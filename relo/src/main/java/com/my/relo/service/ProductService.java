@@ -215,5 +215,12 @@ public class ProductService {
 		}
 		return list;
 	}
+	
+	public void updateProductStatus8(Long pNum) throws AddException{
+		Optional<Product> optP = pr.findById(pNum);
+		Product p = optP.get();
+		p.updatePStatus8(8);
+		pr.save(p);
+	}
 
 }

@@ -86,6 +86,9 @@ public class Product {
 		this.mNum = mNum;
 	}
     
+	public void updatePStatus8(Integer pStatus) {
+		this.pStatus = pStatus;
+	}
 	
     
 }

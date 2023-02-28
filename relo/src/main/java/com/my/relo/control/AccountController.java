@@ -5,6 +5,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,12 +27,10 @@ public class AccountController {
 	public ResponseEntity<?> accountAdd(HttpSession session, 
 			AccountDTO account) throws AddException{
 		
-//		Long mNum = (Long) session.getAttribute("logined");
-//		if (mNum == null) {
-//			throw new AddException("로그인하세요");
-//		}
-		System.out.println("여기2:" + account);
-		Long mNum = (long) 2;
+		Long mNum = (Long) session.getAttribute("logined");
+		if (mNum == null) {
+			throw new AddException("로그인하세요");
+		}
 		
 		account.setMember(mNum);
 		
@@ -57,15 +56,15 @@ public class AccountController {
 	
 	}
 	
-	@PostMapping("del")
+	@DeleteMapping("del")
 	public ResponseEntity<?> deleteAccount(HttpSession session) throws RemoveException{
 		
-//		Long mNum = (Long) session.getAttribute("logined");
-//		if (mNum == null) {
-//			throw new RemoveException("로그인하세요");
-//		}
+		Long mNum = (Long) session.getAttribute("logined");
+		if (mNum == null) {
+			throw new RemoveException("로그인하세요");
+		}
 		
-		Long mNum = (long) 2;
+
 		
 		accountservice.deleteAccount(mNum);
 		

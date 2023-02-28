@@ -16,7 +16,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -51,7 +50,8 @@ public class Account {
 	   this.mNum = mNum;
 	   this.bankAccount = bankAccount;
 	   this.bankCode = bankCode;
-}
+   }
+   
    
    
 
