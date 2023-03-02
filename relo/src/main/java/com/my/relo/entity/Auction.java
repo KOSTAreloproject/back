@@ -40,7 +40,7 @@ public class Auction {
 	@Column(name = "a_num")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "AUCTION_SEQ_GENERATOR")
 	private Long aNum;
-
+	
 	@JoinColumn(name = "m_num", nullable = false, referencedColumnName = "m_num")
 	private Long mNum;
 

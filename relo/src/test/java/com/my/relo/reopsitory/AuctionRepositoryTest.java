@@ -49,13 +49,13 @@ class AuctionRepositoryTest {
 			LocalDate d = LocalDate.now();
 			a = Auction.builder()
 					.aNum(otpA.get().getANum())
-					.aPrice(275000)
+					.aPrice(215000)
 					.mNum(4L)
 					.product(p)
 					.aDate(d).build();
 		} else { //해당 상품에 경매 참여이력 없을 경우 새로 값 insert
 			a = Auction.builder()
-					.aPrice(275000)
+					.aPrice(215000)
 					.mNum(4L)
 					.product(p).build();
 		}
