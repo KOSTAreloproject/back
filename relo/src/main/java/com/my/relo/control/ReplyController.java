@@ -1,5 +1,7 @@
 package com.my.relo.control;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -40,25 +43,28 @@ public class ReplyController {
 	 */
 	@PostMapping(value="{styleNum}",produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> postRep(@PathVariable("styleNum")Long styleNum,
-										HttpSession session, String repContent,Long repNum) throws AddException, FindException{
+										HttpSession session,@RequestBody Map<String,String> map) throws AddException, FindException{
 		
 		Long mNum = (Long) session.getAttribute("logined");
 		if(mNum == null) {
 			throw new FindException("로그인하세요");
 		}
-	
-		MemberDTO m = 
-				MemberDTO.builder().mnum(mNum).build();
 		ReplyDTO r = new ReplyDTO();
-		
-		StyleDTO s = new StyleDTO();
-		s.setStyleNum(styleNum);
-		
-		if(repNum != null) {
+		System.out.println(map.toString());
+		String repContent = map.get("repContent");
+		if(map.size()==2) {
+			Long repNum = Long.valueOf(map.get("repNum"));
 			ReplyDTO parentR = new ReplyDTO();
 			parentR.setRepNum(repNum);
 			r.setReplyParentDTO(parentR);
 		}
+	
+		MemberDTO m = 
+				MemberDTO.builder().mnum(mNum).build();
+		
+		StyleDTO s = new StyleDTO();
+		s.setStyleNum(styleNum);
+		
 		r.setMember(m);
 		r.setStyle(s);
 		r.setRepContent(repContent);
@@ -77,13 +83,14 @@ public class ReplyController {
 	 */
 	@PutMapping(value="{repNum}",produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> updateRep(@PathVariable("repNum")Long repNum,
-												String repContent,HttpSession session) throws AddException, FindException{
+												HttpSession session,@RequestBody Map<String, String> map) throws AddException, FindException{
 		
 		Long mNum = (Long) session.getAttribute("logined");
 		if(mNum == null) {
 			throw new FindException("로그인하세요");
 		}
 		
+		String repContent = map.get("repContent");
 		ReplyDTO r = new ReplyDTO();
 		r.setRepNum(repNum);
 		r.setRepContent(repContent);

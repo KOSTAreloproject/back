@@ -48,8 +48,8 @@ public class StyleController {
 	@Autowired
 	private StyleService service;
 	
-	private final String saveDirectory = "C:\\storage\\style";
-//	private final String saveDirectory = "/Users/skyleeb95/Downloads/files/style";
+//	private final String saveDirectory = "C:\\storage\\style";
+	private final String saveDirectory = "/Users/skyleeb95/Downloads/files/style";
 	
 	/**
 	 * 리스트 출력 
@@ -116,12 +116,17 @@ public class StyleController {
 	@GetMapping(value = "detail/{styleNum}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> getDetail(@PathVariable("styleNum")Long styleNum, HttpSession session) throws FindException, AddException {
 		Long mNum = (Long) session.getAttribute("logined");
+		String loginId = (String) session.getAttribute("loginId");
 		if(mNum == null) {
 			throw new FindException("로그인하세요");
 		}
 		service.plusCnt(styleNum);
 		StyleDTO style= service.styleDetail(styleNum);
-		return new ResponseEntity<>(style, HttpStatus.OK);
+		Map<String, Object> map = new HashMap<>();
+		map.put("style", style);
+		map.put("loginNum", mNum);	
+		map.put("loginId", loginId);			
+		return new ResponseEntity<>(map, HttpStatus.OK);
 	}
 	
 	/**
