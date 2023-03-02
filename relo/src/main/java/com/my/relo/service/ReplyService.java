@@ -76,7 +76,7 @@ public class ReplyService {
 			Style s = optS.get();
 			
 			MemberDTO mDTO = replyDTO.getMember();
-			Optional<Member> optM = mr.findById(mDTO.getMNum());
+			Optional<Member> optM = mr.findById(mDTO.getMnum());
 			Member m = optM.get();
 			
 			ReplyDTO rDTO = replyDTO.getReplyParentDTO();
