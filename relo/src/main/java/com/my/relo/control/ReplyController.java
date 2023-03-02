@@ -36,19 +36,19 @@ public class ReplyController {
 	 * @param repNum -> 부모댓글 번호 있으면 대댓글 
 	 * @return
 	 * @throws AddException
+	 * @throws FindException 
 	 */
 	@PostMapping(value="{styleNum}",produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> postRep(@PathVariable("styleNum")Long styleNum,
-										HttpSession session, String repContent,Long repNum) throws AddException{
+										HttpSession session, String repContent,Long repNum) throws AddException, FindException{
 		
-//		Long logined = (Long) session.getAttribute("logined");
-//		if(logined == null) {
-//			throw new AddException("로그인하세요");
-//		}
-		Long logined = 1L;
+		Long mNum = (Long) session.getAttribute("logined");
+		if(mNum == null) {
+			throw new FindException("로그인하세요");
+		}
 	
 		MemberDTO m = 
-				MemberDTO.builder().mnum(logined).build();
+				MemberDTO.builder().mnum(mNum).build();
 		ReplyDTO r = new ReplyDTO();
 		
 		StyleDTO s = new StyleDTO();
@@ -73,10 +73,16 @@ public class ReplyController {
 	 * @param repContent
 	 * @return
 	 * @throws AddException
+	 * @throws FindException 
 	 */
 	@PutMapping(value="{repNum}",produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> updateRep(@PathVariable("repNum")Long repNum,
-												String repContent) throws AddException{
+												String repContent,HttpSession session) throws AddException, FindException{
+		
+		Long mNum = (Long) session.getAttribute("logined");
+		if(mNum == null) {
+			throw new FindException("로그인하세요");
+		}
 		
 		ReplyDTO r = new ReplyDTO();
 		r.setRepNum(repNum);
@@ -94,7 +100,12 @@ public class ReplyController {
 	 * @throws FindException 
 	 */
 	@DeleteMapping(value="{repNum}",produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> deleteRep(@PathVariable("repNum")Long repNum) throws RemoveException, FindException{
+	public ResponseEntity<?> deleteRep(@PathVariable("repNum")Long repNum, HttpSession session) throws RemoveException, FindException{
+		
+		Long mNum = (Long) session.getAttribute("logined");
+		if(mNum == null) {
+			throw new FindException("로그인하세요");
+		}
 		
 		service.deleteReply(repNum);
 		

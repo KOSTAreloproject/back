@@ -29,16 +29,16 @@ public class LikesController {
 	 * @param session
 	 * @return
 	 * @throws AddException
+	 * @throws FindException 
 	 */
 	@PostMapping(value="{styleNum}",produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> likePlus(@PathVariable("styleNum")Long styleNum,
-										HttpSession session) throws AddException{
-//		Long logined = (Long)session.getAttribute("logined");
-//		if(logined == null) {//로그인 안한 경우
-//			throw new AddException("로그인하세요");
-//		}
-		Long logined = 2L;
-		service.plusLikes(logined, styleNum);
+										HttpSession session) throws AddException, FindException{
+		Long mNum = (Long)session.getAttribute("logined");
+		if(mNum == null) {//로그인 안한 경우
+			throw new FindException("로그인하세요");
+		}
+		service.plusLikes(mNum, styleNum);
 		
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
@@ -53,12 +53,11 @@ public class LikesController {
 	@DeleteMapping(value="{styleNum}",produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> likeMinus(@PathVariable("styleNum")Long styleNum,
 										HttpSession session) throws RemoveException, FindException{
-//		Long logined = (Long)session.getAttribute("logined");
-//		if(logined == null) {//로그인 안한 경우
-//			throw new AddException("로그인하세요");
-//		}
-		Long logined = 1L;
-		service.minusLikes(logined, styleNum);
+		Long mNum = (Long)session.getAttribute("logined");
+		if(mNum == null) {//로그인 안한 경우
+			throw new FindException("로그인하세요");
+		}
+		service.minusLikes(mNum, styleNum);
 		
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

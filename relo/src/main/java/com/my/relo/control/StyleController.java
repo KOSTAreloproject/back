@@ -49,7 +49,7 @@ public class StyleController {
 	private StyleService service;
 	
 	private final String saveDirectory = "C:\\storage\\style";
-//	private final String saveDirectory = "/Users/skyleeb95/Downloads/files";
+//	private final String saveDirectory = "/Users/skyleeb95/Downloads/files/style";
 	
 	/**
 	 * 리스트 출력 
@@ -114,7 +114,11 @@ public class StyleController {
 	 * @throws AddException 
 	 */
 	@GetMapping(value = "detail/{styleNum}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getDetail(@PathVariable("styleNum")Long styleNum) throws FindException, AddException {
+	public ResponseEntity<?> getDetail(@PathVariable("styleNum")Long styleNum, HttpSession session) throws FindException, AddException {
+		Long mNum = (Long) session.getAttribute("logined");
+		if(mNum == null) {
+			throw new FindException("로그인하세요");
+		}
 		service.plusCnt(styleNum);
 		StyleDTO style= service.styleDetail(styleNum);
 		return new ResponseEntity<>(style, HttpStatus.OK);
@@ -153,8 +157,12 @@ public class StyleController {
 	 * @return
 	 * @throws FindException
 	 */
-	@GetMapping(value = "myList/{mNum}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getMyList(@PathVariable("mNum")Long mNum) throws FindException{
+	@GetMapping(value = "myList", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getMyList(HttpSession session) throws FindException{
+		Long mNum = (Long) session.getAttribute("logined");
+		if(mNum == null) {
+			throw new FindException("로그인하세요");
+		}
 		Map map = service.listByMNum(mNum);
 		return new ResponseEntity<>(map, HttpStatus.OK);
 	}
@@ -185,17 +193,16 @@ public class StyleController {
 									String styleContent, 
 									@RequestPart(value = "f",required = false) MultipartFile f) throws AddException, IOException, FindException {
 		
-//		Long logined = (Long)session.getAttribute("logined");
-//		if(logined == null) {//로그인 안한 경우
-//			throw new AddException("로그인하세요");
-//		}
+		Long mNum = (Long)session.getAttribute("logined");
+		if(mNum == null) {//로그인 안한 경우
+			throw new FindException("로그인하세요");
+		}
 		
 		if(f.getSize() == 0) {
 			throw new FindException("파일이 없습니다.");
 		}
-		Long logined = 2L;
 		MemberDTO mDTO = 
-					MemberDTO.builder().mnum(logined).build();
+					MemberDTO.builder().mnum(mNum).build();
 		
 		StyleDTO s = new StyleDTO();
 		s.setMember(mDTO);
@@ -244,8 +251,12 @@ public class StyleController {
 	@PostMapping(value = "update/{styleNum}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> update(@PathVariable("styleNum")Long styleNum,
 															String styleContent,
-															@RequestPart(value = "f",required = false) MultipartFile f) throws AddException, IllegalStateException, IOException, FindException{
+															@RequestPart(value = "f",required = false) MultipartFile f,HttpSession session) throws AddException, IllegalStateException, IOException, FindException{
 		
+		Long mNum = (Long)session.getAttribute("logined");
+		if(mNum == null) {//로그인 안한 경우
+			throw new AddException("로그인하세요");
+		}
 		StyleDTO s = new StyleDTO();
 		List<StyleTagDTO> tagList = new ArrayList<>();
 		StringTokenizer stk = new StringTokenizer(styleContent,"#");
@@ -311,7 +322,12 @@ public class StyleController {
 	 * @throws FindException 
 	 */
 	@DeleteMapping(value = "{styleNum}",produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> delete(@PathVariable("styleNum")Long styleNum) throws RemoveException, FindException{
+	public ResponseEntity<?> delete(@PathVariable("styleNum")Long styleNum, HttpSession session) throws RemoveException, FindException{
+		
+		Long mNum = (Long)session.getAttribute("logined");
+		if(mNum == null) {//로그인 안한 경우
+			throw new FindException("로그인하세요");
+		}
 		
 		File saveDirFile = new File(saveDirectory);
 		File[] files = saveDirFile.listFiles();

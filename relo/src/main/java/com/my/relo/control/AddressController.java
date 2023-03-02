@@ -35,8 +35,12 @@ public class AddressController {
 	 * @return
 	 * @throws FindException
 	 */
-	@GetMapping(value = "{mNum}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getAddrList(@PathVariable("mNum") Long mNum) throws FindException{
+	@GetMapping(value = "list", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getAddrList(HttpSession session) throws FindException{
+		Long mNum = (Long) session.getAttribute("logined");
+		if(mNum == null) {
+			throw new FindException("로그인하세요");
+		}
 		 List<AddressDTO> list = service.findByMNum(mNum);
 		 return new ResponseEntity<>(list, HttpStatus.OK);
 	}
@@ -58,16 +62,16 @@ public class AddressController {
 	 * @param addressDTO
 	 * @return
 	 * @throws AddException
+	 * @throws FindException 
 	 */
 	@PostMapping(value="add",produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> addAddr(HttpSession session,@RequestBody AddressDTO addressDTO) throws AddException{
+	public ResponseEntity<?> addAddr(HttpSession session,@RequestBody AddressDTO addressDTO) throws AddException, FindException{
 
-//		Long logined = (Long)session.getAttribute("logined");
-//		if(logined == null) {//로그인 안한 경우
-//			throw new AddException("로그인하세요");
-//		}
-		Long logined = 2L;
-		addressDTO.setMNum(logined);
+		Long mNum = (Long)session.getAttribute("logined");
+		if(mNum == null) {//로그인 안한 경우
+			throw new FindException("로그인하세요");
+		}
+		addressDTO.setMNum(mNum);
 		
 		service.write(addressDTO);
 		return new ResponseEntity<>(HttpStatus.OK);
@@ -86,12 +90,11 @@ public class AddressController {
 			@RequestBody AddressDTO addressDTO,HttpSession session) 
 												throws AddException, FindException{
 
-//		Long logined = (Long)session.getAttribute("logined");
-//		if(logined == null) {//로그인 안한 경우
-//			throw new AddException("로그인하세요");
-//		}
-		Long logined = 2L;
-		addressDTO.setMNum(logined);
+		Long mNum = (Long)session.getAttribute("logined");
+		if(mNum == null) {//로그인 안한 경우
+			throw new FindException("로그인하세요");
+		}
+		addressDTO.setMNum(mNum);
 		
 		addressDTO.setAddrNum(addrNum);
 		service.write(addressDTO);
@@ -106,7 +109,11 @@ public class AddressController {
 	 * @throws FindException 
 	 */
 	@DeleteMapping(value = "{addrNum}",produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> deleteAddr(@PathVariable("addrNum")Long addrNum) throws RemoveException, FindException{
+	public ResponseEntity<?> deleteAddr(@PathVariable("addrNum")Long addrNum,HttpSession session) throws RemoveException, FindException{
+		Long mNum = (Long)session.getAttribute("logined");
+		if(mNum == null) {//로그인 안한 경우
+			throw new FindException("로그인하세요");
+		}
 		service.deleteByAddrNum(addrNum);
 		return new ResponseEntity<>(HttpStatus.OK);
 		
