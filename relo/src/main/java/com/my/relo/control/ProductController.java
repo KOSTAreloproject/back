@@ -1,6 +1,7 @@
 package com.my.relo.control;
 
 import java.util.List;
+
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,15 +31,15 @@ public class ProductController {
 	
 	@PostMapping("add")
 	public ResponseEntity<?> ProductAdd(HttpSession session, 
-			PInfo product,Long sNum) throws AddException{
+			@RequestBody Map<String, Long> sNum) throws AddException{
 		
 		Long mNum = (Long) session.getAttribute("logined");
 		
 		if (mNum == null) {
 			throw new AddException("로그인하세요");
 		}
-
-		service.ProductAdd(product,sNum,mNum);
+		Long snum = Long.valueOf(sNum.get("sNum"));
+		service.ProductAdd(snum,mNum);
 		
 	return new ResponseEntity<>(HttpStatus.OK);
 	
@@ -50,8 +52,7 @@ public class ProductController {
 		if (mNum == null) {
 			throw new FindException("로그인하세요");
 		}
-		
-//		Long mNum = (long) 3;
+
 		Map<String,Object> resultMap = service.selectByIdProduct(mNum,currentPage);
 		
 	return new ResponseEntity<>(resultMap,HttpStatus.OK);
@@ -66,7 +67,7 @@ public class ProductController {
 			throw new FindException("로그인하세요");
 		}
 		
-//		Long mNum = (long) 2;
+
 		List<PInfoDTO> list = service.selectByIdProductDetail(mNum,pNum);
 		
 	return new ResponseEntity<>(list,HttpStatus.OK);
@@ -81,7 +82,7 @@ public class ProductController {
 			throw new FindException("로그인하세요");
 		}
 		
-//		Long mNum = (long) 1;
+
 		Map<String,Object> resultMap = service.ProductEndListById(mNum,currentPage);
 		
 	return new ResponseEntity<>(resultMap,HttpStatus.OK);
@@ -96,7 +97,7 @@ public class ProductController {
 			throw new FindException("로그인하세요");
 		}
 		
-//		Long mNum = (long) 2;
+
 		List<PInfoDTO> list = service.ProductEndDetailById(mNum);
 		
 	return new ResponseEntity<>(list,HttpStatus.OK);
@@ -104,14 +105,15 @@ public class ProductController {
 	}
 	
 	@PutMapping("editPStatus8")
-	public ResponseEntity<?> updatePStatus8(HttpSession session,Long pNum) throws AddException{
+	public ResponseEntity<?> updatePStatus8(HttpSession session,@RequestBody  Map<String, Long> pNum) throws AddException{
 		
 		Long mNum = (Long) session.getAttribute("logined");
 		if (mNum == null) {
 			throw new AddException("로그인하세요");
 		}
 		
-		service.updateProductStatus8(pNum);
+		Long pnum = Long.valueOf(pNum.get("pNum"));
+		service.updateProductStatus8(pnum);
 		
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
