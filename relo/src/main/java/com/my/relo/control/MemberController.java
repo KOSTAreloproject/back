@@ -40,11 +40,11 @@ public class MemberController {
 	@Autowired
 	private MemberService ms;
 
-	private final String saveDirectory = "C:\\storage\\member";
-//	private final String saveDirectory = "/Users/skyleeb95/Downloads/files/member";
+//	private final String saveDirectory = "C:\\storage\\member";
+	private final String saveDirectory = "/Users/skyleeb95/Downloads/files/member";
 
 	// 회원 가입
-	@GetMapping("join")
+	@PostMapping("join")
 	public ResponseEntity<?> join(@RequestBody MemberDTO dto) throws AddException {
 		if (dto == null) {
 			throw new AddException();
