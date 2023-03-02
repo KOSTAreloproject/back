@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,9 +26,10 @@ public class StockReturnController {
 	StockReturnService stockReturnService;
 	
 	@PostMapping("add")
-	public ResponseEntity<?> addStockReturn(Long mNum,Long sNum) throws AddException{
-		
-		stockReturnService.addStockReturn(mNum,sNum);
+	public ResponseEntity<?> addStockReturn(@RequestBody  Map<String, Long> num) throws AddException{
+		Long mnum = Long.valueOf(num.get("mNum"));
+		Long snum = Long.valueOf(num.get("sNum"));
+		stockReturnService.addStockReturn(mnum,snum);
 		
 	return new ResponseEntity<>(HttpStatus.OK);
 	

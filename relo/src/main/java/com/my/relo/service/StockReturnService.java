@@ -56,7 +56,7 @@ public class StockReturnService {
       Address a = ar.findByAddrType(mNum);
       UUID u = UUID.randomUUID();
 
-      StockReturn stockReturn = StockReturn.builder().sNum(s.getSNum()).s(s).addr(a).srTrackingInfo(String.valueOf(u))
+      StockReturn stockReturn = StockReturn.builder().sNum(s.getSNum()).s(s).addr(a).srTrackingInfo(String.valueOf(u)).srStartDate(LocalDate.now())
             .build();
 
       srr.save(stockReturn);

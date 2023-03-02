@@ -52,11 +52,12 @@ public class StockReturn {
    private LocalDate srStartDate;
 
    @Builder
-   public StockReturn(Long sNum, Stock s, Address addr, String srTrackingInfo) {
+   public StockReturn(Long sNum, Stock s, Address addr, String srTrackingInfo,LocalDate srStartDate) {
       this.sNum = sNum;
       this.s = s;
       this.addr = addr;
       this.srTrackingInfo = srTrackingInfo;
+      this.srStartDate = srStartDate;
    }
 
 }
