@@ -48,7 +48,7 @@ public class ReplyController {
 		Long logined = 1L;
 	
 		MemberDTO m = 
-				MemberDTO.builder().mNum(logined).build();
+				MemberDTO.builder().mnum(logined).build();
 		ReplyDTO r = new ReplyDTO();
 		
 		StyleDTO s = new StyleDTO();

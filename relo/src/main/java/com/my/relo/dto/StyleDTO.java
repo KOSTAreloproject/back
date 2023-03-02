@@ -47,7 +47,7 @@ public class StyleDTO {
 				.name(member.getName())
 				.tel(member.getTel())
 				.type(member.getType())
-				.mNum(member.getMnum())
+				.mNum(member.getMNum())
 				.build();
 		Style entity = Style.builder().member(m).build();
 		return entity;

@@ -1,7 +1,9 @@
 package com.my.relo.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -58,7 +60,6 @@ public class StyleService {
 	public Long write(StyleDTO styleDTO) throws AddException{
 		List<StyleTagDTO> tagList = styleDTO.getTagList();
 		MemberDTO m = styleDTO.getMember();
-		System.out.println("멤버 >>" +m.getMNum());
 		Style style = styleDTO.toEntity(m);
 		sr.save(style);
 		Optional<Style> optS1 = sr.findById(style.getStyleNum());
@@ -92,7 +93,8 @@ public class StyleService {
 	 * @return
 	 * @throws FindException
 	 */
-	public List<StyleDTO> listByStyleNum() throws FindException{
+	public Map listByStyleNum() throws FindException{
+		Map map = new HashMap<>();
 		List<Style> styleList = sr.findAll(Sort.by(Sort.Direction.DESC,"styleNum"));
 		List<StyleDTO> styleDTOList = 
 				styleList.stream().map(style -> modelMapper.map(style, StyleDTO.class)).collect(Collectors.toList());
@@ -107,7 +109,11 @@ public class StyleService {
 			dto.setMember(mDTO);
 			list.add(dto);
 		}
-		return list;
+		List<String> tagList = str.ListByCnt();
+		map.put("list", list);
+		map.put("tagList", tagList);
+		
+		return map;
 	}
 	/**
 	 * 해시태그 별 리스트 출력 
@@ -115,7 +121,8 @@ public class StyleService {
 	 * @return
 	 * @throws FindException
 	 */
-	public List<StyleDTO> listByHashName(String hashName) throws FindException{
+	public Map listByHashName(String hashName) throws FindException{
+		Map map = new HashMap<>();
 		List<Style> styleList = sr.listByHashName(hashName);
 		List<StyleDTO> styleDTOList = 
 				styleList.stream().map(style -> modelMapper.map(style, StyleDTO.class)).collect(Collectors.toList());
@@ -130,7 +137,11 @@ public class StyleService {
 			dto.setMember(mDTO);
 			list.add(dto);
 		}
-		return list;
+		List<String> tagList = str.ListByCnt();
+		map.put("list", list);
+		map.put("tagList", tagList);
+		
+		return map;
 	}
 	
 	/**
@@ -138,7 +149,8 @@ public class StyleService {
 	 * @return List<StyleDTO>
 	 * @throws FindException
 	 */
-	public List<StyleDTO> listByLikes() throws FindException{
+	public Map listByLikes() throws FindException{
+		Map map = new HashMap<>();
 		List<Style> styleList = sr.listByLikes();
 		List<StyleDTO> styleDTOList = 
 				styleList.stream().map(style -> modelMapper.map(style, StyleDTO.class)).collect(Collectors.toList());
@@ -153,7 +165,11 @@ public class StyleService {
 			dto.setMember(mDTO);
 			list.add(dto);
 		}
-		return list;
+		List<String> tagList = str.ListByCnt();
+		map.put("list", list);
+		map.put("tagList", tagList);
+		
+		return map;
 	}
 	
 	/**
@@ -161,7 +177,8 @@ public class StyleService {
 	 * @return List<StyleDTO>
 	 * @throws FindException
 	 */
-	public List<StyleDTO> listBystyleCnt() throws FindException{
+	public Map listBystyleCnt() throws FindException{
+		Map map = new HashMap<>();
 		List<Style> styleList = sr.findAll(Sort.by(Sort.Direction.DESC,"styleCnt","styleNum"));
 		List<StyleDTO> styleDTOList = 
 				styleList.stream().map(style -> modelMapper.map(style, StyleDTO.class)).collect(Collectors.toList());
@@ -176,7 +193,11 @@ public class StyleService {
 			dto.setMember(mDTO);
 			list.add(dto);
 		}
-		return list;
+		List<String> tagList = str.ListByCnt();
+		map.put("list", list);
+		map.put("tagList", tagList);
+		
+		return map;
 	}
 	
 	/**
@@ -185,7 +206,8 @@ public class StyleService {
 	 * @return
 	 * @throws FindException
 	 */
-	public List<StyleDTO> listByMNum(Long mNum) throws FindException{
+	public Map listByMNum(Long mNum) throws FindException{
+		Map map = new HashMap<>();
 		List<Style> styleList = sr.findBymNum(mNum);
 		List<StyleDTO> styleDTOList =
 				styleList.stream().map(style -> modelMapper.map(style, StyleDTO.class)).collect(Collectors.toList());
@@ -200,7 +222,11 @@ public class StyleService {
 			dto.setMember(mDTO);
 			list.add(dto);
 		}
-		return list;
+		List<String> tagList = str.ListByCnt();
+		map.put("list", list);
+		map.put("tagList", tagList);
+		
+		return map;
 	}
 	
 	/**
@@ -216,7 +242,7 @@ public class StyleService {
 		Style style = optS.get();
 		StyleDTO sDTO = new StyleDTO();
 		MemberDTO mDTO1 = 
-				MemberDTO.builder().mNum(style.getMember().getMNum())
+				MemberDTO.builder().mnum(style.getMember().getMNum())
 						.id(style.getMember().getId()).build();
 		
 		sDTO.setMember(mDTO1);
@@ -291,18 +317,5 @@ public class StyleService {
 	public void plusCnt(Long styleNum) throws AddException{
 		sr.updateCnt(styleNum);
 	}
-	
-	/**
-	 * 이미지 리스트 출력 
-	 * @param list
-	 * @return List<Long>
-	 */
-	public List<Long> imgStyleNum(List<StyleDTO> list) throws FindException{
-		List<Long> imgList = new ArrayList<>();
-		for(int i = 0; i < list.size(); i++) {
-			Long styleNum = list.get(i).getStyleNum();
-			imgList.add(styleNum);
-		}
-		return imgList;
-	}
+
 }

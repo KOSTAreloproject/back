@@ -45,6 +45,8 @@ public class ReplyService {
 		List<Reply> repList = rr.findByStyleNum(styleNum);
 		List<ReplyDTO> repDTOList = new ArrayList<>();
 		for(Reply r : repList) {
+			ReplyDTO pDTO = new ReplyDTO();
+			pDTO.setRepNum(r.getReplyParent().getRepNum());
 			ReplyDTO rDTO = new ReplyDTO();
 			rDTO.setRepNum(r.getRepNum());
 			rDTO.setRepDate(r.getRepDate());
@@ -53,6 +55,7 @@ public class ReplyService {
 			MemberDTO mDTO = new MemberDTO();
 			mDTO.builder().id(m.getId()).build();
 			rDTO.setMember(mDTO);
+			rDTO.setReplyParentDTO(pDTO);
 			repDTOList.add(rDTO);
 		}
 		return repDTOList;	
