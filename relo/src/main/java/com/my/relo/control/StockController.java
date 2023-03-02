@@ -83,23 +83,25 @@ public class StockController {
 	public ResponseEntity<?> updateSetSStatus(HttpSession session,
 		@RequestBody Map<String, Object> stock) throws AddException{
 
-		Long mNum = (Long) session.getAttribute("logined");
-		if (mNum == null) {
-			throw new AddException("로그인하세요");
-		}
-		
+//		Long mNum = (Long) session.getAttribute("logined");
+//		if (mNum == null) {
+//			throw new AddException("로그인하세요");
+//		}
+//		
+		Long mNum = (long)2;
 		Long snum = Long.valueOf((Integer) stock.get("sNum"));
 		String sGrade = (String) stock.get("sGrade");
 		String managerComment = (String) stock.get("managerComment");
-
+		Integer sHopePrice = (Integer) stock.get("sHopePrice");
 		
 		StockDTO sDto = StockDTO.builder()
 				.sNum(snum)
 				.sGrade(sGrade)
 				.managerComment(managerComment)
 				.mNum(mNum)
+				.sHopePrice(sHopePrice)
 				.build();
-		
+
 		stockService.updateSetSStatus(sDto);
 		
 	return new ResponseEntity<>(HttpStatus.OK);
