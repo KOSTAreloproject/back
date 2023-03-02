@@ -56,8 +56,8 @@ public class PInfo {
 	@Column(name = "s_hope_days")
 	private Integer sHopeDays;
 	
-	@Column(name = "manager_commnet")
-	private String managerCommnet;
+	@Column(name = "manager_comment")
+	private String managerComment;
 	
 	@Temporal(TemporalType.DATE)
 	@JsonFormat(timezone = "Asia/Seoul", pattern = "yyyy-MM-dd")
