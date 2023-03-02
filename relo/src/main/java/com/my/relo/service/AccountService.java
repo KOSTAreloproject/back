@@ -31,8 +31,8 @@ public class AccountService {
       if (optA.isEmpty()) { // 계좌정보가 없을 때 INSERT
          Account ac = Account.builder()
          .mNum(account.getMNum())
-         .bankAccount(account.getBankCode())
-         .bankCode(account.getBankAccount())
+         .bankAccount(account.getBankAccount())
+         .bankCode(account.getBankCode())
          .build();
          
          ar.save(ac);
@@ -40,8 +40,8 @@ public class AccountService {
     	  Account ac = optA.get();
     	  ac = Account.builder()
     		         .mNum(account.getMNum())
-    		         .bankAccount(account.getBankCode())
-    		         .bankCode(account.getBankAccount())
+    		         .bankAccount(account.getBankAccount())
+    		         .bankCode(account.getBankCode())
     		         .build();
          ar.save(ac);
       }
