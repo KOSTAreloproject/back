@@ -47,7 +47,10 @@ public class StyleController {
 	
 	@Autowired
 	private StyleService service;
-
+	
+	private final String saveDirectory = "C:\\storage\\style";
+//	private final String saveDirectory = "/Users/skyleeb95/Downloads/files";
+	
 	/**
 	 * 리스트 출력 
 	 * @param type 1: 최신순 2: 좋아요순 3: 조회수순 
@@ -82,7 +85,6 @@ public class StyleController {
 	@GetMapping(value="list/img/{styleNum}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> getImgList(@PathVariable("styleNum")Long styleNum) throws FindException, IOException {
 
-		String saveDirectory = "/Users/skyleeb95/Downloads/files/";
 		File saveDirFile = new File(saveDirectory);
 		File[] files = saveDirFile.listFiles();
 		File file = null;
@@ -126,7 +128,6 @@ public class StyleController {
 	 */
 	@GetMapping(value = "detail/img/{styleNum}")
 	public ResponseEntity<?> getDetailFile(@PathVariable("styleNum")Long styleNum) throws IOException{
-		String saveDirectory = "/Users/skyleeb95/Downloads/files";
 		File saveDirFile = new File(saveDirectory);
 		File[] files = saveDirFile.listFiles();
 		Resource img = null;
@@ -211,7 +212,6 @@ public class StyleController {
 		s.setTagList(tagList);
 
 		Long styleNum = service.write(s);
-		String saveDirectory = "/Users/skyleeb95/Downloads/files";
 		String originFileName = f.getOriginalFilename();
 		String fileExtension = originFileName.substring(originFileName.lastIndexOf(".") + 1);
 		String fileName = "s_"+styleNum+"."+fileExtension;
@@ -262,7 +262,6 @@ public class StyleController {
 		
 		if(f.getSize() != 0 ) {
 			
-			String saveDirectory = "/Users/skyleeb95/Downloads/files";
 			File saveDirFile = new File(saveDirectory);
 			
 			File[] files = saveDirFile.listFiles();
@@ -314,7 +313,6 @@ public class StyleController {
 	@DeleteMapping(value = "{styleNum}",produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> delete(@PathVariable("styleNum")Long styleNum) throws RemoveException, FindException{
 		
-		String saveDirectory = "/Users/skyleeb95/Downloads/files";
 		File saveDirFile = new File(saveDirectory);
 		File[] files = saveDirFile.listFiles();
 		
