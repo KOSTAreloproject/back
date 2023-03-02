@@ -15,13 +15,16 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -76,37 +79,49 @@ public class StockController {
 	}
 	
 	
-	@PutMapping("editSstatus")
-	public ResponseEntity<?> updateSetSStatus(HttpSession session, 
-		 StockDTO stock) throws AddException{
-		
+	@PutMapping(value = "editSstatus", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> updateSetSStatus(HttpSession session,
+		@RequestBody Map<String, Object> stock) throws AddException{
+
 		Long mNum = (Long) session.getAttribute("logined");
 		if (mNum == null) {
 			throw new AddException("로그인하세요");
 		}
-
-		stock.stockSetMember(mNum);
 		
-		stockService.updateSetSStatus(stock);
+		Long snum = Long.valueOf((Integer) stock.get("sNum"));
+		String sGrade = (String) stock.get("sGrade");
+		String managerComment = (String) stock.get("managerComment");
+
+		
+		StockDTO sDto = StockDTO.builder()
+				.sNum(snum)
+				.sGrade(sGrade)
+				.managerComment(managerComment)
+				.mNum(mNum)
+				.build();
+		
+		stockService.updateSetSStatus(sDto);
 		
 	return new ResponseEntity<>(HttpStatus.OK);
 	
 	}
 	
 	@PutMapping("editSstatus5")
-	public ResponseEntity<?> updateByCancleSStatus5(HttpSession session, 
-		 Long sNum) throws AddException{
-		
-		Long mNum = (Long) session.getAttribute("logined");
-		if (mNum == null) {
-			throw new AddException("로그인하세요");
-		}
-		
-		stockService.updateByCancleSStatus5(sNum);
-		
-	return new ResponseEntity<>(HttpStatus.OK);
-	
-	}
+	   public ResponseEntity<?> updateByCancleSStatus5(HttpSession session,
+			   @RequestBody Map<String, Long> sNum)
+	         throws AddException {
+	      Long snum = Long.valueOf(sNum.get("sNum"));
+	      
+	      Long mNum = (Long) session.getAttribute("logined");
+	      if (mNum == null) {
+	         throw new AddException("로그인하세요");
+	      }
+
+	      stockService.updateByCancleSStatus5(snum);
+
+	      return new ResponseEntity<>(HttpStatus.OK);
+
+	   }
 	
 	@GetMapping("listById/{currentPage}")
 	public ResponseEntity<?> selectById(HttpSession session,@PathVariable int currentPage) throws FindException{
@@ -115,6 +130,8 @@ public class StockController {
 		if (mNum == null) {
 			throw new FindException("로그인하세요");
 		}
+		
+
 
 		Map<String,Object> resultMap  = stockService.selectById(mNum,currentPage);
 		
@@ -123,13 +140,13 @@ public class StockController {
 	}
 	
 	@GetMapping("detailById")
-	public ResponseEntity<?> detailById(Long sNum,HttpSession session) throws FindException{
+	public ResponseEntity<?> detailById( Long sNum,HttpSession session) throws FindException{
 		
-		Long mNum = (Long) session.getAttribute("logined");
-		if (mNum == null) {
-			throw new FindException("로그인하세요");
-		}
-		
+//		Long mNum = (Long) session.getAttribute("logined");
+//		if (mNum == null) {
+//			throw new FindException("로그인하세요");
+//		}
+		Long mNum	= (long)2;
 		List<StockDTO> list = stockService.detailById(sNum,mNum);
 		
 	return new ResponseEntity<>(list,HttpStatus.OK);
@@ -137,12 +154,13 @@ public class StockController {
 	}
 	
 	@GetMapping("listBySstatus/{currentPage}")
-	public ResponseEntity<?> selectBySstatus(HttpSession session,Integer sStatus,@PathVariable int currentPage) throws FindException{
+	public ResponseEntity<?> selectBySstatus(HttpSession session, Integer sStatus,@PathVariable int currentPage) throws FindException{
 		
-		Long mNum = (Long) session.getAttribute("logined");
-		if (mNum == null) {
-			throw new FindException("로그인하세요");
-		}
+//		Long mNum = (Long) session.getAttribute("logined");
+//		if (mNum == null) {
+//			throw new FindException("로그인하세요");
+//		}
+
 		
 		Map<String,Object> resultMap = stockService.selectBySstatus(sStatus,currentPage);
 		
