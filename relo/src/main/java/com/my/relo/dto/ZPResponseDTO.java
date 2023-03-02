@@ -13,8 +13,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ZPResponseDTO {
-	private Long mNum;
+	private Long mnum;
 	private Long pNum;
+	private Long sNum;
 	private String sBrand;
 	private String sName;
 	private String sType;
@@ -27,13 +28,15 @@ public class ZPResponseDTO {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "Asia/Seoul", pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime pendDate;
 	private String managerComment;
+	private Long totalcnt;
 
 	@Builder
-	public ZPResponseDTO(Long mNum, Long pNum, String sBrand, String sName, String sType, String sizeCategoryName,
-			String sColor, Integer sOriginPrice, Integer sHopePrice, Integer maxPrice, String sGrade,
-			LocalDateTime pendDate, String managerComment) {
-		this.mNum = mNum;
+	public ZPResponseDTO(Long mnum, Long pNum, Long sNum, String sBrand, String sName, String sType,
+			String sizeCategoryName, String sColor, Integer sOriginPrice, Integer sHopePrice, Integer maxPrice,
+			String sGrade, LocalDateTime pendDate, String managerComment, Long totalcnt) {
+		this.mnum = mnum;
 		this.pNum = pNum;
+		this.sNum = sNum;
 		this.sBrand = sBrand;
 		this.sName = sName;
 		this.sType = sType;
@@ -45,7 +48,6 @@ public class ZPResponseDTO {
 		this.sGrade = sGrade;
 		this.pendDate = pendDate;
 		this.managerComment = managerComment;
-
 	}
 
 }
