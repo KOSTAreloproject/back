@@ -18,20 +18,17 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StockReturnDTO {
-	private Long sNum;
-	private Address addr;
-	private Integer stdStatus;
-	private String stdTrackingInfo;
-	 @JsonFormat(timezone = "Asia/Seoul", pattern = "yyyy-MM-dd")
-	private LocalDate stdStartDate;
-	
-	public StockReturn toEntity() {
-		StockReturn stockreturn = StockReturn.builder()
-		.sNum(this.sNum)
-		.addr(this.addr)
-		.stdTrackingInfo(this.stdTrackingInfo)
-		.build();
-	
-		return stockreturn;
-	}
+   private Long sNum;
+   private Address addr;
+   private Integer srStatus;
+   private String srTrackingInfo;
+   @JsonFormat(timezone = "Asia/Seoul", pattern = "yyyy-MM-dd")
+   private LocalDate srStartDate;
+
+   public StockReturn toEntity() {
+      StockReturn stockreturn = StockReturn.builder().sNum(this.sNum).addr(this.addr)
+            .srTrackingInfo(this.srTrackingInfo).build();
+
+      return stockreturn;
+   }
 }
