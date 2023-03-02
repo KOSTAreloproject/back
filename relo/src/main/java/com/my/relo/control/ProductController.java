@@ -25,7 +25,7 @@ import com.my.relo.service.ProductService;
 @RequestMapping("product/*")
 public class ProductController {
 	@Autowired
-	ProductService productService;
+	ProductService Service;
 	
 	@PostMapping("add")
 	public ResponseEntity<?> ProductAdd(HttpSession session, 
@@ -37,7 +37,7 @@ public class ProductController {
 			throw new AddException("로그인하세요");
 		}
 
-		productService.ProductAdd(product,sNum,mNum);
+		Service.ProductAdd(product,sNum,mNum);
 		
 	return new ResponseEntity<>(HttpStatus.OK);
 	
@@ -52,7 +52,7 @@ public class ProductController {
 		}
 		
 //		Long mNum = (long) 3;
-		Map<String,Object> resultMap = productService.selectByIdProduct(mNum,currentPage);
+		Map<String,Object> resultMap = Service.selectByIdProduct(mNum,currentPage);
 		
 	return new ResponseEntity<>(resultMap,HttpStatus.OK);
 	
@@ -67,7 +67,7 @@ public class ProductController {
 		}
 		
 //		Long mNum = (long) 2;
-		List<PInfoDTO> list = productService.selectByIdProductDetail(mNum,pNum);
+		List<PInfoDTO> list = Service.selectByIdProductDetail(mNum,pNum);
 		
 	return new ResponseEntity<>(list,HttpStatus.OK);
 	
@@ -82,7 +82,7 @@ public class ProductController {
 		}
 		
 //		Long mNum = (long) 1;
-		Map<String,Object> resultMap = productService.ProductEndListById(mNum,currentPage);
+		Map<String,Object> resultMap = Service.ProductEndListById(mNum,currentPage);
 		
 	return new ResponseEntity<>(resultMap,HttpStatus.OK);
 	
@@ -97,7 +97,7 @@ public class ProductController {
 		}
 		
 //		Long mNum = (long) 2;
-		List<PInfoDTO> list = productService.ProductEndDetailById(mNum);
+		List<PInfoDTO> list = Service.ProductEndDetailById(mNum);
 		
 	return new ResponseEntity<>(list,HttpStatus.OK);
 	
@@ -111,7 +111,7 @@ public class ProductController {
 			throw new AddException("로그인하세요");
 		}
 		
-		productService.updateProductStatus8(pNum);
+		Service.updateProductStatus8(pNum);
 		
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
