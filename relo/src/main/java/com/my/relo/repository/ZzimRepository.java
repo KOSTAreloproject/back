@@ -18,7 +18,7 @@ public interface ZzimRepository extends CrudRepository<Zzim, ZzimEmbedded> {
 	 * @param mNum : 회원번호
 	 * @return 나의 찜목록
 	 */
-	@Query(value = "SELECT z.m_num, z.p_num, s_brand, s_name, s_type, sz.size_category_name, s_color, s_hope_price, s_grade, p_end_date, nvl(a.max_price,0) as max_price\r\n"
+	@Query(value = "SELECT z.m_num, z.p_num, s.s_num, s_brand, s_name, s_type, sz.size_category_name, s_color, s_hope_price, s_grade, p_end_date, nvl(a.max_price,0) as max_price\r\n"
 			+ "FROM product p\r\n" + "JOIN zzim z ON p.p_num = z.p_num\r\n" + "JOIN stock s ON p.s_num = s.s_num\r\n"
 			+ "JOIN sizes sz ON s.size_category_num = sz.size_category_num\r\n"
 			+ "LEFT JOIN (SELECT p_num, max(a_price) as max_price FROM auction GROUP BY p_num) a on p.p_num = a.p_num\r\n"
