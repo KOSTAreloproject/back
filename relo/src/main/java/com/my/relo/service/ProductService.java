@@ -1,6 +1,8 @@
 package com.my.relo.service;
 
 import java.time.LocalDate;
+
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -44,7 +46,7 @@ public class ProductService {
 	 * @param mNum
 	 * @throws AddException
 	 */
-	public void ProductAdd(PInfo product, Long sNum, Long mNum) throws AddException {
+	public void ProductAdd( Long sNum, Long mNum) throws AddException {
 
 		Optional<Stock> optS1 = sr.findById(sNum);
 		Stock s = optS1.get();
