@@ -23,7 +23,6 @@ import com.my.relo.dto.AuctionDTO;
 import com.my.relo.dto.PInfoDTO;
 import com.my.relo.dto.ZPResponseDTO;
 import com.my.relo.entity.Member;
-import com.my.relo.entity.PInfo;
 import com.my.relo.entity.Product;
 import com.my.relo.entity.Stock;
 import com.my.relo.exception.AddException;
@@ -54,7 +53,7 @@ public class ProductService {
 	 * @param mNum
 	 * @throws AddException
 	 */
-	public void ProductAdd(PInfo product, Long sNum, Long mNum) throws AddException {
+	public void ProductAdd(Long sNum, Long mNum) throws AddException {
 
 		Optional<Stock> optS1 = sr.findById(sNum);
 		Stock s = optS1.get();
