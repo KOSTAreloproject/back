@@ -48,8 +48,8 @@ public class StyleController {
 	@Autowired
 	private StyleService service;
 	
-//	private final String saveDirectory = "C:\\storage\\style";
-	private final String saveDirectory = "/Users/skyleeb95/Downloads/files/style";
+	private final String saveDirectory = "C:\\storage\\style";
+//	private final String saveDirectory = "/Users/skyleeb95/Downloads/files/style";
 	
 	/**
 	 * 리스트 출력 
@@ -57,7 +57,7 @@ public class StyleController {
 	 * @return
 	 */
 	@GetMapping(value = "list/{type}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getList(@PathVariable("type") Long type) {
+	public ResponseEntity<?> getList(@PathVariable("type") Long type,HttpSession session) {
 		Map map = new HashMap<>();
 		try {
 			if(type == 1) {
@@ -68,6 +68,8 @@ public class StyleController {
 				map = service.listBystyleCnt();
 			}
 			if(!map.isEmpty()) {
+				Long loginId = (Long) session.getAttribute("logined");
+				map.put("loginId", loginId);
 				return new ResponseEntity<>(map, HttpStatus.OK);
 			}
 		} catch (FindException e) {
@@ -199,6 +201,7 @@ public class StyleController {
 									@RequestPart(value = "f",required = false) MultipartFile f) throws AddException, IOException, FindException {
 		
 		Long mNum = (Long)session.getAttribute("logined");
+		
 		if(mNum == null) {//로그인 안한 경우
 			throw new FindException("로그인하세요");
 		}
