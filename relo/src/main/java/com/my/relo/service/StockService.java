@@ -58,6 +58,7 @@ public class StockService {
 				.sType(stock.getSType())
 				.sHopeDays(stock.getSHopeDays())
 				.sellerComment(stock.getSellerComment())
+				.sStatus(1)
 				.build();
 		sr.save(s);
 		return s.getSNum();
