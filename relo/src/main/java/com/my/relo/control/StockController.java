@@ -54,12 +54,12 @@ public class StockController {
 			@RequestPart(value = "f", required = false) MultipartFile f)
 			throws AddException, IOException, FindException {
 
-//		Long mNum = (Long) session.getAttribute("logined");
-//		if (mNum == null) {
-//			throw new AddException("로그인하세요");
-//		}
+		Long mNum = (Long) session.getAttribute("logined");
+		if (mNum == null) {
+			throw new AddException("로그인하세요");
+		}
 
-		Long mNum = (long) 4;
+
 
 		stock.stockSetMember(mNum);
 
