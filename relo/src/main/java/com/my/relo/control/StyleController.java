@@ -48,8 +48,8 @@ public class StyleController {
 	@Autowired
 	private StyleService service;
 	
-//	private final String saveDirectory = "C:\\storage\\style";
-	private final String saveDirectory = "/Users/skyleeb95/Downloads/files/style";
+	private final String saveDirectory = "C:\\storage\\style";
+//	private final String saveDirectory = "/Users/skyleeb95/Downloads/files/style";
 	
 	/**
 	 * 리스트 출력 
