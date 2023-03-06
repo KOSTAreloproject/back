@@ -25,7 +25,6 @@ public class OrderDeliveryController {
 	@PostMapping(value = "add", produces = "text/plain;charset=utf-8")
 	public ResponseEntity<?> add(HttpSession session, Long aNum, AddressDTO adDTO, OrdersDTO odDTO) {
 		Long mNum = (Long) session.getAttribute("logined");
-//			mNum = 10L;
 		if (mNum == null) {
 			return new ResponseEntity<>("로그인하세요", HttpStatus.BAD_REQUEST);
 		} else {
@@ -56,7 +55,6 @@ public class OrderDeliveryController {
 	@PostMapping(value = "confirm", produces = "text/plain;charset=utf-8")
 	public ResponseEntity<?> confirm(HttpSession session, Long aNum) {
 		Long mNum = (Long) session.getAttribute("logined");
-//		mNum = 8L;
 		if (mNum == null) {
 			return new ResponseEntity<>("로그인하세요", HttpStatus.BAD_REQUEST);
 		} else {

@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -59,8 +60,8 @@ public class OrdersController {
 	}
 
 	// 회원 주문 상세
-	@GetMapping(value = "detail", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> detail(HttpSession session, Long aNum) {
+	@GetMapping(value = "detail/{aNum}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> detail(HttpSession session, @PathVariable Long aNum) {
 		Long mNum = (Long) session.getAttribute("logined");
 //		mNum = 8L;
 		if (mNum == null) {

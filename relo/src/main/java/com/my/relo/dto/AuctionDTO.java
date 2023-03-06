@@ -1,6 +1,7 @@
 package com.my.relo.dto;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -31,4 +32,6 @@ public class AuctionDTO {
 	private String sizeCategoryName;
 	private int aPrice;
 	private Long awNum;
+	@JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "Asia/Seoul")
+	private LocalDateTime aDate2;
 }
