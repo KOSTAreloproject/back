@@ -1,7 +1,9 @@
 package com.my.relo.control;
 
+import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,47 +28,45 @@ public class ZzimController {
 	@Autowired
 	private ZzimService service;
 
-	// 찜 목록 보기
-//	@GetMapping(value = "{mNum}", produces = MediaType.APPLICATION_JSON_VALUE)
-//	public ResponseEntity<?> myZzimList(@PathVariable Long mNum) throws FindException {
-//		List<ZPResponseDTO> list = service.readZzimList(mNum);
-//		return new ResponseEntity<>(list, HttpStatus.OK);
-//	}
-
 	@GetMapping(value = "{cp}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> MyZzimList(HttpSession session, @PathVariable(name = "cp") int cp) throws FindException {
+	public ResponseEntity<?> MyZzimList(HttpServletRequest request, @PathVariable(name = "cp") int cp)
+			throws FindException {
+		HttpSession session = request.getSession();
 		Long mNum = (Long) session.getAttribute("logined");
-//		Long mNum = 4L;
+		System.out.println("1221" + mNum);
 		Map<String, Object> map = service.readZzimList(mNum, cp);
 		return new ResponseEntity<>(map, HttpStatus.OK);
 	}
 
 	// 찜 추가
 	@PostMapping(value = "{pNum}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> addMyZzimList(HttpSession session, @PathVariable(value = "pNum") Long pNum)
+	public ResponseEntity<?> addMyZzimList(HttpServletRequest request, @PathVariable(name = "pNum") Long pNum)
 			throws AddException {
+		Map<String, String> map = new HashMap<>();
+		HttpSession session = request.getSession();
 		Long mNum = (Long) session.getAttribute("logined");
 		if (mNum == null) {
-			throw new AddException("먼저 로그인을 해주세요.");
+			map.put("msg", "관심상품으로 추가하시려면 로그인을 해주세요.");
+			return new ResponseEntity<>(map, HttpStatus.OK);
 		}
 		service.createZzimList(mNum, pNum);
-		return new ResponseEntity<>(HttpStatus.OK);
+		map.put("msg", "관심상품 목록에 추가했습니다.");
+		return new ResponseEntity<>(map, HttpStatus.OK);
 	}
-
-//	@PostMapping(value = "add", produces = MediaType.APPLICATION_JSON_VALUE)
-//	public ResponseEntity<?> addMyZzimList(@RequestParam(value = "mNum") Long mNum,
-//			@RequestParam(value = "pNum") Long pNum) throws AddException {
-//		System.out.println(mNum + "+" + pNum);
-//		service.createZzimList(mNum, pNum);
-//		return new ResponseEntity<>(HttpStatus.OK);
-//	}
 
 	// 찜 삭제
 	@DeleteMapping(value = "{pNum}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> delMyZzimList(HttpSession session, @PathVariable Long pNum) throws RemoveException {
+	public ResponseEntity<?> delMyZzimList(HttpSession session, @PathVariable(name = "pNum") Long pNum)
+			throws RemoveException {
 		Long mNum = (Long) session.getAttribute("logined");
+		Map<String, String> map = new HashMap<>();
+		if (mNum == null) {
+			map.put("msg", "관심상품에서 삭제하시려면 로그인을 해주세요.");
+			return new ResponseEntity<>(map, HttpStatus.OK);
+		}
 		service.deleteZzimList(mNum, pNum);
-		return new ResponseEntity<>(HttpStatus.OK);
+		map.put("msg", "관심상품 목록에서 삭제했습니다.");
+		return new ResponseEntity<>(map, HttpStatus.OK);
 	}
 
 }

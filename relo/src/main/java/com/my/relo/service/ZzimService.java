@@ -35,10 +35,6 @@ public class ZzimService {
 	 * @return 회원의 찜 목록
 	 * @throws FindException
 	 */
-	// DateTimeFormatter fm = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss",
-	// Locale.KOREA);
-//	DateTimeFormatter dtf = new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd hh:mm:ss.S")
-//			.appendValue(ChronoField.MICRO_OF_SECOND, 3).toFormatter();
 	public Map<String, Object> readZzimList(Long mNum, int currentPage) throws FindException {
 		Pageable pb = PageRequest.of((currentPage - 1), 10);
 		Page<Object[]> resultList = zr.findByMNum(mNum, pb);
@@ -46,7 +42,9 @@ public class ZzimService {
 		int totalpage = resultList.getTotalPages();
 		System.out.println();
 		if (list.isEmpty()) {
-			throw new FindException("찜 목록이 없습니다");
+			Map<String, Object> resultMap = new HashMap<>();
+			resultMap.put("msg", "찜 목록이 없습니다.");
+			return resultMap;
 		}
 		List<ZPResponseDTO> dtos = new ArrayList<>();
 		for (Object[] objs : list) {
@@ -66,6 +64,24 @@ public class ZzimService {
 		resultMap.put("totalcnt", dtos.size());
 		return resultMap;
 
+	}
+
+	/**
+	 * 내 찜목록에 있는지 확인한다.
+	 * 
+	 * @param mNum : 회원번호
+	 * @param pNum : 상품번호
+	 * @throws FindException
+	 */
+
+	public int checkExistlist(Long mNum, Long pNum) throws FindException {
+		ZzimEmbedded ze = ZzimEmbedded.builder().mnum(mNum).pNum(pNum).build();
+		Optional<Zzim> optZ = zr.findById(ze);
+		if (optZ.isPresent()) {
+			return 1;
+		} else {
+			return 2;
+		}
 	}
 
 	/**
