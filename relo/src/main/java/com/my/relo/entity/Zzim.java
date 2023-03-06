@@ -21,7 +21,7 @@ public class Zzim {
 	@EmbeddedId
 	private ZzimEmbedded ze = new ZzimEmbedded();
 
-	@MapsId("mNum")
+	@MapsId("mnum")
 	@ManyToOne
 	@JoinColumn(name = "m_num")
 	private Member member; // 멤버번호
