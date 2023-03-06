@@ -1,12 +1,21 @@
 package com.my.relo.container;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.support.WebBindingInitializer;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
 @Configuration
 //@ComponentScan(basePackages = {"com.my.customer.control",
@@ -27,18 +36,24 @@ public class MyServletContext
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/**")
-		    .allowedOrigins("http://192.168.0.42:5500")
+		    .allowedOrigins("http://192.168.0.43:5500")
 		    .allowCredentials(true)
 		    .allowedMethods("GET", "POST", "PUT", "DELETE");
 	}
-
+	
+	
+    
+//	@Bean
+//	public InternalResourceViewResolver viewResolver() {
+//		InternalResourceViewResolver irvr = new InternalResourceViewResolver();
+//		irvr.setPrefix("/WEB-INF/views/");
+//		irvr.setSuffix(".jsp");
+//		return irvr;
+//	}
 	@Bean
-	public InternalResourceViewResolver viewResolver() {
-		InternalResourceViewResolver irvr = new InternalResourceViewResolver();
-		irvr.setPrefix("/WEB-INF/views/");
-		irvr.setSuffix(".jsp");
-		return irvr;
-	}
+    public ModelMapper modelMapper(){
+        return new ModelMapper();
+    }
 
 	@Bean 
 	public CommonsMultipartResolver multipartResolver() {
