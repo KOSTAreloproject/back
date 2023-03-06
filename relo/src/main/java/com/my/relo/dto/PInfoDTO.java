@@ -37,6 +37,8 @@ public class PInfoDTO {
 	private Long pNum;
 	
 	private Long maxPrice;
+	
+	private Long sNum;
 
 //	@Builder
 //	public PInfoDTO(String sName, String sizeCategoryName, Integer pStatus, Date pEndDate, Integer sHopePrice,

@@ -79,11 +79,12 @@ public class Product {
 	private List<Zzim> Zzim;
 
 	@Builder
-	public Product(LocalDate pEndDate, Integer pStatus, Stock stock, Long mNum) {
+	public Product(LocalDate pEndDate, Integer pStatus, Stock stock, Long mNum, LocalDate pStartDate) {
 		this.pEndDate = pEndDate;
 		this.pStatus = pStatus;
 		this.stock = stock;
 		this.mNum = mNum;
+		this.pStartDate = pStartDate;
 	}
     
 	public void updatePStatus8(Integer pStatus) {

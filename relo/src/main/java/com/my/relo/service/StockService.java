@@ -145,26 +145,30 @@ public class StockService {
 		Pageable pageable = PageRequest.of(currentPage-1,10);  //10개씩 페이징
 		Page<Object[]> pageSList = sr.selectById(m1.getMNum(),pageable);
 		List<Object[]> sList = pageSList.getContent();
-		
-		List<StockDTO> list = new ArrayList<>();
-		for (Object[] obj : sList) {
-			StockDTO dto = StockDTO.builder()
-			.sNum(Long.valueOf(String.valueOf(obj[0])))
-			.sName(String.valueOf(obj[1]))
-			.sizeCategoryName(String.valueOf(obj[2]))
-			.sStatus(Integer.valueOf(String.valueOf(obj[3])))
-			.sGrade(String.valueOf(obj[4]))
-			.sBrand(String.valueOf(obj[5]))
-			.build();
+		if(!sList.isEmpty()) {
+			
+			List<StockDTO> list = new ArrayList<>();
+			for (Object[] obj : sList) {
+				StockDTO dto = StockDTO.builder()
+						.sNum(Long.valueOf(String.valueOf(obj[0])))
+						.sName(String.valueOf(obj[1]))
+						.sizeCategoryName(String.valueOf(obj[2]))
+						.sStatus(Integer.valueOf(String.valueOf(obj[3])))
+						.sGrade(String.valueOf(obj[4]))
+						.sBrand(String.valueOf(obj[5]))
+						.build();
 				
-			list.add(dto);
+				list.add(dto);
+			}
+			
+			Map<String,Object> resultMap = new HashMap<>();
+			resultMap.put("list", list);
+			resultMap.put("totalPageNum",pageSList.getTotalPages());
+			
+			return resultMap;
+		}else {
+			throw new FindException("등록된 상품이 없습니다.");
 		}
-		
-		Map<String,Object> resultMap = new HashMap<>();
-		resultMap.put("list", list);
-		resultMap.put("totalPageNum",pageSList.getTotalPages());
-		
-		return resultMap;
 	}
 	
 	/**
@@ -211,25 +215,29 @@ public class StockService {
 			Pageable pageable = PageRequest.of(currentPage-1,10,Sort.by("s_num"));  //10개씩 페이징
 			Page<Object[]> pageSList = sr.selectBySReturn(sStatus,pageable);
 			List<Object[]> List = pageSList.getContent();
-			
-			List<StockDTO> list = new ArrayList<>();
-			for (Object[] obj : List) {
-				StockDTO dto = StockDTO.builder()
-				.sNum(Long.valueOf(String.valueOf(obj[0])))
-				.sName(String.valueOf(obj[1]))
-				.sizeCategoryName(String.valueOf(obj[2]))
-				.sColor(String.valueOf(obj[3]))
-				.mNum(Long.valueOf(String.valueOf(obj[4])))
-				.build();
+			if(!List.isEmpty()) {
+				
+				List<StockDTO> list = new ArrayList<>();
+				for (Object[] obj : List) {
+					StockDTO dto = StockDTO.builder()
+							.sNum(Long.valueOf(String.valueOf(obj[0])))
+							.sName(String.valueOf(obj[1]))
+							.sizeCategoryName(String.valueOf(obj[2]))
+							.sColor(String.valueOf(obj[3]))
+							.mNum(Long.valueOf(String.valueOf(obj[4])))
+							.build();
 					
-				list.add(dto);
+					list.add(dto);
+				}
+				
+				Map<String,Object> resultMap = new HashMap<>();
+				resultMap.put("list", list);
+				resultMap.put("totalPageNum",pageSList.getTotalPages());
+				
+				return resultMap;
+			}else {
+				throw new FindException("상품이 없습니다.");
 			}
-			
-			Map<String,Object> resultMap = new HashMap<>();
-			resultMap.put("list", list);
-			resultMap.put("totalPageNum",pageSList.getTotalPages());
-
-		return resultMap;
 	}
 	
 	/**

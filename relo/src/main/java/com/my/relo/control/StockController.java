@@ -105,14 +105,15 @@ public class StockController {
 			throw new AddException("로그인하세요");
 		}
 
-		Long snum = Long.valueOf((Integer) stock.get("sNum"));
+		Long snum = Long.valueOf((String) stock.get("sNum"));
 		String sGrade = (String) stock.get("sGrade");
 		String managerComment = (String) stock.get("managerComment");
-		Integer sHopePrice = (Integer) stock.get("sHopePrice");
-
+		Integer sHopePrice = Integer.valueOf((String)stock.get("sHopePrice"));
+		
 		StockDTO sDto = StockDTO.builder().sNum(snum).sGrade(sGrade).managerComment(managerComment).mNum(mNum)
 				.sHopePrice(sHopePrice).build();
-
+		
+		
 		stockService.updateSetSStatus(sDto);
 
 		return new ResponseEntity<>(HttpStatus.OK);
@@ -120,16 +121,16 @@ public class StockController {
 	}
 
 	@PutMapping("editSstatus5")
-	public ResponseEntity<?> updateByCancleSStatus5(HttpSession session, @RequestBody Map<String, Long> sNum)
+	public ResponseEntity<?> updateByCancleSStatus5(HttpSession session, @RequestBody Long sNum)
 			throws AddException {
-		Long snum = Long.valueOf(sNum.get("sNum"));
+
 
 		Long mNum = (Long) session.getAttribute("logined");
 		if (mNum == null) {
 			throw new AddException("로그인하세요");
 		}
 
-		stockService.updateByCancleSStatus5(snum);
+		stockService.updateByCancleSStatus5(sNum);
 
 		return new ResponseEntity<>(HttpStatus.OK);
 
@@ -156,6 +157,8 @@ public class StockController {
 		if (mNum == null) {
 			throw new FindException("로그인하세요");
 		}
+		
+
 
 		List<StockDTO> list = stockService.detailById(sNum, mNum);
 
