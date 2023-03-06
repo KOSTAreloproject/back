@@ -260,6 +260,7 @@ public class ProductController {
 	      int chz = zService.checkExistlist(mNum, pNum);
 	      return new ResponseEntity<>(chz, HttpStatus.OK);
 
+	      
 	   }
 
 	   // 상품목록 출력 시 이미지 목록 가져오기

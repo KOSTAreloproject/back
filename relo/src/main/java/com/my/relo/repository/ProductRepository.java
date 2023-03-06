@@ -14,6 +14,7 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
 
 	// @Modifying insert, update, delete
 	// @Transactional update, delete
+	
 
 	// 판매자 판매내역 진행중 페이지
 

@@ -291,6 +291,7 @@ public class ProductService {
 	    * @return 최근 입찰 내역
 	    * @throws FindException
 	    */
+	   
 	   public List<AuctionDTO> ShopRecentTender(Long pNum) throws FindException {
 	      List<Object[]> resultlist = pr.recentTenderList(pNum);
 	      List<AuctionDTO> dtos = new ArrayList<>();
