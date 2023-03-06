@@ -32,7 +32,9 @@ public class AddressService {
 		if(type == 0) {
 			Address defaultaddr = ar.findByAddrType(addrDTO.getMNum());
 			if(defaultaddr != null) {
-				ar.updateAddrType(defaultaddr.getAddrNum());
+				if(defaultaddr.getAddrNum() != addrDTO.getAddrNum()) {
+					ar.updateAddrType(defaultaddr.getAddrNum());
+				}				
 			}
 		}
 		Address a = addrDTO.toEntity();

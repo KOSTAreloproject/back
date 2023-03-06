@@ -32,10 +32,6 @@ public class LikesService {
 	public List<LikesDTO> listByStyleNum(Long styleNum) throws FindException{
 		List<Likes> likesList = lr.ListByStyleNum(styleNum);
 		
-		if(likesList == null) {
-			throw new FindException(" 존재하지 않습니다.");
-		}
-		
 		List<LikesDTO> likesDTOList = 
 				likesList.stream().map(likes -> modelMapper.map(likes, LikesDTO.class)).collect(Collectors.toList());
 		return likesDTOList;
