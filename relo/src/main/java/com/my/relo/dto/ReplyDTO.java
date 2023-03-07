@@ -31,7 +31,6 @@ public class ReplyDTO {
 	
 	private String date;
 	
-	
 	public void setRepDate(LocalDateTime LocalDateTime) {
 		this.date = DateTimeFormat.timesAgo(LocalDateTime);
 	}

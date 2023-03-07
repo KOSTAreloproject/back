@@ -92,7 +92,6 @@ public class AuctionService {
 			for (Auction a : listA) {
 				AuctionDTO dto = AuctionDTO.builder()
 						.aNum(a.getANum())
-						.mNum(a.getMNum())
 						.pNum(a.getProduct().getPNum())
 						.pEndDate(a.getProduct().getPEndDate())
 						.aTime(a.getAward() != null ? a.getAward().getATime():null)

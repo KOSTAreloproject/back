@@ -47,7 +47,7 @@ public class ApiExamCaptchaImage {
         byte[] bytes = new byte[1024];
         // 랜덤한 이름으로  파일 생성
         String filename = "cap";
-        File f = new File("C:\\storage\\captcha",filename + ".jpg");
+        File f = new File("C:\\relofront\\imgs\\captcha",filename + ".jpg");
         try(OutputStream outputStream = new FileOutputStream(f)){
             f.createNewFile();
             while ((read = is.read(bytes)) != -1) {

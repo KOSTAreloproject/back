@@ -31,7 +31,7 @@ public class OrderPayController {
 	@PostMapping(value = "/pay", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> add(HttpSession session, @RequestBody HashMap<String, Object> param) {
 		Long mNum = (Long) session.getAttribute("logined");
-			mNum = 10L;
+
 		if (mNum == null) {
 			return new ResponseEntity<>("로그인하세요", HttpStatus.BAD_REQUEST);
 		} else { 

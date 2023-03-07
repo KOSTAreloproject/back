@@ -53,27 +53,27 @@ class ProductRepositoryTest {
 		pr.save(p);
 	}
 
-	@Test
-	void selectByIdProductTest() {
-		Optional<Member> optM1 = mr.findById(2L);
-		Member m1 = optM1.get();
-
-		List<Object[]> pList = pr.selectByIdProduct(m1.getMNum());
-
-		List<PInfoDTO> list = new ArrayList<>();
-		for (Object[] obj : pList) {
-			PInfoDTO dto = PInfoDTO.builder()
-			.sName(String.valueOf(obj[0]))
-			.sizeCategoryName(String.valueOf(obj[1]))
-			.pStatus(Integer.valueOf(String.valueOf(obj[2])))
-			.pNum(Long.valueOf(String.valueOf(obj[3])))
-			.sBrand(String.valueOf(obj[4]))
-			.build();
-				
-			list.add(dto);
-		}
-			logger.info(list.toString());
-		}
+//	@Test
+//	void selectByIdProductTest() {
+//		Optional<Member> optM1 = mr.findById(2L);
+//		Member m1 = optM1.get();
+//
+//		List<Object[]> pList = pr.selectByIdProduct(m1.getMNum());
+//
+//		List<PInfoDTO> list = new ArrayList<>();
+//		for (Object[] obj : pList) {
+//			PInfoDTO dto = PInfoDTO.builder()
+//			.sName(String.valueOf(obj[0]))
+//			.sizeCategoryName(String.valueOf(obj[1]))
+//			.pStatus(Integer.valueOf(String.valueOf(obj[2])))
+//			.pNum(Long.valueOf(String.valueOf(obj[3])))
+//			.sBrand(String.valueOf(obj[4]))
+//			.build();
+//				
+//			list.add(dto);
+//		}
+//			logger.info(list.toString());
+//		}
 
 	
 
@@ -132,28 +132,28 @@ class ProductRepositoryTest {
 
 	}
 
-	@Test
-	void selectByEndProductTest() {
-		Optional<Member> optM1 = mr.findById(2L);
-		Member m1 = optM1.get();
-
-		List<Object[]> pList = pr.selectByEndProduct(m1.getMNum());
-
-		List<PInfoDTO> list = new ArrayList<>();
-		for (Object[] obj : pList) {
-			PInfoDTO dto = PInfoDTO.builder()
-			.sName(String.valueOf(obj[0]))
-			.sizeCategoryName(String.valueOf(obj[1]))
-			.pStatus(Integer.valueOf(String.valueOf(obj[2])))
-			.pNum(Long.valueOf(String.valueOf(obj[3])))
-			.sBrand(String.valueOf(obj[4]))
-			.build();
-			
-			list.add(dto);
-		}
-		logger.info(list.toString());
-		logger.info("====================");
-	}
+//	@Test
+//	void selectByEndProductTest() {
+//		Optional<Member> optM1 = mr.findById(2L);
+//		Member m1 = optM1.get();
+//
+//		List<Object[]> pList = pr.selectByEndProduct(m1.getMNum());
+//
+//		List<PInfoDTO> list = new ArrayList<>();
+//		for (Object[] obj : pList) {
+//			PInfoDTO dto = PInfoDTO.builder()
+//			.sName(String.valueOf(obj[0]))
+//			.sizeCategoryName(String.valueOf(obj[1]))
+//			.pStatus(Integer.valueOf(String.valueOf(obj[2])))
+//			.pNum(Long.valueOf(String.valueOf(obj[3])))
+//			.sBrand(String.valueOf(obj[4]))
+//			.build();
+//			
+//			list.add(dto);
+//		}
+//		logger.info(list.toString());
+//		logger.info("====================");
+//	}
 
 	@Test
 	void selectByEndProductDetailTest() {

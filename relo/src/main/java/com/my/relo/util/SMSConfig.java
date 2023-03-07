@@ -21,9 +21,9 @@ public class SMSConfig {
 		String hostNameUrl = "https://sens.apigw.ntruss.com"; // 호스트 URL
 		String requestUrl = "/sms/v2/services/"; // 요청 URL
 		String requestUrlType = "/messages"; // 요청 URL
-		String accessKey = "ZfzUFTBLShFrXDm4wjpb"; // 개인 인증키
-		String secretKey = "sI03jAE58c7QZWXQ32RvCRBorJvehvVDLGWh9NTV"; // 2차 인증을 위해 서비스마다 할당되는 service secret
-		String serviceId = "ncp:sms:kr:282464910856:kostareloproject"; // 프로젝트에 할당된 SMS 서비스 ID
+		String accessKey = "rwpVLZBib0vnE8SNqOO5"; // 개인 인증키
+		String secretKey = "2FPqg6HaCNfyiFDgx55ZgmZ9zPhhKT4SoTpzqfqB"; // 2차 인증을 위해 서비스마다 할당되는 service secret
+		String serviceId = "ncp:sms:kr:303147174183:relo"; // 프로젝트에 할당된 SMS 서비스 ID
 		String method = "POST"; // 요청 method
 		String timestamp = Long.toString(System.currentTimeMillis()); // current timestamp (epoch)
 		requestUrl += serviceId + requestUrlType;
@@ -42,7 +42,7 @@ public class SMSConfig {
 		bodyJson.put("type", "sms"); // 메시지 Type (sms | lms)
 		bodyJson.put("contentType", "COMM");
 		bodyJson.put("countryCode", "82");
-		bodyJson.put("from", "01097043273"); // 발신번호 * 사전에 인증/등록된 번호만 사용할 수 있습니다.
+		bodyJson.put("from", "01063268273"); // 발신번호 * 사전에 인증/등록된 번호만 사용할 수 있습니다.
 		bodyJson.put("messages", toArr);
 
 		String body = bodyJson.toString();

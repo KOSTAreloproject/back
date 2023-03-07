@@ -1,4 +1,3 @@
-
 package com.my.relo.control;
 
 import java.io.File;
@@ -289,4 +288,3 @@ public class ProductController {
 	      return new ResponseEntity<>(img, responseHeaders, HttpStatus.OK);
 	   }
 }
-

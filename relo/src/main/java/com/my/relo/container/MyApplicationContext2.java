@@ -1,5 +1,6 @@
 package com.my.relo.container;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -25,4 +26,9 @@ public class MyApplicationContext2 {
 	public HikariDataSource dataSourceHikari() {
 		return new HikariDataSource(hikariConfig());
 	}	
+	
+	@Bean
+	   public ModelMapper modelMapper() {
+	      return new ModelMapper();
+	   }
 }

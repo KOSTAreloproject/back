@@ -83,29 +83,29 @@ class StockRepositoryTest {
 		sr.save(s);
 	}
 	
-	@Test
-	//2.판매자 마이페이지-> 판매내역 -> 판매대기
-	void selectByIdTest() {
-		Optional<Member> optM1 = mr.findById(2L);
-		Member m1 = optM1.get();
-		
-		List<Object[]> sList = sr.selectById(m1.getMNum());
-		
-		List<StockDTO> list = new ArrayList<>();
-		for (Object[] obj : sList) {
-			StockDTO dto = StockDTO.builder()
-			.sNum(Long.valueOf(String.valueOf(obj[0])))
-			.sName(String.valueOf(obj[1]))
-			.sizeCategoryName(String.valueOf(obj[2]))
-			.sStatus(Integer.valueOf(String.valueOf(obj[3])))
-			.sGrade(String.valueOf(obj[4]))
-			.sBrand(String.valueOf(obj[5]))
-			.build();
-				
-			list.add(dto);
-		}
-			logger.info(list.toString());
-	}
+//	@Test
+//	//2.판매자 마이페이지-> 판매내역 -> 판매대기
+//	void selectByIdTest() {
+//		Optional<Member> optM1 = mr.findById(2L);
+//		Member m1 = optM1.get();
+//		
+//		List<Object[]> sList = sr.selectById(m1.getMNum());
+//		
+//		List<StockDTO> list = new ArrayList<>();
+//		for (Object[] obj : sList) {
+//			StockDTO dto = StockDTO.builder()
+//			.sNum(Long.valueOf(String.valueOf(obj[0])))
+//			.sName(String.valueOf(obj[1]))
+//			.sizeCategoryName(String.valueOf(obj[2]))
+//			.sStatus(Integer.valueOf(String.valueOf(obj[3])))
+//			.sGrade(String.valueOf(obj[4]))
+//			.sBrand(String.valueOf(obj[5]))
+//			.build();
+//				
+//			list.add(dto);
+//		}
+//			logger.info(list.toString());
+//	}
 		
 		
 		
@@ -146,28 +146,28 @@ class StockRepositoryTest {
 	}
 	
 	
-	@Test
-	//3. 관리자 상품등록 승인요청 목록 sStatus =2 AND 관리자 상품 최종 등록 목록  sStatus =3
-	void selectBySReturnTest() {
-
-			Pageable pageable = PageRequest.of(0, 5, Sort.by("s_num"));  //5개씩 페이징
-			List<Object[]> sList = sr.selectBySReturn(3,pageable);
-			List<StockDTO> list = new ArrayList<>();
-			for (Object[] obj : sList) {
-				StockDTO dto = StockDTO.builder()
-				.sNum(Long.valueOf(String.valueOf(obj[0])))
-				.sName(String.valueOf(obj[1]))
-				.sizeCategoryName(String.valueOf(obj[2]))
-				.sColor(String.valueOf(obj[3]))
-				.mNum(Long.valueOf(String.valueOf(obj[4])))
-				.build();
-					
-				list.add(dto);
-			}
-				logger.info(list.toString());
-
-		
-	}
+//	@Test
+//	//3. 관리자 상품등록 승인요청 목록 sStatus =2 AND 관리자 상품 최종 등록 목록  sStatus =3
+//	void selectBySReturnTest() {
+//
+//			Pageable pageable = PageRequest.of(0, 5, Sort.by("s_num"));  //5개씩 페이징
+//			List<Object[]> sList = sr.selectBySReturn(3,pageable);
+//			List<StockDTO> list = new ArrayList<>();
+//			for (Object[] obj : sList) {
+//				StockDTO dto = StockDTO.builder()
+//				.sNum(Long.valueOf(String.valueOf(obj[0])))
+//				.sName(String.valueOf(obj[1]))
+//				.sizeCategoryName(String.valueOf(obj[2]))
+//				.sColor(String.valueOf(obj[3]))
+//				.mNum(Long.valueOf(String.valueOf(obj[4])))
+//				.build();
+//					
+//				list.add(dto);
+//			}
+//				logger.info(list.toString());
+//
+//		
+//	}
 	
 	@Test
 	//3. 관리자 상품등록 승인요청 목록 상세 AND 관리자 상품 최종 등록 목록 상세

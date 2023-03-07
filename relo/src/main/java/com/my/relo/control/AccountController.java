@@ -47,8 +47,7 @@ public class AccountController {
 		if (mNum == null) {
 			throw new FindException("로그인하세요");
 		}
-		
-//		Long mNum = (long) 2;
+
 		
 		AccountDTO aDTO = accountservice.readAccount(mNum);
 		

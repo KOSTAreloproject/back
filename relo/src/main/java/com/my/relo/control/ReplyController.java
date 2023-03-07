@@ -51,7 +51,7 @@ public class ReplyController {
 		}
 		ReplyDTO r = new ReplyDTO();
 		System.out.println(map.toString());
-		String repContent = (String)map.get("repContent");
+		String repContent = map.get("repContent");
 		if(map.size()==2) {
 			Long repNum = Long.valueOf(map.get("repNum"));
 			ReplyDTO parentR = new ReplyDTO();

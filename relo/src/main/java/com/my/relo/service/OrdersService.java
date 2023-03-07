@@ -28,7 +28,6 @@ public class OrdersService {
 				OrdersDTO dto = OrdersDTO.builder()
 						.aNum(o.getANum())
 						.pNum(o.getAward().getAuction().getProduct().getPNum())
-						.sNum(o.getAward().getAuction().getProduct().getStock().getSNum())
 						.sColor(o.getAward().getAuction().getProduct().getStock().getSColor())
 						.sBrand(o.getAward().getAuction().getProduct().getStock().getSBrand())
 						.sName(o.getAward().getAuction().getProduct().getStock().getSName())
@@ -55,7 +54,6 @@ public class OrdersService {
 				dto = OrdersDTO.builder()
 						.aNum(o.getANum())
 						.pNum(o.getAward().getAuction().getProduct().getPNum())
-						.sNum(o.getAward().getAuction().getProduct().getStock().getSNum())
 						.sColor(o.getAward().getAuction().getProduct().getStock().getSColor())
 						.sBrand(o.getAward().getAuction().getProduct().getStock().getSBrand())
 						.sName(o.getAward().getAuction().getProduct().getStock().getSName())
@@ -89,7 +87,6 @@ public class OrdersService {
 				OrdersDTO dto = OrdersDTO.builder()
 						.aNum(o.getANum())
 						.pNum(o.getAward().getAuction().getProduct().getPNum())
-						.sNum(o.getAward().getAuction().getProduct().getStock().getSNum())
 						.sColor(o.getAward().getAuction().getProduct().getStock().getSColor())
 						.sBrand(o.getAward().getAuction().getProduct().getStock().getSBrand())
 						.sName(o.getAward().getAuction().getProduct().getStock().getSName())
@@ -97,9 +94,7 @@ public class OrdersService {
 						.sizeCategoryName(o.getAward().getAuction().getProduct().getStock().getSizes().getSizeCategoryName())
 						.aPrice(o.getAward().getAuction().getAPrice())
 						.oDate(o.getODate())
-						.dStatus(o.getODelivery().getDStatus())
-						.dCompleteDay(o.getODelivery().getDCompleteDay())
-						.build();
+						.dStatus(o.getODelivery().getDStatus()).build();
 				list.add(dto);
 			}
 			return list;

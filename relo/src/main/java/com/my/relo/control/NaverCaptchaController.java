@@ -32,9 +32,8 @@ public class NaverCaptchaController {
         requestHeaders.put("X-Naver-Client-Id", clientId);
         requestHeaders.put("X-Naver-Client-Secret", clientSecret);
         String key = ApiExamCaptchaNkey.get(apiURL, requestHeaders);
-		
 
-	    return key;
+	    return key.substring(8, 24);
 	}
 	
 	/**
@@ -44,14 +43,14 @@ public class NaverCaptchaController {
 	 */
 	@GetMapping("captchaImg")
 	public String ApiExamCaptchaImage(String key){
-        
+		
         String apiURL = "https://openapi.naver.com/v1/captcha/ncaptcha.bin?key=" + key;  // https://openapi.naver.com/v1/captcha/nkey 호출로 받은 키값
 
         Map<String, String> requestHeaders = new HashMap<>();
         requestHeaders.put("X-Naver-Client-Id", clientId);
         requestHeaders.put("X-Naver-Client-Secret", clientSecret);
         String img = ApiExamCaptchaImage.get(apiURL,requestHeaders);
-
+        
 	    return img;
 	}
 	

@@ -43,7 +43,7 @@ class StockReturnRepositoryTest {
 		.sNum(s1.getSNum())
 		.s(s1)
 		.addr(a1)
-		.stdTrackingInfo(String.valueOf(u))
+		.srTrackingInfo(String.valueOf(u))
 		.build();
 		
 		
@@ -68,10 +68,10 @@ class StockReturnRepositoryTest {
 		Address a1 = optA1.get();
 
 		logger.info("SNum: " + sr1.getSNum());
-		logger.info("StdTrackingInfo: " + sr1.getStdTrackingInfo());
-		logger.info("StdStatus: " + sr1.getStdStatus());
+		logger.info("StdTrackingInfo: " + sr1.getSrTrackingInfo());
+		logger.info("StdStatus: " + sr1.getSrStatus());
 		logger.info("Addr: " + a1.getAddrName());
-		logger.info("StdStartDate: " + sr1.getStdStartDate());
+		logger.info("StdStartDate: " + sr1.getSrStartDate());
 	}
 
 }

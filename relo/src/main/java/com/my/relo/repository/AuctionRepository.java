@@ -61,7 +61,7 @@ public interface AuctionRepository extends CrudRepository<Auction, Long> {
 			+ "and s.s_num = p.s_num\r\n"
 			+ "and p.p_num=a.p_num\r\n"
 			+ "and a.a_num=aw.a_num(+)\r\n"
-			+ "and p.p_status in (6, 7, 8)\r\n"
+			+ "and p.p_status in (6, 7)\r\n"
 			+ "order by p_end_date desc", nativeQuery = true)
 	List<Auction> findAuctionEndByMNum(@Param("mNum") Long mNum);
 	
