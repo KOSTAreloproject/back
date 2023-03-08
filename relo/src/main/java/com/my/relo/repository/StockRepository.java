@@ -23,8 +23,8 @@ public interface StockRepository extends CrudRepository<Stock, Long> {
 	//3. 관리자 상품등록 승인요청 목록 AND 관리자 상품 최종 등록 목록
 	@Query(value = "select s.s_num,s.s_name,si.size_category_name ,s.s_color,s.m_num\r\n"
 			+ "from stock s INNER JOIN sizes si on s.size_category_num = si.size_category_num\r\n"
-			+ "where s.s_status =:sStatus "
-	, countQuery = "select count(*) from stock", nativeQuery = true)
+			+ "where s.s_status =:sStatus and s_num not in(select s_num from stock_return) "
+	, countQuery = "select count(*) from stock where s_num not in(select s_num from stock_return) ", nativeQuery = true)
 	public Page<Object[]> selectBySReturn(@Param("sStatus")Integer sStatus,Pageable pageable);
 	
 	//2.판매자 마이페이지-> 판매내역 -> 판매대기 상세
@@ -35,6 +35,5 @@ public interface StockRepository extends CrudRepository<Stock, Long> {
 	public List<Object[]> selectByIdDeatil(@Param("sNum")Long sNum,@Param("mNum")Long mNum);
 	
 	
-//	@Query(value = "select s_num from stock  where m_num=:mNum",nativeQuery = true)
-//	public List<Object[]> findByMNum(@Param("mNum")Long mNum);
+
 }

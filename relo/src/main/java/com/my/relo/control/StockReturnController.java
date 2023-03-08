@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +31,8 @@ public class StockReturnController {
 		Long mnum = Long.valueOf(num.get("mNum"));
 		Long snum = Long.valueOf(num.get("sNum"));
 		stockReturnService.addStockReturn(mnum,snum);
+		
+		
 		
 	return new ResponseEntity<>(HttpStatus.OK);
 	

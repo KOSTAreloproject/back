@@ -1,6 +1,7 @@
 package com.my.relo.service;
 
 import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -214,6 +215,7 @@ public class StockService {
 	public Map<String,Object> selectBySstatus(Integer sStatus,int currentPage) throws FindException{
 			Pageable pageable = PageRequest.of(currentPage-1,10,Sort.by("s_num"));  //10개씩 페이징
 			Page<Object[]> pageSList = sr.selectBySReturn(sStatus,pageable);
+			System.out.println("여기야!!: "+pageSList.getTotalPages());
 			List<Object[]> List = pageSList.getContent();
 			if(!List.isEmpty()) {
 				
