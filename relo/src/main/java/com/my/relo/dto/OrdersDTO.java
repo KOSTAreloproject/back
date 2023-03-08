@@ -25,12 +25,12 @@ public class OrdersDTO {
 	private String sColor;
 	private String sGrade;
 	private String sizeCategoryName;
-	private int aPrice;
+	private Integer aPrice;
 	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
 	private LocalDate oDate;
 	private String oMemo;
 	
-	
+	private String impUid;
 	private int dStatus;
 	private String dTrackingInfo;
 	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
