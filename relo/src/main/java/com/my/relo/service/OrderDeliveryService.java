@@ -49,6 +49,7 @@ public class OrderDeliveryService {
 						.mNum(odDTO.getMNum())
 						.award(a)
 						.oMemo(odDTO.getOMemo())
+						.impUid(odDTO.getImpUid())
 						.build();
 
 				OrderDelivery od = OrderDelivery.builder()
