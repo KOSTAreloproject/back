@@ -28,12 +28,12 @@ public class ZzimController {
 	@Autowired
 	private ZzimService service;
 
+	// 찜목록
 	@GetMapping(value = "{cp}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> MyZzimList(HttpServletRequest request, @PathVariable(name = "cp") int cp)
 			throws FindException {
 		HttpSession session = request.getSession();
 		Long mNum = (Long) session.getAttribute("logined");
-		System.out.println("1221" + mNum);
 		Map<String, Object> map = service.readZzimList(mNum, cp);
 		return new ResponseEntity<>(map, HttpStatus.OK);
 	}
