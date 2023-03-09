@@ -36,6 +36,7 @@ public class OrderDeliveryService {
 			if (otpA.isPresent() && !otpOd.isPresent()) {
 				Award a = otpA.get();
 				Address ad = Address.builder()
+						.addrNum(adDTO.getAddrNum())
 						.mNum(adDTO.getMNum())
 						.addrName(adDTO.getAddrName())
 						.addrPostNum(adDTO.getAddrPostNum())
