@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.file.Files;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,17 +41,28 @@ public class MemberController {
 	@Autowired
 	private MemberService ms;
 
-//	private final String saveDirectory = "C:\\storage\\member";
-	private final String saveDirectory = "/Users/skyleeb95/Downloads/files/member";
+	private final String saveDirectory = "C:\\storage\\member";
 
 	// 회원 가입
 	@PostMapping("join")
-	public ResponseEntity<?> join(@RequestBody MemberDTO dto) throws AddException {
-		if (dto == null) {
-			throw new AddException();
-		} else {
+	public ResponseEntity<?> join(@RequestBody Map<String, Object> param) throws AddException {
+		boolean check = (boolean) param.get("check");
+
+		String id = (String) param.get("id");
+		String pwd = (String) param.get("pwd");
+		String tel = (String) param.get("tel");
+		String birth = (String) param.get("birth");
+		String email = (String) param.get("email");
+		String name = (String) param.get("name");
+
+		MemberDTO dto = MemberDTO.builder().id(id).pwd(pwd).birth(birth).email(email).name(name).tel(tel).type(1)
+				.build();
+
+		if (check) {
 			ms.join(dto);
 			return new ResponseEntity<>(HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
 
@@ -59,15 +71,12 @@ public class MemberController {
 	public ResponseEntity<?> login(HttpServletRequest request, @RequestParam String id, @RequestParam String pwd) {
 
 		MemberDTO dto = ms.idCheck(id);
-		Long mNum = dto.getMnum();
-		
+
 		if (dto.getId().equals(id) && dto.getPwd().equals(pwd)) {
 
 			HttpSession session = request.getSession();
-			session.setAttribute("logined", mNum);
+			session.setAttribute("logined", dto.getMnum());
 			session.setAttribute("loginId", id);
-			session.setAttribute(pwd, session);
-
 			return new ResponseEntity<>(HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -76,15 +85,14 @@ public class MemberController {
 
 	// 로그인 상태 확인
 	@GetMapping("checklogined")
-	public ResponseEntity<?> checkLogined(HttpServletRequest request) {
-		HttpSession session = request.getSession();
-		String loginId = (String) session.getAttribute("loginId");
-		MemberDTO dto = ms.idCheck(loginId);
-
-		if (dto != null) {
-			return new ResponseEntity<>(HttpStatus.OK);
+	public ResponseEntity<?> checkLogined(HttpSession session) throws FindException {
+		Long mNum = (Long) session.getAttribute("logined");
+		if (mNum != null) {
+			MemberDTO dto = ms.detailMember(mNum);
+			int type = dto.getType();
+			return new ResponseEntity<>(type, HttpStatus.OK);
 		} else {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("no", HttpStatus.OK);
 		}
 	}
 
@@ -95,22 +103,36 @@ public class MemberController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
+	// 아이디 및 비밀번호 찾기
+	@PostMapping("findidandpwd")
+	public ResponseEntity<?> findIdAndPwd(String tel) {
+		String id = ms.findIdAndPwd(tel);
+
+		if (id != null) {
+			return new ResponseEntity<>(id, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+
 	// 아이디 중복 체크
 	@GetMapping("idcheck")
 	public ResponseEntity<?> idCheck(@RequestParam String id) {
 		MemberDTO dto = ms.idCheck(id);
 
 		if (dto == null) {
-			return new ResponseEntity<>(HttpStatus.OK);
+			return new ResponseEntity<>("ok", HttpStatus.OK);
 		} else {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("no", HttpStatus.OK);
 		}
 	}
 
 	// 회원 프로필 이미지 출력(이미지 수정 후 출력)
-	@GetMapping(value = "img/{mNum}")
-	public ResponseEntity<?> showImage(@PathVariable Long mNum,
+	@PostMapping(value = "img")
+	public ResponseEntity<?> showImage(HttpSession session,
 			@RequestPart(value = "profile", required = false) MultipartFile profile) throws IOException {
+
+		Long mNum = (Long) session.getAttribute("logined");
 
 		File saveDirFile = new File(saveDirectory);
 
@@ -168,13 +190,48 @@ public class MemberController {
 			responseHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=" + URLEncoder.encode("a", "UTF-8"));
 			return new ResponseEntity<>(img, responseHeaders, HttpStatus.OK);
 		}
+		return null;
+	}
 
-		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	// 스타일 게시판 목록에 회원 프로필 이미지 출력
+	@PostMapping(value = "img/{mNum}")
+	public ResponseEntity<?> showProfileList(@PathVariable Long mNum) throws IOException {
+
+		File saveDirFile = new File(saveDirectory);
+
+		// 해당 경로의 정보 필요 -> listFiles로 해당 경로의 정보 얻어옴
+		File[] files = saveDirFile.listFiles();
+		Resource img = null;
+		for (File f : files) {
+			// .을 기준으로, 확장자명 앞에 있는 파일명 얻음
+			StringTokenizer stk = new StringTokenizer(f.getName(), ".");
+			String fileName = stk.nextToken();
+
+			// 해당 파일들 중에서 원하는 파일 이름과 일치하는 파일명이 존재할 경우
+			if (fileName.equals("m_" + mNum)) {
+				img = new FileSystemResource(f);
+
+				// response 헤더 설정을 따로 하지 않을 경우, 응답 헤더의 content-type이 application/json 타입으로 되므로
+				// 설정 필요함
+				HttpHeaders responseHeaders = new HttpHeaders();
+				// 파일 크기 설정
+				responseHeaders.set(HttpHeaders.CONTENT_LENGTH, f.length() + "");
+				// 파일 타입 설정
+				responseHeaders.set(HttpHeaders.CONTENT_TYPE, Files.probeContentType(f.toPath()));
+				// 파일 인코딩 설정
+				responseHeaders.set(HttpHeaders.CONTENT_DISPOSITION,
+						"inline; filename=" + URLEncoder.encode("a", "UTF-8"));
+				return new ResponseEntity<>(img, responseHeaders, HttpStatus.OK);
+			}
+		}
+
+		return null;
 	}
 
 	// 회원 프로필 조회(개인 정보만 조회)
-	@GetMapping(value = "detail/{mNum}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> detail(@PathVariable Long mNum) throws FindException, IOException {
+	@GetMapping(value = "detail", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> detail(HttpSession session) throws FindException, IOException {
+		Long mNum = (Long) session.getAttribute("logined");
 		MemberDTO dto = ms.detailMember(mNum);
 
 		return new ResponseEntity<>(dto, HttpStatus.OK);
@@ -183,9 +240,11 @@ public class MemberController {
 
 	// 회원 정보 수정
 	@PutMapping(value = "edit")
-	public ResponseEntity<?> edit(@RequestBody MemberDTO dto) throws AddException, FindException {
-		if (dto.getMnum() != null) {
-			ms.updateProfile(dto);
+	public ResponseEntity<?> edit(HttpSession session, @RequestBody MemberDTO dto) throws AddException, FindException {
+		Long mNum = (Long) session.getAttribute("logined");
+
+		if (mNum != null) {
+			ms.updateProfile(mNum, dto);
 			return new ResponseEntity<>(HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -193,22 +252,43 @@ public class MemberController {
 	}
 
 	// 회원 탈퇴시 탈퇴 가능 여부 확인 후, id null && outCk를 -1로 변경
-	@PutMapping("out/{mNum}")
-	public ResponseEntity<?> out(@PathVariable Long mNum) throws FindException {
+	@PutMapping("out/{checkCnt}")
+	public ResponseEntity<?> out(HttpSession session, @PathVariable Integer checkCnt) throws FindException {
+		Long mNum = (Long) session.getAttribute("logined");
+
 		Integer cnt = ms.checkOutTerms(mNum);
-		if (cnt == 1) {
+
+		if (checkCnt == 5 && cnt == 1) {
 			ms.updateIdNull(mNum);
+			session.invalidate();
+			return new ResponseEntity<>(HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	// 회원 정보 삭제
-	@DeleteMapping("del/{mNum}")
-	public ResponseEntity<?> delete(@PathVariable Long mNum) throws RemoveException, FindException {
+	@DeleteMapping("del")
+	public ResponseEntity<?> delete(HttpSession session) throws RemoveException, FindException {
+		Long mNum = (Long) session.getAttribute("logined");
+
 		ms.deleteMember(mNum);
 
+		delProfile(mNum);
+
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	@DeleteMapping("delprofile")
+	public ResponseEntity<?> deleteProfile(HttpSession session) throws RemoveException, FindException {
+		Long mNum = (Long) session.getAttribute("logined");
+		delProfile(mNum);
+
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	// 회원 프로필 삭제
+	public void delProfile(Long mNum) {
 		File saveDirFile = new File(saveDirectory);
 
 		// 해당 경로의 정보 필요 -> listFiles로 해당 경로의 정보 얻어옴
@@ -224,6 +304,5 @@ public class MemberController {
 				break;
 			}
 		}
-		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }

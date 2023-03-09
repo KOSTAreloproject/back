@@ -133,6 +133,7 @@ public class AuctionController {
 		}
 	}
 
+
 	// 회원 결제시에 띄워줄 정보 회원 id 이메일 연락처, 상품, 회원 기본주소
 	@PostMapping(value = "/pay", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> payDetail(@RequestBody Map<String, Long> map, HttpSession session) {
