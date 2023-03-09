@@ -26,4 +26,8 @@ public interface MemberRepository extends CrudRepository<Member, Long> {
 	@Query(value = "select m from Member m where tel=:tel")
 	Member findIdAndPwd(String tel);
 
+	// 소셜 로그인시 이메일로 확인
+	@Query(value = "select m from Member m where email=:email")
+	Member findByEmail(String email);
+
 }
