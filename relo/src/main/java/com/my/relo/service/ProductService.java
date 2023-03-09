@@ -249,7 +249,7 @@ public class ProductService {
 				+ "LEFT OUTER JOIN (SELECT p_num, COUNT(*) zcount FROM zzim GROUP BY p_num) z ON p.p_num = z.p_num\r\n"
 				+ "WHERE p_status = 4 " + tender + "ORDER BY " + sort;
 
-		List<Object[]> resultList = em.createNativeQuery(sql).setFirstResult(start).setMaxResults(3).getResultList();
+		List<Object[]> resultList = em.createNativeQuery(sql).setFirstResult(start).setMaxResults(15).getResultList();
 		List<ZPResponseDTO> dtos = new ArrayList<>();
 		for (Object[] objs : resultList) {
 			ZPResponseDTO dto = ZPResponseDTO.builder().pNum(Long.valueOf(String.valueOf(objs[0])))
@@ -320,21 +320,18 @@ public class ProductService {
 	 * @return 검색결과(상품목록)
 	 * @throws FindException
 	 */
-	public Map<String, Object> searchProductList(String keyword, int currentpage) throws FindException {
+	public Map<String, Object> searchProductList(String keyword, int currentpage) {
 		Pageable pb = PageRequest.of((currentpage - 1), 10);
 		Page<Object[]> resultList = pr.selectProductListByName(keyword, pb);
 		List<Object[]> list = resultList.getContent();
 		int totalpage = resultList.getTotalPages();
-		if (list.isEmpty()) {
-			throw new FindException("검색 결과가 없습니다.");
-		}
 		List<ZPResponseDTO> dtos = new ArrayList<>();
 		for (Object[] objs : resultList) {
 			ZPResponseDTO dto = ZPResponseDTO.builder().pNum(Long.valueOf(String.valueOf(objs[0])))
 					.sNum(Long.valueOf(String.valueOf(objs[1]))).sName((String) objs[2])
 					.sHopePrice(Integer.parseInt(String.valueOf(objs[3])))
-					.maxPrice(Integer.parseInt(String.valueOf(objs[4])))
-					.pendDate(LocalDateTime.parse(String.valueOf(objs[5]), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S")))
+					.maxPrice(Integer.parseInt(String.valueOf(objs[4]))).pendDate(LocalDateTime
+							.parse(String.valueOf(objs[5]), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S")))
 					.sType((String) objs[6]).build();
 			dtos.add(dto);
 		}

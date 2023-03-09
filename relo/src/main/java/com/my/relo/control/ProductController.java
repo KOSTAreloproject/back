@@ -198,7 +198,7 @@ public class ProductController {
 
 	@GetMapping(value = "search")
 	public ResponseEntity<?> readSearchProductList(@RequestParam("keyword") String keyword, @RequestParam("cp") int cp)
-			throws FindException, UnsupportedEncodingException {
+			throws UnsupportedEncodingException {
 		String decode = java.net.URLDecoder.decode(keyword, "UTF-8");
 		System.out.println(decode);
 		Map<String, Object> map = service.searchProductList(decode, cp);
