@@ -1,6 +1,7 @@
 package com.my.relo.repository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Query;
@@ -12,6 +13,14 @@ import com.my.relo.entity.Product;
 
 public interface AuctionRepository extends CrudRepository<Auction, Long> {
 
+	/**
+	 * 경매 번호에 따른 입찰가 select SQL
+	 *  
+	 * @return a_price
+	 */
+	Optional<Auction> findByaNum(Long aNum);
+	
+	
 	/**
 	 * 상품의 최고입찰가 select SQL
 	 * 상품 최고 입찰가
@@ -65,20 +74,17 @@ public interface AuctionRepository extends CrudRepository<Auction, Long> {
 			+ "order by p_end_date desc", nativeQuery = true)
 	List<Auction> findAuctionEndByMNum(@Param("mNum") Long mNum);
 	
-	/**
-	 * 회원의 입찰 내역 (경매 종료) select SQL 
-	 * 상품번호, 브랜드명, 상품명, 사이즈, 등급, 경매마감일
-	 *  
-	 * @return List<Auction>
-	 */
-//	@Query(value="select a.a_num, p.p_num, s.s_grade,s.s_name, sz.size_category_name, a.a_price, am.max_price \"max_price\", p.p_status, p.p_end_date\r\n"
-//			+ "from sizes sz, stock s, product p, auction a, a_max am\r\n"
-//			+ "where a.m_num= :mNum \r\n"
-//			+ "and sz.size_category_num=s.size_category_num\r\n"
-//			+ "and s.s_num = p.s_num\r\n"
-//			+ "and p.p_num=a.p_num\r\n"
-//			+ "and p.p_num=am.p_num\r\n"
-//			+ "and p.p_status in (6, 7)\r\n"
-//			+ "order by p_end_date desc", nativeQuery = true)
-//	List<AuctionDTO> findAuctionEndByMNum(@Param("mNum") Long mNum);
+	@Query(value="select s.s_num, s.s_name, s.s_brand, sz.size_category_name, s.s_color, s.s_grade,\r\n"
+			+ "m.name, m.email, m.tel, a.a_price, ad.addr_num, ad.addr_recipient,\r\n"
+			+ "ad.addr_post_num, ad.addr_tel, ad.addr, ad.addr_detail, ad.addr_type\r\n"
+			+ "from product p\r\n"
+			+ "INNER JOIN stock s ON s.s_num=p.s_num\r\n"
+			+ "INNER JOIN sizes sz ON sz.size_category_num = s.size_category_num\r\n"
+			+ "INNER JOIN auction a ON p.p_num=a.p_num\r\n"
+			+ "INNER JOIN member m ON m.m_num=a.m_num\r\n"
+			+ "LEFT OUTER JOIN address ad ON ad.m_num=m.m_num\r\n"
+			+ "where p.p_num= :pNum\r\n"
+			+ "and a.a_num= :aNum\r\n"
+			+ "and m.m_num= :mNum", nativeQuery = true)
+	List<Object[]> findOrderDetailByPNum(@Param("mNum") Long mNum, @Param("pNum") Long pNum, @Param("aNum") Long aNum);
 }

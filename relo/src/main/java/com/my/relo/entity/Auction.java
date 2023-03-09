@@ -49,7 +49,7 @@ public class Auction {
 	private Product product;
 
 	@Column(name = "a_price", nullable = false)
-	private int aPrice;
+	private Integer aPrice;
 
 	
 	@Column(name = "a_date", nullable = false)
