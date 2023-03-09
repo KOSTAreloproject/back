@@ -21,6 +21,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,6 +49,7 @@ public class StockController {
 
 	@Autowired
 	StockService stockService;
+	
 
 	@PostMapping("add")
 	public ResponseEntity<?> StockAdd(HttpSession session, StockDTO stock,
@@ -108,7 +110,12 @@ public class StockController {
 		Long snum = Long.valueOf((String) stock.get("sNum"));
 		String sGrade = (String) stock.get("sGrade");
 		String managerComment = (String) stock.get("managerComment");
-		Integer sHopePrice = Integer.valueOf((String)stock.get("sHopePrice"));
+		Integer sHopePrice;
+		if(stock.get("sHopePrice")  == null) {
+			sHopePrice = 0;
+		}else {
+			sHopePrice = Integer.valueOf((String)stock.get("sHopePrice"));	
+		}
 		
 		StockDTO sDto = StockDTO.builder().sNum(snum).sGrade(sGrade).managerComment(managerComment).mNum(mNum)
 				.sHopePrice(sHopePrice).build();
