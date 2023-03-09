@@ -13,6 +13,7 @@ import com.my.relo.entity.Award;
 import com.my.relo.entity.OrderDelivery;
 import com.my.relo.entity.Orders;
 import com.my.relo.exception.FindException;
+import com.my.relo.repository.AddressRepository;
 import com.my.relo.repository.AwardRepository;
 import com.my.relo.repository.OrderDeliveryRepository;
 
@@ -21,8 +22,8 @@ public class OrderDeliveryService {
 	@Autowired
 	private OrderDeliveryRepository odr;
 
-//	@Autowired
-//	private AddressRepository adr;
+	@Autowired
+	private AddressRepository adr;
 
 	@Autowired
 	private AwardRepository awr;
@@ -91,15 +92,20 @@ public class OrderDeliveryService {
 //	}
 
 	// 구매확정 update
-	public void editDstatus(Long aNum) throws FindException {
+	public void editDstatus(Long aNum, Long addrNum) throws FindException {
 		try {
 			Optional<OrderDelivery> otpOd = odr.findById(aNum);
-			if (otpOd.isPresent()) {
+			Optional<Address> otpAd = adr.findById(addrNum);
+			
+			System.out.println(otpOd.get().getDStatus()+" 배송상태");
+			
+			if (otpOd.isPresent() && otpAd.isPresent()) {
 				OrderDelivery od = otpOd.get();
-				LocalDate d = LocalDate.now();
-				OrderDelivery res = OrderDelivery.builder().aNum(od.getANum()).address(od.getAddress()).dStatus(3)
-						.dCompleteDay(d).dTrackingInfo(od.getDTrackingInfo()).build();
-				odr.save(res);
+				Address ad = otpAd.get();
+				od.updateDStatus(3);
+				od.updateAddress(ad);
+				
+				odr.save(od);
 			}
 		} catch (Exception e) {
 			throw new FindException("구매확정 처리 실패.");

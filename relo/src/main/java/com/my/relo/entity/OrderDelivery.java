@@ -51,4 +51,12 @@ public class OrderDelivery implements Serializable {
 	
 	@Column(name = "d_complete_day")
 	private LocalDate dCompleteDay;
+	
+	public void updateDStatus(Integer dStatus) {
+		this.dStatus = dStatus;
+	}
+	
+	public void updateAddress(Address address) {
+		this.address = address;
+	}
 }

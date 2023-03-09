@@ -50,7 +50,7 @@ public class AwardController {
 	               return new ResponseEntity<>(map1, HttpStatus.OK);
 	            }
 	            
-	            pService.updateProductStatus8(map.get("pnum"));
+	            pService.updateProductStatus(map.get("pnum"), 8);
 	            service.delAward(map.get("anum"));
 	            Map map1 = new HashMap();
 	            map1.put("msg", "낙찰 포기 완료");

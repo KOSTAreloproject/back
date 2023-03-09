@@ -18,11 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.my.relo.dto.AddressDTO;
 import com.my.relo.dto.OrderInfoDTO;
 import com.my.relo.dto.OrdersDTO;
+import com.my.relo.exception.AddException;
 import com.my.relo.exception.FindException;
 import com.my.relo.service.AddressService;
 import com.my.relo.service.AuctionService;
 import com.my.relo.service.OrderDeliveryService;
 import com.my.relo.service.OrdersService;
+import com.my.relo.service.ProductService;
 
 @RestController
 @RequestMapping(value = "/order-delivery/")
@@ -39,6 +41,9 @@ public class OrderDeliveryController {
 	
 	@Autowired
 	private AuctionService aService;
+	
+	@Autowired
+	private ProductService pService;
 	
 	// 회원 결제 완료시 주문/주문배송tb 값 삽입
 	@PostMapping(value = "add", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -110,15 +115,23 @@ public class OrderDeliveryController {
 	}
 
 	// 회원 구매확정
-	@PostMapping(value = "confirm", produces = "text/plain;charset=utf-8")
-	public ResponseEntity<?> confirm(HttpSession session, Long aNum) {
+	@PostMapping(value = "confirm", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> confirm(HttpSession session, @RequestBody HashMap<String, Long> body) throws AddException  {
 		Long mNum = (Long) session.getAttribute("logined");
+		Map<String, Object> map = new HashMap();
 		if (mNum == null) {
-			return new ResponseEntity<>("로그인하세요", HttpStatus.BAD_REQUEST);
+			map.put("msg", "로그인하세요");
+			return new ResponseEntity<>(map, HttpStatus.OK);
 		} else {
 			try {
-				service.editDstatus(aNum);
-				return new ResponseEntity<>("구매확정 완료.", HttpStatus.OK);
+				Long aNum = body.get("aNum");
+				Long addrNum = body.get("addrNum");
+				Long pNum = body.get("pNum");
+				service.editDstatus(aNum, addrNum);
+				pService.updateProductStatus(pNum, 9);
+				
+				map.put("msg", "구매확정 완료");
+				return new ResponseEntity<>(map, HttpStatus.OK);
 
 			} catch (FindException e) {
 				// TODO Auto-generated catch block
