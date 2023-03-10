@@ -13,6 +13,10 @@ import java.util.Optional;
 import javax.net.ssl.HttpsURLConnection;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -24,6 +28,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.my.relo.dto.OrderInfoDTO;
 import com.my.relo.dto.OrdersDTO;
+import com.my.relo.entity.Award;
 import com.my.relo.entity.Orders;
 import com.my.relo.exception.FindException;
 import com.my.relo.repository.OrdersRepository;
@@ -93,7 +98,7 @@ public class OrdersService {
 	}
 
 	// 관리자 구매확정 목록
-	public List<OrdersDTO> getListBypStatus() throws FindException {
+	public List<OrdersDTO> getListBydStatus() throws FindException {
 		try {
 			List<Orders> listO = or.findOrdersConfirmedListBydStatus3();
 			List<OrdersDTO> list = new ArrayList<>();
@@ -116,6 +121,70 @@ public class OrdersService {
 		} catch (Exception e) {
 			throw new FindException(e.getMessage());
 		}
+	}
+
+	// 회원의 주문 목록 페이징버전
+	public Map<String, Object> getPagingBymNum(Long mNum, int currentPage) throws FindException {
+		Pageable sortedByoDateDesc = PageRequest.of(currentPage - 1, 10, Sort.by("oDate").descending());
+
+		Page<Orders> p = or.findOrdersBymNum(mNum, sortedByoDateDesc);
+		List<Orders> listO = p.getContent();
+		int totalPage = p.getTotalPages();
+
+		List<OrdersDTO> list = new ArrayList<>();
+		for (Orders o : listO) {
+			OrdersDTO dto = OrdersDTO.builder().aNum(o.getANum())
+					.pNum(o.getAward().getAuction().getProduct().getPNum())
+					.sNum(o.getAward().getAuction().getProduct().getStock().getSNum())
+					.sColor(o.getAward().getAuction().getProduct().getStock().getSColor())
+					.sBrand(o.getAward().getAuction().getProduct().getStock().getSBrand())
+					.sName(o.getAward().getAuction().getProduct().getStock().getSName())
+					.sGrade(o.getAward().getAuction().getProduct().getStock().getSGrade())
+					.sizeCategoryName(
+							o.getAward().getAuction().getProduct().getStock().getSizes().getSizeCategoryName())
+					.aPrice(o.getAward().getAuction().getAPrice())
+					.oDate(o.getODate())
+					.dStatus(o.getODelivery().getDStatus()).build();
+			list.add(dto);
+		}
+		
+		Map<String, Object> res = new HashMap<>();
+		res.put("totalPage", totalPage);
+		res.put("list", list);
+		return res;
+	}
+	
+	// 관리자 구매확정 목록 페이징버전
+	public Map<String, Object> getPagingBydStatus(int currentPage) throws FindException {
+
+		Pageable sortedByoDateDesc = PageRequest.of(currentPage - 1, 10, Sort.by("oDate").descending());
+
+		Page<Orders> p = or.findConfirmedBydStatus3(sortedByoDateDesc);
+		List<Orders> listO = p.getContent();
+		int totalPage = p.getTotalPages();
+
+		List<OrdersDTO> list = new ArrayList<>();
+		for (Orders o : listO) {
+			OrdersDTO dto = OrdersDTO.builder().aNum(o.getANum())
+					.pNum(o.getAward().getAuction().getProduct().getPNum())
+					.sNum(o.getAward().getAuction().getProduct().getStock().getSNum())
+					.sColor(o.getAward().getAuction().getProduct().getStock().getSColor())
+					.sBrand(o.getAward().getAuction().getProduct().getStock().getSBrand())
+					.sName(o.getAward().getAuction().getProduct().getStock().getSName())
+					.sGrade(o.getAward().getAuction().getProduct().getStock().getSGrade())
+					.sizeCategoryName(
+							o.getAward().getAuction().getProduct().getStock().getSizes().getSizeCategoryName())
+					.aPrice(o.getAward().getAuction().getAPrice()).oDate(o.getODate())
+					.dStatus(o.getODelivery().getDStatus()).dCompleteDay(o.getODelivery().getDCompleteDay())
+					.build();
+			list.add(dto);
+		}
+		Map<String, Object> res = new HashMap<>();
+		res.put("totalPage", totalPage);
+		res.put("list", list);
+		
+		return res;
+
 	}
 
 	public String getToken() throws JsonProcessingException {

@@ -13,6 +13,7 @@ import com.my.relo.entity.Award;
 import com.my.relo.entity.OrderDelivery;
 import com.my.relo.entity.Orders;
 import com.my.relo.exception.FindException;
+import com.my.relo.repository.AddressRepository;
 import com.my.relo.repository.AwardRepository;
 import com.my.relo.repository.OrderDeliveryRepository;
 
@@ -21,8 +22,8 @@ public class OrderDeliveryService {
 	@Autowired
 	private OrderDeliveryRepository odr;
 
-//	@Autowired
-//	private AddressRepository adr;
+	@Autowired
+	private AddressRepository adr;
 
 	@Autowired
 	private AwardRepository awr;
@@ -36,6 +37,7 @@ public class OrderDeliveryService {
 			if (otpA.isPresent() && !otpOd.isPresent()) {
 				Award a = otpA.get();
 				Address ad = Address.builder()
+						.addrNum(adDTO.getAddrNum())
 						.mNum(adDTO.getMNum())
 						.addrName(adDTO.getAddrName())
 						.addrPostNum(adDTO.getAddrPostNum())
@@ -67,38 +69,19 @@ public class OrderDeliveryService {
 		}
 	}
 
-//	// 주문 주소 수정
-//	public void editAddrNum(Long aNum, Long addrNum) throws FindException {
-//		try {
-//			Optional<OrderDelivery> otpOd = odr.findById(aNum);
-//			if (otpOd.isPresent()) {
-//				OrderDelivery od = otpOd.get();
-//				Optional<Address> otpAd = adr.findById(addrNum);
-//				if (!otpAd.isPresent()) {
-//					throw new FindException("해당 주소가 존재하지 않습니다.");
-//				} else {
-//					Address ad = otpAd.get();
-//					OrderDelivery res = OrderDelivery.builder().aNum(od.getANum()).address(ad)
-//							.dTrackingInfo(od.getDTrackingInfo()).build();
-//
-//					odr.save(res);
-//				}
-//			}
-//		} catch (Exception e) {
-//			throw new FindException("주소 수정 실패.");
-//		}
-//	}
-
 	// 구매확정 update
-	public void editDstatus(Long aNum) throws FindException {
+	public void editDstatus(Long aNum, Long addrNum) throws FindException {
 		try {
 			Optional<OrderDelivery> otpOd = odr.findById(aNum);
-			if (otpOd.isPresent()) {
+			Optional<Address> otpAd = adr.findById(addrNum);
+			
+			if (otpOd.isPresent() && otpAd.isPresent()) {
 				OrderDelivery od = otpOd.get();
-				LocalDate d = LocalDate.now();
-				OrderDelivery res = OrderDelivery.builder().aNum(od.getANum()).address(od.getAddress()).dStatus(3)
-						.dCompleteDay(d).dTrackingInfo(od.getDTrackingInfo()).build();
-				odr.save(res);
+				Address ad = otpAd.get();
+				od.updateDStatus(3);
+				od.updateAddress(ad);
+				
+				odr.save(od);
 			}
 		} catch (Exception e) {
 			throw new FindException("구매확정 처리 실패.");
