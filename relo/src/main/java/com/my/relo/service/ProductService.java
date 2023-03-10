@@ -28,6 +28,7 @@ import com.my.relo.entity.Product;
 import com.my.relo.entity.Stock;
 import com.my.relo.exception.AddException;
 import com.my.relo.exception.FindException;
+import com.my.relo.repository.AwardRepository;
 import com.my.relo.repository.MemberRepository;
 import com.my.relo.repository.ProductRepository;
 import com.my.relo.repository.StockRepository;
@@ -45,6 +46,9 @@ public class ProductService {
 
 	@PersistenceContext
 	private EntityManager em;
+
+	@Autowired
+	private AwardRepository ar;
 
 	/**
 	 * 관리자가 상품을 등록한다. 상품이 등록될때 DB에서 트리거로 Stock의 status를 3에서 4로 바꾼다.
@@ -223,10 +227,10 @@ public class ProductService {
 		return list;
 	}
 
-	public void updateProductStatus8(Long pNum) throws AddException {
+	public void updateProductStatus(Long pNum, Integer pStatus) throws AddException {
 		Optional<Product> optP = pr.findById(pNum);
 		Product p = optP.get();
-		p.updatePStatus8(8);
+		p.updatePStatus(pStatus);
 		pr.save(p);
 	}
 
@@ -249,7 +253,7 @@ public class ProductService {
 				+ "LEFT OUTER JOIN (SELECT p_num, COUNT(*) zcount FROM zzim GROUP BY p_num) z ON p.p_num = z.p_num\r\n"
 				+ "WHERE p_status = 4 " + tender + "ORDER BY " + sort;
 
-		List<Object[]> resultList = em.createNativeQuery(sql).setFirstResult(start).setMaxResults(3).getResultList();
+		List<Object[]> resultList = em.createNativeQuery(sql).setFirstResult(start).setMaxResults(15).getResultList();
 		List<ZPResponseDTO> dtos = new ArrayList<>();
 		for (Object[] objs : resultList) {
 			ZPResponseDTO dto = ZPResponseDTO.builder().pNum(Long.valueOf(String.valueOf(objs[0])))
@@ -320,21 +324,17 @@ public class ProductService {
 	 * @return 검색결과(상품목록)
 	 * @throws FindException
 	 */
-	public Map<String, Object> searchProductList(String keyword, int currentpage) throws FindException {
+	public Map<String, Object> searchProductList(String keyword, int currentpage) {
 		Pageable pb = PageRequest.of((currentpage - 1), 10);
 		Page<Object[]> resultList = pr.selectProductListByName(keyword, pb);
-		List<Object[]> list = resultList.getContent();
 		int totalpage = resultList.getTotalPages();
-		if (list.isEmpty()) {
-			throw new FindException("검색 결과가 없습니다.");
-		}
 		List<ZPResponseDTO> dtos = new ArrayList<>();
 		for (Object[] objs : resultList) {
 			ZPResponseDTO dto = ZPResponseDTO.builder().pNum(Long.valueOf(String.valueOf(objs[0])))
 					.sNum(Long.valueOf(String.valueOf(objs[1]))).sName((String) objs[2])
 					.sHopePrice(Integer.parseInt(String.valueOf(objs[3])))
-					.maxPrice(Integer.parseInt(String.valueOf(objs[4])))
-					.pendDate(LocalDateTime.parse(String.valueOf(objs[5]), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S")))
+					.maxPrice(Integer.parseInt(String.valueOf(objs[4]))).pendDate(LocalDateTime
+							.parse(String.valueOf(objs[5]), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S")))
 					.sType((String) objs[6]).build();
 			dtos.add(dto);
 		}
@@ -343,6 +343,16 @@ public class ProductService {
 		resultMap.put("list", dtos);
 		resultMap.put("totalpage", totalpage);
 		return resultMap;
+	}
+
+	/**
+	 * 상품 삭제
+	 * 
+	 * @param pNum
+	 * @throws FindException
+	 */
+	public void deleteProduct(Long pNum) throws FindException {
+		pr.deleteById(pNum);
 	}
 
 }

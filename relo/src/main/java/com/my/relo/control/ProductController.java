@@ -22,11 +22,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -129,21 +128,6 @@ public class ProductController {
 
 	}
 
-	@PutMapping("editPStatus8")
-	public ResponseEntity<?> updatePStatus8(HttpSession session, @RequestBody Map<String, Long> pNum)
-			throws AddException {
-
-		Long mNum = (Long) session.getAttribute("logined");
-		if (mNum == null) {
-			throw new AddException("로그인하세요");
-		}
-
-		Long pnum = Long.valueOf(pNum.get("pNum"));
-		service.updateProductStatus8(pnum);
-
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
-
 	@GetMapping(value = "shop/{start}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> readShopProdList(@PathVariable(value = "start") int start,
 			@RequestParam(name = "prodCate", required = false, defaultValue = "") String prodCate,
@@ -163,7 +147,7 @@ public class ProductController {
 			pc = "'하의'";
 			break;
 		case "shoes":
-			pc = "'신발'";
+			pc = "'하의'";
 			break;
 		default:
 			pc = "'상의', '하의', '신발'";
@@ -198,7 +182,7 @@ public class ProductController {
 
 	@GetMapping(value = "search")
 	public ResponseEntity<?> readSearchProductList(@RequestParam("keyword") String keyword, @RequestParam("cp") int cp)
-			throws FindException, UnsupportedEncodingException {
+			throws UnsupportedEncodingException {
 		String decode = java.net.URLDecoder.decode(keyword, "UTF-8");
 		System.out.println(decode);
 		Map<String, Object> map = service.searchProductList(decode, cp);
@@ -280,5 +264,11 @@ public class ProductController {
 		responseHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=" + URLEncoder.encode("a", "UTF-8"));
 
 		return new ResponseEntity<>(img, responseHeaders, HttpStatus.OK);
+	}
+
+	@DeleteMapping("delBypNum/{pNum}")
+	public ResponseEntity<?> delBypNum(@PathVariable("pNum") Long pNum) throws FindException {
+		service.deleteProduct(pNum);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }
