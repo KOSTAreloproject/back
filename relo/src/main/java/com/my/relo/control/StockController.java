@@ -40,7 +40,7 @@ import com.my.relo.service.StockService;
 
 import net.coobird.thumbnailator.Thumbnailator;
 
-@PropertySource("classpath:application.properties")
+
 @RestController
 @RequestMapping("stock/*")
 public class StockController {
@@ -48,11 +48,7 @@ public class StockController {
 	@Autowired
 	StockService stockService;
 
-	@Value("${client.ip}")
-	private String clientIp;
 
-	@Value("${client.port}")
-	private String clientPort;
 
 	@PostMapping("add")
 	public ResponseEntity<?> StockAdd(HttpSession session, StockDTO stock,
