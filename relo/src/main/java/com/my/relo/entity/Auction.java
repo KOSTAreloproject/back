@@ -17,8 +17,6 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,7 +27,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 
-@DynamicInsert @DynamicUpdate
+@DynamicInsert
+@DynamicUpdate
 @Entity
 @Table(name = "auction")
 @SequenceGenerator(name = "AUCTION_SEQ_GENERATOR", // 사용할 sequence 이름
@@ -40,7 +39,7 @@ public class Auction {
 	@Column(name = "a_num")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "AUCTION_SEQ_GENERATOR")
 	private Long aNum;
-	
+
 	@JoinColumn(name = "m_num", nullable = false, referencedColumnName = "m_num")
 	private Long mNum;
 
@@ -51,7 +50,6 @@ public class Auction {
 	@Column(name = "a_price", nullable = false)
 	private Integer aPrice;
 
-	
 	@Column(name = "a_date", nullable = false)
 	@ColumnDefault(value = "SYSDATE")
 	private LocalDate aDate;

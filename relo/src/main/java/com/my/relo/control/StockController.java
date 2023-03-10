@@ -1,11 +1,9 @@
 package com.my.relo.control;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.util.List;
@@ -15,6 +13,7 @@ import java.util.StringTokenizer;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -25,16 +24,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.my.relo.dto.StockDTO;
-
 import com.my.relo.entity.Stock;
 import com.my.relo.exception.AddException;
 import com.my.relo.exception.FindException;
@@ -42,6 +38,7 @@ import com.my.relo.service.StockService;
 
 import net.coobird.thumbnailator.Thumbnailator;
 
+@PropertySource("classpath:application.properties")
 @RestController
 @RequestMapping("stock/*")
 public class StockController {
@@ -58,8 +55,6 @@ public class StockController {
 		if (mNum == null) {
 			throw new AddException("로그인하세요");
 		}
-
-
 
 		stock.stockSetMember(mNum);
 
@@ -99,7 +94,6 @@ public class StockController {
 	@PutMapping(value = "editSstatus", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> updateSetSStatus(HttpSession session, @RequestBody Map<String, Object> stock)
 			throws AddException {
-
 		Long mNum = (Long) session.getAttribute("logined");
 		if (mNum == null) {
 			throw new AddException("로그인하세요");
@@ -108,12 +102,17 @@ public class StockController {
 		Long snum = Long.valueOf((String) stock.get("sNum"));
 		String sGrade = (String) stock.get("sGrade");
 		String managerComment = (String) stock.get("managerComment");
-		Integer sHopePrice = Integer.valueOf((String)stock.get("sHopePrice"));
-		
+		Integer sHopePrice;
+		if (stock.get("sHopePrice") == null) {
+
+			sHopePrice = 0;
+		} else {
+			sHopePrice = Integer.valueOf((String) stock.get("sHopePrice"));
+		}
+
 		StockDTO sDto = StockDTO.builder().sNum(snum).sGrade(sGrade).managerComment(managerComment).mNum(mNum)
 				.sHopePrice(sHopePrice).build();
-		
-		
+
 		stockService.updateSetSStatus(sDto);
 
 		return new ResponseEntity<>(HttpStatus.OK);
@@ -121,18 +120,16 @@ public class StockController {
 	}
 
 	@PutMapping("editSstatus5")
-	public ResponseEntity<?> updateByCancleSStatus5(HttpSession session, @RequestBody Long sNum)
-			throws AddException {
-
+	public ResponseEntity<?> updateByCancleSStatus5(HttpSession session, @RequestBody Long sNum) throws AddException {
 
 		Long mNum = (Long) session.getAttribute("logined");
 		if (mNum == null) {
 			throw new AddException("로그인하세요");
 		}
 
-		stockService.updateByCancleSStatus5(sNum);
+		boolean flag = stockService.updateByCancleSStatus5(sNum, mNum);
 
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<>(flag, HttpStatus.OK);
 
 	}
 
@@ -157,8 +154,6 @@ public class StockController {
 		if (mNum == null) {
 			throw new FindException("로그인하세요");
 		}
-		
-
 
 		List<StockDTO> list = stockService.detailById(sNum, mNum);
 

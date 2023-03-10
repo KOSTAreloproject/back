@@ -44,30 +44,31 @@ import net.coobird.thumbnailator.Thumbnailator;
 @RestController
 @RequestMapping("style/*")
 public class StyleController {
-	
+
 	@Autowired
 	private StyleService service;
-	
+
 	private final String saveDirectory = "C:\\storage\\style";
 //	private final String saveDirectory = "/Users/skyleeb95/Downloads/files/style";
-	
+
 	/**
-	 * 리스트 출력 
-	 * @param type 1: 최신순 2: 좋아요순 3: 조회수순 
+	 * 리스트 출력
+	 * 
+	 * @param type 1: 최신순 2: 좋아요순 3: 조회수순
 	 * @return
 	 */
 	@GetMapping(value = "list/{type}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getList(@PathVariable("type") Long type,HttpSession session) {
-		Map map = new HashMap<>();
+	public ResponseEntity<?> getList(@PathVariable("type") Long type, HttpSession session) {
+		Map<String, Object> map = new HashMap<>();
 		try {
-			if(type == 1) {
+			if (type == 1) {
 				map = service.listByStyleNum();
-			}else if(type == 2) {
+			} else if (type == 2) {
 				map = service.listByLikes();
-			}else if(type == 3) {
+			} else if (type == 3) {
 				map = service.listBystyleCnt();
 			}
-			if(!map.isEmpty()) {
+			if (!map.isEmpty()) {
 				Long loginId = (Long) session.getAttribute("logined");
 				map.put("loginId", loginId);
 				return new ResponseEntity<>(map, HttpStatus.OK);
@@ -77,176 +78,187 @@ public class StyleController {
 		}
 		return new ResponseEntity<>("", HttpStatus.NO_CONTENT);
 	}
+
 	/**
-	 * 리스트 출력 - 이미지 출력 
+	 * 리스트 출력 - 이미지 출력
+	 * 
 	 * @param styleNum
 	 * @return
 	 * @throws FindException
 	 * @throws IOException
 	 */
-	@GetMapping(value="list/img/{styleNum}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getImgList(@PathVariable("styleNum")Long styleNum) throws FindException, IOException {
+	@GetMapping(value = "list/img/{styleNum}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getImgList(@PathVariable("styleNum") Long styleNum) throws FindException, IOException {
 
 		File saveDirFile = new File(saveDirectory);
 		File[] files = saveDirFile.listFiles();
 		File file = null;
 		String fileName;
 		Resource img = null;
-		for(File thumbF : files) {
+		for (File thumbF : files) {
 			StringTokenizer stk = new StringTokenizer(thumbF.getName(), ".");
-			 fileName = stk.nextToken();
-			if(fileName.equals("t_s_"+styleNum)) {
+			fileName = stk.nextToken();
+			if (fileName.equals("t_s_" + styleNum)) {
 				img = new FileSystemResource(thumbF);
 				file = thumbF;
 			}
 		}
 		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.set(HttpHeaders.CONTENT_LENGTH, ""+file.length());
+		responseHeaders.set(HttpHeaders.CONTENT_LENGTH, "" + file.length());
 		responseHeaders.set(HttpHeaders.CONTENT_TYPE, Files.probeContentType(file.toPath()));
-		responseHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "inline; filename="+URLEncoder.encode("a","UTF-8"));
-		
-		return new ResponseEntity<>(img,responseHeaders,HttpStatus.OK);
+		responseHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=" + URLEncoder.encode("a", "UTF-8"));
+
+		return new ResponseEntity<>(img, responseHeaders, HttpStatus.OK);
 	}
-	
+
 	/**
 	 * 상세보기 출력 (상세보기 조회시 조회수 +1 증가)
+	 * 
 	 * @param styleNum
 	 * @return
 	 * @throws FindException
-	 * @throws AddException 
+	 * @throws AddException
 	 */
 	@GetMapping(value = "detail/{styleNum}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getDetail(@PathVariable("styleNum")Long styleNum, HttpSession session) throws FindException, AddException {
+	public ResponseEntity<?> getDetail(@PathVariable("styleNum") Long styleNum, HttpSession session)
+			throws FindException, AddException {
 		Long mNum = (Long) session.getAttribute("logined");
 		String loginId = (String) session.getAttribute("loginId");
 //		if(mNum == null) {
 //			throw new FindException("로그인하세요");
 //		}
 		service.plusCnt(styleNum);
-		StyleDTO style= service.styleDetail(styleNum);
+		StyleDTO style = service.styleDetail(styleNum);
 		Map<String, Object> map = new HashMap<>();
 		map.put("style", style);
-		map.put("loginNum", mNum);	
-		map.put("loginId", loginId);			
+		map.put("loginNum", mNum);
+		map.put("loginId", loginId);
 		return new ResponseEntity<>(map, HttpStatus.OK);
 	}
-	
+
 	/**
-	 * 상세보기 - 해당 이미지 출력 
+	 * 상세보기 - 해당 이미지 출력
+	 * 
 	 * @param styleNum
 	 * @return
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	@GetMapping(value = "detail/img/{styleNum}")
-	public ResponseEntity<?> getDetailFile(@PathVariable("styleNum")Long styleNum) throws IOException{
+	public ResponseEntity<?> getDetailFile(@PathVariable("styleNum") Long styleNum) throws IOException {
 		File saveDirFile = new File(saveDirectory);
 		File[] files = saveDirFile.listFiles();
 		Resource img = null;
-		for(File f : files) {
+		for (File f : files) {
 			StringTokenizer stk = new StringTokenizer(f.getName(), ".");
 			String fileName = stk.nextToken();
-			if(fileName.equals("s_"+styleNum)) {
+			if (fileName.equals("s_" + styleNum)) {
 				img = new FileSystemResource(f);
 				HttpHeaders responseHeaders = new HttpHeaders();
-				responseHeaders.set(HttpHeaders.CONTENT_LENGTH, f.length()+"");
+				responseHeaders.set(HttpHeaders.CONTENT_LENGTH, f.length() + "");
 				responseHeaders.set(HttpHeaders.CONTENT_TYPE, Files.probeContentType(f.toPath()));
-				responseHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "inline; filename="+URLEncoder.encode("a","UTF-8"));
-				
+				responseHeaders.set(HttpHeaders.CONTENT_DISPOSITION,
+						"inline; filename=" + URLEncoder.encode("a", "UTF-8"));
+
 				return new ResponseEntity<>(img, responseHeaders, HttpStatus.OK);
 			}
 		}
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-	
+
 	/**
-	 * 내가 쓴 게시판 리스트 출력 
+	 * 내가 쓴 게시판 리스트 출력
+	 * 
 	 * @param mNum
 	 * @return
 	 * @throws FindException
 	 */
 	@GetMapping(value = "myList", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getMyList(HttpSession session) throws FindException{
+	public ResponseEntity<?> getMyList(HttpSession session) throws FindException {
 		Long mNum = (Long) session.getAttribute("logined");
-		if(mNum == null) {
+		if (mNum == null) {
 			throw new FindException("로그인하세요");
 		}
-		Map map = service.listByMNum(mNum);
+		Map<String, Object> map = service.listByMNum(mNum);
 		return new ResponseEntity<>(map, HttpStatus.OK);
 	}
-	
+
 	/**
-	 * 해시태그 별 리스트 출력 
-	 * @param hashName : 해시태그 
+	 * 해시태그 별 리스트 출력
+	 * 
+	 * @param hashName : 해시태그
 	 * @return
 	 * @throws FindException
 	 */
-	@GetMapping(value="hashList/{hashName}",produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getHashName(@PathVariable("hashName")String hashName) throws FindException{
-		Map map = service.listByHashName(hashName);
+	@GetMapping(value = "hashList/{hashName}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getHashName(@PathVariable("hashName") String hashName) throws FindException {
+		Map<String, Object> map = service.listByHashName(hashName);
 		return new ResponseEntity<>(map, HttpStatus.OK);
 	}
+
 	/**
-	 * 게시판 작성 
+	 * 게시판 작성
+	 * 
 	 * @param session
-	 * @param styleContent : 해시태그 리스트 
-	 * @param f : 파일 
+	 * @param styleContent : 해시태그 리스트
+	 * @param f            : 파일
 	 * @return
 	 * @throws AddException
-	 * @throws IOException 
-	 * @throws FindException 
+	 * @throws IOException
+	 * @throws FindException
 	 */
 	@PostMapping(value = "write")
-	public ResponseEntity<?> write(HttpSession session,
-									String styleContent, 
-									@RequestPart(value = "f",required = false) MultipartFile f) throws AddException, IOException, FindException {
-		
-		Long mNum = (Long)session.getAttribute("logined");
-		
-		if(mNum == null) {//로그인 안한 경우
+	public ResponseEntity<?> write(HttpSession session, String styleContent,
+			@RequestPart(value = "f", required = false) MultipartFile f)
+			throws AddException, IOException, FindException {
+
+		Long mNum = (Long) session.getAttribute("logined");
+
+		if (mNum == null) {// 로그인 안한 경우
 			throw new FindException("로그인하세요");
 		}
-		
-		if(f.getSize() == 0) {
+
+		if (f.getSize() == 0) {
 			throw new FindException("파일이 없습니다.");
 		}
-		MemberDTO mDTO = 
-					MemberDTO.builder().mnum(mNum).build();
-		
+		MemberDTO mDTO = MemberDTO.builder().mnum(mNum).build();
+
 		StyleDTO s = new StyleDTO();
 		s.setMember(mDTO);
-		
+
 		List<StyleTagDTO> tagList = new ArrayList<>();
-		StringTokenizer stk = new StringTokenizer(styleContent,"#");
-		while(stk.hasMoreTokens()) {
+		StringTokenizer stk = new StringTokenizer(styleContent, "#");
+		while (stk.hasMoreTokens()) {
 			StyleTagDTO tag = new StyleTagDTO();
 			StyleTagEmbedded ste = new StyleTagEmbedded();
 			ste.setHashName(stk.nextToken().trim());
 			tag.setSte(ste);
 			tagList.add(tag);
-			}
+		}
 		s.setTagList(tagList);
 
 		Long styleNum = service.write(s);
 		String originFileName = f.getOriginalFilename();
 		String fileExtension = originFileName.substring(originFileName.lastIndexOf(".") + 1);
-		String fileName = "s_"+styleNum+"."+fileExtension;
-		
+		String fileName = "s_" + styleNum + "." + fileExtension;
+
 		File file = new File(saveDirectory, fileName);
-		
+
 		int width = 500;
 		int height = 500;
-		String thumbFileName = "t_"+fileName;
+		String thumbFileName = "t_" + fileName;
 		File thumbFile = new File(saveDirectory, thumbFileName);
 		FileOutputStream thumbOs = new FileOutputStream(thumbFile);
 		InputStream thumbIs = f.getInputStream();
-		Thumbnailator.createThumbnail(thumbIs,thumbOs,width,height);
-		
+		Thumbnailator.createThumbnail(thumbIs, thumbOs, width, height);
+
 		f.transferTo(file);
-		
+
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
+
 	/**
 	 * 게시물 업데이트(스타일 태그만 수정)
+	 * 
 	 * @param styleNum
 	 * @param styleContent
 	 * @param f
@@ -254,109 +266,110 @@ public class StyleController {
 	 * @throws AddException
 	 * @throws IllegalStateException
 	 * @throws IOException
-	 * @throws FindException 
+	 * @throws FindException
 	 */
 	@PostMapping(value = "update/{styleNum}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> update(@PathVariable("styleNum")Long styleNum,
-															String styleContent,
-															@RequestPart(value = "f",required = false) MultipartFile f,HttpSession session) throws AddException, IllegalStateException, IOException, FindException{
-		
-		Long mNum = (Long)session.getAttribute("logined");
-		if(mNum == null) {//로그인 안한 경우
+	public ResponseEntity<?> update(@PathVariable("styleNum") Long styleNum, String styleContent,
+			@RequestPart(value = "f", required = false) MultipartFile f, HttpSession session)
+			throws AddException, IllegalStateException, IOException, FindException {
+
+		Long mNum = (Long) session.getAttribute("logined");
+		if (mNum == null) {// 로그인 안한 경우
 			throw new AddException("로그인하세요");
 		}
 		StyleDTO s = new StyleDTO();
 		List<StyleTagDTO> tagList = new ArrayList<>();
-		StringTokenizer stk = new StringTokenizer(styleContent,"#");
-		while(stk.hasMoreTokens()) {
+		StringTokenizer stk = new StringTokenizer(styleContent, "#");
+		while (stk.hasMoreTokens()) {
 			StyleTagDTO tag = new StyleTagDTO();
 			StyleTagEmbedded ste = new StyleTagEmbedded();
 			ste.setHashName(stk.nextToken().trim());
 			tag.setSte(ste);
 			tagList.add(tag);
-			}
+		}
 		s.setTagList(tagList);
 		s.setStyleNum(styleNum);
 		service.edit(s);
-		
-		if(f.getSize() != 0 ) {
-			
+
+		if (f.getSize() != 0) {
+
 			File saveDirFile = new File(saveDirectory);
-			
+
 			File[] files = saveDirFile.listFiles();
-			for(File originF : files) {
+			for (File originF : files) {
 				StringTokenizer stk2 = new StringTokenizer(originF.getName(), ".");
 				String fileName = stk2.nextToken();
-				if(fileName.equals("s_"+styleNum)){
+				if (fileName.equals("s_" + styleNum)) {
 					originF.delete();
 				}
 			}
-			for(File thumbF : files) {
+			for (File thumbF : files) {
 				StringTokenizer stk2 = new StringTokenizer(thumbF.getName(), ".");
 				String fileName2 = stk2.nextToken();
-				if(fileName2.equals("t_s_"+styleNum)) {
+				if (fileName2.equals("t_s_" + styleNum)) {
 					thumbF.delete();
 				}
 			}
-				
+
 			String originFileName = f.getOriginalFilename();
 			String fileExtension = originFileName.substring(originFileName.lastIndexOf(".") + 1);
-			String fileName = "s_"+styleNum+"."+fileExtension;
+			String fileName = "s_" + styleNum + "." + fileExtension;
 
 			File file = new File(saveDirectory, fileName);
-			
+
 			int width = 500;
 			int height = 500;
-			String thumbFileName = "t_"+fileName;
+			String thumbFileName = "t_" + fileName;
 			File thumbFile = new File(saveDirectory, thumbFileName);
 			FileOutputStream thumbOs = new FileOutputStream(thumbFile);
 			InputStream thumbIs = f.getInputStream();
-			Thumbnailator.createThumbnail(thumbIs,thumbOs,width,height);
+			Thumbnailator.createThumbnail(thumbIs, thumbOs, width, height);
 
 			f.transferTo(file);
 
 			return new ResponseEntity<>(HttpStatus.OK);
-		}
-		else {
+		} else {
 			return new ResponseEntity<>(HttpStatus.OK);
 		}
 	}
-	
+
 	/**
 	 * 게시판 삭제(좋아요 + 해시태그 + 댓글)
+	 * 
 	 * @param styleNum
 	 * @return
 	 * @throws RemoveException
-	 * @throws FindException 
+	 * @throws FindException
 	 */
-	@DeleteMapping(value = "{styleNum}",produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> delete(@PathVariable("styleNum")Long styleNum, HttpSession session) throws RemoveException, FindException{
-		
-		Long mNum = (Long)session.getAttribute("logined");
-		if(mNum == null) {//로그인 안한 경우
+	@DeleteMapping(value = "{styleNum}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> delete(@PathVariable("styleNum") Long styleNum, HttpSession session)
+			throws RemoveException, FindException {
+
+		Long mNum = (Long) session.getAttribute("logined");
+		if (mNum == null) {// 로그인 안한 경우
 			throw new FindException("로그인하세요");
 		}
-		
+
 		File saveDirFile = new File(saveDirectory);
 		File[] files = saveDirFile.listFiles();
-		
-		for(File originF : files) {
+
+		for (File originF : files) {
 			StringTokenizer stk2 = new StringTokenizer(originF.getName(), ".");
 			String fileName = stk2.nextToken();
-			if(fileName.equals("s_"+styleNum)){
+			if (fileName.equals("s_" + styleNum)) {
 				originF.delete();
 			}
 		}
-		for(File thumbF : files) {
+		for (File thumbF : files) {
 			StringTokenizer stk2 = new StringTokenizer(thumbF.getName(), ".");
 			String fileName2 = stk2.nextToken();
-			if(fileName2.equals("t_s_"+styleNum)) {
+			if (fileName2.equals("t_s_" + styleNum)) {
 				thumbF.delete();
 			}
 		}
-			
+
 		service.deleteByStyleNum(styleNum);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
+
 }

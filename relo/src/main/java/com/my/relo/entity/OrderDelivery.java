@@ -23,39 +23,42 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter @NoArgsConstructor @AllArgsConstructor 
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-@DynamicInsert @DynamicUpdate
+@DynamicInsert
+@DynamicUpdate
 @Entity
-@Table(name="order_delivery")
+@Table(name = "order_delivery")
 public class OrderDelivery implements Serializable {
 	@Id
-	@Column(name="a_num")
+	@Column(name = "a_num")
 	private Long aNum;
-	
-	@OneToOne(optional=true,  fetch = FetchType.LAZY,  cascade=CascadeType.ALL)
+
+	@OneToOne(optional = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@MapsId
-	@JoinColumn(name="a_num")
+	@JoinColumn(name = "a_num")
 	private Orders orders;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "addr_num")
 	private Address address;
-	
+
 	@Column(name = "d_status")
 	@ColumnDefault(value = "0")
 	private int dStatus;
-	
+
 	@Column(name = "d_tracking_info")
 	private String dTrackingInfo;
-	
+
 	@Column(name = "d_complete_day")
 	private LocalDate dCompleteDay;
-	
+
 	public void updateDStatus(Integer dStatus) {
 		this.dStatus = dStatus;
 	}
-	
+
 	public void updateAddress(Address address) {
 		this.address = address;
 	}

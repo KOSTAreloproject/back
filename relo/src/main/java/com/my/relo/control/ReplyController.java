@@ -30,92 +30,97 @@ public class ReplyController {
 
 	@Autowired
 	private ReplyService service;
-	
+
 	/**
-	 * 댓글, 대댓글 작성 
+	 * 댓글, 대댓글 작성
+	 * 
 	 * @param styleNum
 	 * @param session
 	 * @param repContent
-	 * @param repNum -> 부모댓글 번호 있으면 대댓글 
+	 * @param repNum     -> 부모댓글 번호 있으면 대댓글
 	 * @return
 	 * @throws AddException
-	 * @throws FindException 
+	 * @throws FindException
 	 */
-	@PostMapping(value="{styleNum}",produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> postRep(@PathVariable("styleNum")Long styleNum,
-										HttpSession session,@RequestBody Map<String,String> map) throws AddException, FindException{
-		
+	@PostMapping(value = "{styleNum}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> postRep(@PathVariable("styleNum") Long styleNum, HttpSession session,
+			@RequestBody Map<String, String> map) throws AddException, FindException {
+
 		Long mNum = (Long) session.getAttribute("logined");
-		if(mNum == null) {
+		if (mNum == null) {
 			throw new FindException("로그인하세요");
 		}
 		ReplyDTO r = new ReplyDTO();
-		System.out.println(map.toString());
-		String repContent = (String)map.get("repContent");
-		if(map.size()==2) {
+		System.out.println(map);
+		String repContent = (String) map.get("repContent");
+		if (map.size() == 2) {
 			Long repNum = Long.valueOf(map.get("repNum"));
 			ReplyDTO parentR = new ReplyDTO();
 			parentR.setRepNum(repNum);
 			r.setReplyParentDTO(parentR);
 		}
-	
-		MemberDTO m = 
-				MemberDTO.builder().mnum(mNum).build();
-		
+
+		MemberDTO m = MemberDTO.builder().mnum(mNum).build();
+
 		StyleDTO s = new StyleDTO();
 		s.setStyleNum(styleNum);
-		
+
 		r.setMember(m);
 		r.setStyle(s);
 		r.setRepContent(repContent);
 
 		service.writeReply(r);
-		
+
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
+
 	/**
-	 * 댓글 수정 
+	 * 댓글 수정
+	 * 
 	 * @param repNum
 	 * @param repContent
 	 * @return
 	 * @throws AddException
-	 * @throws FindException 
+	 * @throws FindException
 	 */
-	@PutMapping(value="{repNum}",produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> updateRep(@PathVariable("repNum")Long repNum,
-												HttpSession session,@RequestBody Map<String, String> map) throws AddException, FindException{
-		
+	@PutMapping(value = "{repNum}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> updateRep(@PathVariable("repNum") Long repNum, HttpSession session,
+			@RequestBody Map<String, String> map) throws AddException, FindException {
+
 		Long mNum = (Long) session.getAttribute("logined");
-		if(mNum == null) {
+		if (mNum == null) {
 			throw new FindException("로그인하세요");
 		}
-		
+
 		String repContent = map.get("repContent");
 		ReplyDTO r = new ReplyDTO();
 		r.setRepNum(repNum);
 		r.setRepContent(repContent);
-		
+
 		service.writeReply(r);
-		
+
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
+
 	/**
-	 * 댓글 삭제 
+	 * 댓글 삭제
+	 * 
 	 * @param repNum
 	 * @return
 	 * @throws RemoveException
-	 * @throws FindException 
+	 * @throws FindException
 	 */
-	@DeleteMapping(value="{repNum}",produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> deleteRep(@PathVariable("repNum")Long repNum, HttpSession session) throws RemoveException, FindException{
-		
+	@DeleteMapping(value = "{repNum}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> deleteRep(@PathVariable("repNum") Long repNum, HttpSession session)
+			throws RemoveException, FindException {
+
 		Long mNum = (Long) session.getAttribute("logined");
-		if(mNum == null) {
+		if (mNum == null) {
 			throw new FindException("로그인하세요");
 		}
-		
+
 		service.deleteReply(repNum);
-		
+
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }

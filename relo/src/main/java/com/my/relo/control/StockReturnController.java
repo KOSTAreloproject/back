@@ -1,6 +1,5 @@
 package com.my.relo.control;
 
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -24,30 +23,30 @@ import com.my.relo.service.StockReturnService;
 public class StockReturnController {
 	@Autowired
 	StockReturnService stockReturnService;
-	
+
 	@PostMapping("add")
-	public ResponseEntity<?> addStockReturn(@RequestBody  Map<String, Long> num) throws AddException{
+	public ResponseEntity<?> addStockReturn(@RequestBody Map<String, Long> num) throws AddException {
 		Long mnum = Long.valueOf(num.get("mNum"));
 		Long snum = Long.valueOf(num.get("sNum"));
-		stockReturnService.addStockReturn(mnum,snum);
-		
-	return new ResponseEntity<>(HttpStatus.OK);
-	
+		stockReturnService.addStockReturn(mnum, snum);
+
+		return new ResponseEntity<>(HttpStatus.OK);
+
 	}
-	
+
 	@GetMapping("listById/{currentPage}")
-public ResponseEntity<?> selectByIdStockReturn(HttpSession session,@PathVariable int currentPage) throws FindException{
-		
+	public ResponseEntity<?> selectByIdStockReturn(HttpSession session, @PathVariable int currentPage)
+			throws FindException {
+
 		Long mNum = (Long) session.getAttribute("logined");
 		if (mNum == null) {
 			throw new FindException("로그인하세요");
 		}
-		
 
-		Map<String,Object> resultMap  = stockReturnService.selectByIdStockReturn(mNum,currentPage);
-		
-	return new ResponseEntity<>(resultMap,HttpStatus.OK);
-	
+		Map<String, Object> resultMap = stockReturnService.selectByIdStockReturn(mNum, currentPage);
+
+		return new ResponseEntity<>(resultMap, HttpStatus.OK);
+
 	}
-	
+
 }

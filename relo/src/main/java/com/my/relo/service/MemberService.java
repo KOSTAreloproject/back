@@ -22,6 +22,16 @@ public class MemberService {
 		mr.save(dto.toEntity());
 	}
 
+	// 소셜 로그인시 이메일 확인
+	public MemberDTO findByEmail(String email) {
+		Member m = mr.findByEmail(email);
+		if (m != null) {
+			MemberDTO dto = MemberDTO.builder().id(m.getId()).mnum(m.getMNum()).build();
+			return dto;
+		}
+		return null;
+	}
+
 	// 아이디 및 비밀번호 찾기
 	public String findIdAndPwd(String tel) {
 		Member m = mr.findIdAndPwd(tel);

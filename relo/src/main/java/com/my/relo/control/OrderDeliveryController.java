@@ -35,16 +35,16 @@ public class OrderDeliveryController {
 
 	@Autowired
 	private AddressService adService;
-	
+
 	@Autowired
 	private OrdersService oService;
-	
+
 	@Autowired
 	private AuctionService aService;
-	
+
 	@Autowired
 	private ProductService pService;
-	
+
 	// 회원 결제 완료시 주문/주문배송tb 값 삽입
 	@PostMapping(value = "add", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> add(HttpSession session, @RequestBody HashMap<String, Object> param) throws IOException {
@@ -54,33 +54,33 @@ public class OrderDeliveryController {
 		} else {
 			try {
 				String token = oService.getToken();
-				
-				//결제 성공 금액 조회하기
+
+				// 결제 성공 금액 조회하기
 				OrderInfoDTO oiDTO = oService.paymentInfo(param.get("imp_uid"), token);
 				Integer paidPrice = oiDTO.getAPrice();
 				String status = oiDTO.getStatus();
-				String impUid = String.valueOf(param.get("imp_uid")); 
+				String impUid = String.valueOf(param.get("imp_uid"));
 				Long aNum = Long.parseLong(String.valueOf(param.get("anum")));
 				String oMemo = "";
-				System.out.println(status+"원");
-				System.out.println(paidPrice+"원");
-				//결제 해야 할 금액 조회
-				Integer expPrice = aService.priceByaNum(aNum); 
-				//+배송비
+				System.out.println(status + "원");
+				System.out.println(paidPrice + "원");
+				// 결제 해야 할 금액 조회
+				Integer expPrice = aService.priceByaNum(aNum);
+				// +배송비
 				expPrice += 2500;
 
-				if (param.get("omemo")!=null) {
+				if (param.get("omemo") != null) {
 					oMemo = String.valueOf(param.get("omemo"));
 				}
 				AddressDTO adDTO = null;
-				OrdersDTO odDTO = new OrdersDTO(); //anum mnum omemo trackingInfo
-				System.out.println(expPrice+"expPrice");
-				System.out.println(oMemo+"- memo");
-				System.out.println(aNum+"- aNum");
+				OrdersDTO odDTO = new OrdersDTO(); // anum mnum omemo trackingInfo
+				System.out.println(expPrice + "expPrice");
+				System.out.println(oMemo + "- memo");
+				System.out.println(aNum + "- aNum");
 				if (expPrice.equals(paidPrice) && status.equals("paid")) {
 					adDTO = adService.findByAddrNum(Long.parseLong(String.valueOf(param.get("addrnum"))));
 					adDTO.setMNum(mNum);
-					
+
 					odDTO.setANum(aNum);
 					odDTO.setMNum(mNum);
 					odDTO.setOMemo(oMemo);
@@ -92,9 +92,9 @@ public class OrderDeliveryController {
 					// 운송장 번호
 					String tracking = String.valueOf(preValue) + "-" + String.valueOf(postValue);
 					odDTO.setDTrackingInfo(tracking);
-					
+
 					service.addOrderDelivery(aNum, adDTO, odDTO);
-					
+
 					Map<String, String> res = new HashMap();
 					res.put("msg", "주문 완료.");
 					res.put("status", "0");
@@ -116,7 +116,7 @@ public class OrderDeliveryController {
 
 	// 회원 구매확정
 	@PostMapping(value = "confirm", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> confirm(HttpSession session, @RequestBody HashMap<String, Long> body) throws AddException  {
+	public ResponseEntity<?> confirm(HttpSession session, @RequestBody HashMap<String, Long> body) throws AddException {
 		Long mNum = (Long) session.getAttribute("logined");
 		Map<String, Object> map = new HashMap();
 		if (mNum == null) {
@@ -129,7 +129,7 @@ public class OrderDeliveryController {
 				Long pNum = body.get("pNum");
 				service.editDstatus(aNum, addrNum);
 				pService.updateProductStatus(pNum, 9);
-				
+
 				map.put("msg", "구매확정 완료");
 				return new ResponseEntity<>(map, HttpStatus.OK);
 

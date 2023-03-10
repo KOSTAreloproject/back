@@ -22,34 +22,37 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter @NoArgsConstructor @AllArgsConstructor 
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-@DynamicInsert @DynamicUpdate
+@DynamicInsert
+@DynamicUpdate
 @Entity
-@Table(name="orders")
-public class Orders implements Serializable{
+@Table(name = "orders")
+public class Orders implements Serializable {
 	@Id
-	@Column(name="a_num")
+	@Column(name = "a_num")
 	private Long aNum;
-	
-	@OneToOne(optional=true, fetch = FetchType.LAZY,  cascade=CascadeType.ALL)
+
+	@OneToOne(optional = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@MapsId
-	@JoinColumn(name="a_num", referencedColumnName = "a_num")
+	@JoinColumn(name = "a_num", referencedColumnName = "a_num")
 	private Award award;
-	
-	@JoinColumn(name = "m_num", nullable = false, referencedColumnName="m_num")
+
+	@JoinColumn(name = "m_num", nullable = false, referencedColumnName = "m_num")
 	private Long mNum;
-	
+
 	@Column(name = "o_memo")
 	private String oMemo;
-	
+
 	@Column(name = "o_date")
 	@ColumnDefault(value = "SYSDATE")
 	private LocalDate oDate;
-	
-	@Column(name="imp_uid")
+
+	@Column(name = "imp_uid")
 	private String impUid;
-	
-	@OneToOne(mappedBy = "orders", optional=true, fetch = FetchType.LAZY)
-	private OrderDelivery oDelivery;                                               
+
+	@OneToOne(mappedBy = "orders", optional = true, fetch = FetchType.LAZY)
+	private OrderDelivery oDelivery;
 }
