@@ -1,10 +1,16 @@
 package com.my.relo.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.my.relo.dto.AuctionDTO;
@@ -62,6 +68,42 @@ public class AwardService {
 		} catch (Exception e) {
 			throw new FindException(e.getMessage());
 		}
+		
+	}
+	
+	//낙찰 상품 목록 관리자에게 출력 페이징버전
+	public Map<String, Object> getPagingList(int currentPage) {
+		Pageable sortedByaDateDesc = PageRequest.of(currentPage - 1, 10, Sort.by("aDate").descending());
+
+		Page<Award> p = awr.findList(sortedByaDateDesc);
+		List<Award> listAw = p.getContent();
+		int totalPage = p.getTotalPages();
+
+		List<AuctionDTO> list = new ArrayList<>();
+		
+		for (Award a : listAw) {
+			AuctionDTO dto = AuctionDTO.builder()
+					.aNum(a.getAuction().getANum())
+					.aDate(a.getAuction().getADate())
+					.aTime(a.getATime())
+					.awNum(a.getANum())
+					.aPrice(a.getAuction().getAPrice())
+					.pNum(a.getAuction().getProduct().getPNum())
+					.pEndDate(a.getAuction().getProduct().getPEndDate())
+					.sNum(a.getAuction().getProduct().getStock().getSNum())
+					.sBrand(a.getAuction().getProduct().getStock().getSBrand())
+					.sGrade(a.getAuction().getProduct().getStock().getSGrade())
+					.sColor(a.getAuction().getProduct().getStock().getSColor())
+					.sName(a.getAuction().getProduct().getStock().getSName())
+					.sizeCategoryName(a.getAuction().getProduct().getStock().getSizes().getSizeCategoryName())
+					.build();
+			list.add(dto);
+		}
+		Map<String, Object> res = new HashMap<>();
+		res.put("totalPage", totalPage);
+		res.put("list", list);
+		
+		return res;
 		
 	}
 }
