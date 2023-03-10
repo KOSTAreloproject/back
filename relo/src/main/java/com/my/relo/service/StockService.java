@@ -15,11 +15,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.my.relo.dto.StockDTO;
+import com.my.relo.entity.Address;
 import com.my.relo.entity.Member;
 import com.my.relo.entity.Sizes;
 import com.my.relo.entity.Stock;
 import com.my.relo.exception.AddException;
 import com.my.relo.exception.FindException;
+import com.my.relo.repository.AddressRepository;
 import com.my.relo.repository.MemberRepository;
 import com.my.relo.repository.SizesRepository;
 import com.my.relo.repository.StockRepository;
@@ -34,6 +36,9 @@ public class StockService {
 	
 	@Autowired
 	private SizesRepository sir;
+	
+	@Autowired
+	private AddressRepository adr;
 	
 	/**
 	 * 판매자가 처음 상품을 등록한다.
@@ -124,13 +129,21 @@ public class StockService {
 	 * @param stock
 	 * @throws AddException
 	 */
-	public void updateByCancleSStatus5(Long sNum) throws AddException{
+	public boolean updateByCancleSStatus5(Long sNum,Long mNum) throws AddException{
+		boolean flag = false;
 		
 		Optional<Stock> optS1 = sr.findById(sNum);
+		List<Address> optA1 = adr.findBymNum(mNum);
+		
+		if(optA1.size() != 0) {
+			 flag = true;
+		}
 		
 		Stock s = optS1.get();
 		s.updateByCancleSStatus5(5);
 		sr.save(s);
+		
+		return flag;
 	}
 	
 	/**
@@ -183,10 +196,17 @@ public class StockService {
 		Optional<Member> optM1 = mr.findById(mNum);
 		Member m1 = optM1.get();
 		
-		List<Object[]> sList = sr.selectByIdDeatil(sNum,m1.getMNum());
+		List<Object[]> sList = sr.selectByIdDetail(sNum,m1.getMNum());
 		
 		List<StockDTO> list = new ArrayList<>();
 		for (Object[] obj : sList) {
+			String sHopePrice;
+			if(String.valueOf(obj[12]).equals("null") ){
+				sHopePrice = "0";
+			}else {
+				sHopePrice = String.valueOf(obj[12]);
+			}
+			
 			StockDTO dto = StockDTO.builder()
 					.sNum(Long.valueOf(String.valueOf(obj[0])))
 					.mNum(Long.valueOf(String.valueOf(obj[1])))
@@ -200,6 +220,7 @@ public class StockService {
 					.sBrand(String.valueOf(obj[9]))
 					.sStatus(Integer.valueOf(String.valueOf(obj[10])))
 					.sGrade(String.valueOf(obj[11]))
+					.sHopePrice(Integer.valueOf(sHopePrice))
 					.build();
 			
 			list.add(dto);
@@ -215,7 +236,6 @@ public class StockService {
 	public Map<String,Object> selectBySstatus(Integer sStatus,int currentPage) throws FindException{
 			Pageable pageable = PageRequest.of(currentPage-1,10,Sort.by("s_num"));  //10개씩 페이징
 			Page<Object[]> pageSList = sr.selectBySReturn(sStatus,pageable);
-			System.out.println("여기야!!: "+pageSList.getTotalPages());
 			List<Object[]> List = pageSList.getContent();
 			if(!List.isEmpty()) {
 				

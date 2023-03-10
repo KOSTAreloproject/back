@@ -28,11 +28,11 @@ public interface StockRepository extends CrudRepository<Stock, Long> {
 	public Page<Object[]> selectBySReturn(@Param("sStatus")Integer sStatus,Pageable pageable);
 	
 	//2.판매자 마이페이지-> 판매내역 -> 판매대기 상세
-	@Query(value = "select s.s_num,s.m_num ,s.s_name,s.s_type,si.SIZE_CATEGORY_NAME ,s.s_color,s.manager_comment,s.s_hope_days,s.s_origin_price,s.s_brand,s.s_status,s.s_grade\r\n"
+	@Query(value = "select s.s_num,s.m_num ,s.s_name,s.s_type,si.SIZE_CATEGORY_NAME ,s.s_color,s.manager_comment,s.s_hope_days,s.s_origin_price,s.s_brand,s.s_status,s.s_grade,s.s_hope_price\r\n"
 			+ "from stock s INNER JOIN sizes si on s.size_category_num = si.size_category_num\r\n"
 			+ "where s.s_num=:sNum and s.M_NUM=:mNum"
 	, nativeQuery = true)
-	public List<Object[]> selectByIdDeatil(@Param("sNum")Long sNum,@Param("mNum")Long mNum);
+	public List<Object[]> selectByIdDetail(@Param("sNum")Long sNum,@Param("mNum")Long mNum);
 	
 	
 

@@ -1,3 +1,4 @@
+
 package com.my.relo.control;
 
 import java.io.File;
@@ -23,6 +24,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -112,7 +114,6 @@ public class ProductController {
 		if (mNum == null) {
 			throw new FindException("로그인하세요");
 		}
-		
 
 		Map<String, Object> resultMap = service.ProductEndListById(mNum, currentPage);
 
@@ -134,20 +135,7 @@ public class ProductController {
 
 	}
 
-	@PutMapping("editPStatus8")
-	public ResponseEntity<?> updatePStatus8(HttpSession session, @RequestBody Map<String, Long> pNum)
-			throws AddException {
 
-		Long mNum = (Long) session.getAttribute("logined");
-		if (mNum == null) {
-			throw new AddException("로그인하세요");
-		}
-
-		Long pnum = Long.valueOf(pNum.get("pNum"));
-		service.updateProductStatus8(pnum);
-
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
 
 	@GetMapping(value = "shop/{start}", produces = MediaType.APPLICATION_JSON_VALUE)
 	   public ResponseEntity<?> readShopProdList(@PathVariable(value = "start") int start,
@@ -287,4 +275,11 @@ public class ProductController {
 
 	      return new ResponseEntity<>(img, responseHeaders, HttpStatus.OK);
 	   }
+	   
+	   @DeleteMapping("delBypNum/{pNum}")
+	   public  ResponseEntity<?> delBypNum(@PathVariable("pNum") Long pNum)throws FindException{
+		   service.deleteProduct(pNum);
+		   return new ResponseEntity<>(HttpStatus.OK);
+	   }
 }
+

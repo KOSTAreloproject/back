@@ -47,7 +47,7 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
 		//판매자 판매내역 종료 페이지
 		@Query(value = "select p.s_name,s.SIZE_CATEGORY_NAME,p.P_STATUS,p.p_num,p.s_brand,p.S_NUM,p.P_End_Date\r\n"
 				+ "from p_info p INNER JOIN sizes s on p.size_category_num = s.size_category_num\r\n"
-				+ "where p.M_NUM=:mNum and (p.p_status = 6 or p.p_status = 8 or p.p_status = 7)"
+				+ "where p.M_NUM=:mNum and (p.p_status = 6 or p.p_status = 8 or p.p_status = 7 or p.p_status = 9)"
 				, countQuery = "select count(*) from stock", nativeQuery = true)
 		public Page<Object[]> selectByEndProduct(@Param("mNum")Long mNum,Pageable pageable);
 		
