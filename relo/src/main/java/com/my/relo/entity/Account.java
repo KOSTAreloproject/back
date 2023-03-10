@@ -5,39 +5,42 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.ToString;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
-@EqualsAndHashCode
 @Entity
+@ToString
 @Table(name = "account")
 public class Account {
 
 	@Id
-	@Column(name = "m_num", nullable = false)
-	private Long mNum; // 멤버번호
+	@Column(name = "m_num")
+	private Long mNum;
 
-	@MapsId(value = "mNum")
-	@OneToOne(cascade = { CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE })
-	@JoinColumn(name = "m_num")
-	private Member member; //식별관계
+	@OneToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "m_num", referencedColumnName = "m_num", nullable = false)
+	private Member member;
 
-	@Column(name = "bank_account")
+	@Column(name = "bank_account", nullable = false)
 	private String bankAccount; // 계좌번호
 
-	@Column(name = "bank_code")
+	@Column(name = "bank_code", nullable = false)
 	private String bankCode; // 은행코드
+
+	@Builder
+	public Account(Long mNum, String bankAccount, String bankCode) {
+		this.mNum = mNum;
+		this.bankAccount = bankAccount;
+		this.bankCode = bankCode;
+	}
 
 }

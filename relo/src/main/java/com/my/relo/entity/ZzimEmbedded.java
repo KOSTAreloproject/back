@@ -4,22 +4,29 @@ import java.io.Serializable;
 
 import javax.persistence.Embeddable;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode
 @Embeddable
 public class ZzimEmbedded implements Serializable {
-	// @Column(name="m_num")
-	private Long mNum;
 
-	// @Column(name = "p_num" )
+	/**
+	* 
+	*/
+	private static final long serialVersionUID = -1842248313818646189L;
+
+	private Long mnum;
+
 	private Long pNum;
+
+	@Builder
+	public ZzimEmbedded(Long mnum, Long pNum) {
+		this.mnum = mnum;
+		this.pNum = pNum;
+	}
 }

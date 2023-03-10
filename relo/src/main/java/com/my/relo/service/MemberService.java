@@ -14,149 +14,148 @@ import com.my.relo.repository.MemberRepository;
 @Service
 public class MemberService {
 
-   @Autowired
-   private MemberRepository mr;
+	@Autowired
+	private MemberRepository mr;
 
-   // 회원 가입
-   public void join(MemberDTO dto) {
-      mr.save(dto.toEntity());
-   }
+	// 회원 가입
+	public void join(MemberDTO dto) {
+		mr.save(dto.toEntity());
+	}
 
-   // 소셜 로그인시 이메일 확인
-   public MemberDTO findByEmail(String email) {
+	// 소셜 로그인시 이메일 확인
+	public MemberDTO findByEmail(String email) {
 		Member m = mr.findByEmail(email);
-		if(m != null) {
-			MemberDTO dto = MemberDTO.builder().id(m.getId())
-					.mnum(m.getMNum()).build();
+		if (m != null) {
+			MemberDTO dto = MemberDTO.builder().id(m.getId()).mnum(m.getMNum()).build();
 			return dto;
 		}
 		return null;
-   }
-   
-   // 아이디 및 비밀번호 찾기
-   public String findIdAndPwd(String tel) {
-      Member m = mr.findIdAndPwd(tel);
-      if (m != null) {
-         String id = m.getId();
-         StringBuilder sb = new StringBuilder(id);
-         int totalLength = id.length() - 1;
-         for (int i = totalLength; i >= 4; i--) {
-            sb.setCharAt(i, '*');
-         }
-         id = sb.toString();
-         return id;
-      }
-      return null;
-   }
+	}
 
-   // 아이디 중복 체크
-   public MemberDTO idCheck(String id) {
-      Member m = mr.checkId(id);
+	// 아이디 및 비밀번호 찾기
+	public String findIdAndPwd(String tel) {
+		Member m = mr.findIdAndPwd(tel);
+		if (m != null) {
+			String id = m.getId();
+			StringBuilder sb = new StringBuilder(id);
+			int totalLength = id.length() - 1;
+			for (int i = totalLength; i >= 4; i--) {
+				sb.setCharAt(i, '*');
+			}
+			id = sb.toString();
+			return id;
+		}
+		return null;
+	}
 
-      if (m != null) {
-         MemberDTO dto = MemberDTO.builder().id(m.getId()).pwd(m.getPwd()).mnum(m.getMNum()).type(m.getType())
-               .build();
-         return dto;
-      } else {
-         return null;
-      }
-   }
+	// 아이디 중복 체크
+	public MemberDTO idCheck(String id) {
+		Member m = mr.checkId(id);
 
-   // 회원 상세 프로필 조회
-   public MemberDTO detailMember(Long mNum) throws FindException {
-      Optional<Member> optM = mr.findById(mNum);
-      if (!optM.isPresent())
-         throw new FindException();
-      else {
-         Member m = optM.get();
+		if (m != null) {
+			MemberDTO dto = MemberDTO.builder().id(m.getId()).pwd(m.getPwd()).mnum(m.getMNum()).type(m.getType())
+					.build();
+			return dto;
+		} else {
+			return null;
+		}
+	}
 
-         String email = m.getEmail();
-         StringBuilder sb = new StringBuilder(email);
+	// 회원 상세 프로필 조회
+	public MemberDTO detailMember(Long mNum) throws FindException {
+		Optional<Member> optM = mr.findById(mNum);
+		if (!optM.isPresent())
+			throw new FindException();
+		else {
+			Member m = optM.get();
 
-         int startIdx = 1;
-         int endIdx = email.indexOf("@") - 2;
+			String email = m.getEmail();
+			StringBuilder sb = new StringBuilder(email);
 
-         for (int i = startIdx; i <= endIdx; i++) {
-            sb.setCharAt(i, '*');
-         }
-         email = sb.toString();
+			int startIdx = 1;
+			int endIdx = email.indexOf("@") - 2;
 
-         MemberDTO dto = MemberDTO.builder().id(m.getId()).pwd(m.getPwd()).email(email).birth(m.getBirth())
-               .name(m.getName()).tel(m.getTel()).type(m.getType()).build();
-         return dto;
-      }
-   }
+			for (int i = startIdx; i <= endIdx; i++) {
+				sb.setCharAt(i, '*');
+			}
+			email = sb.toString();
 
-   // 회원 정보 수정
-   public void updateProfile(Long mNum, MemberDTO dto) throws FindException {
-      Optional<Member> optM = mr.findById(mNum);
-      if (!optM.isPresent()) {
-         throw new FindException();
-      } else {
-         Member m = optM.get();
+			MemberDTO dto = MemberDTO.builder().id(m.getId()).pwd(m.getPwd()).email(email).birth(m.getBirth())
+					.name(m.getName()).tel(m.getTel()).type(m.getType()).build();
+			return dto;
+		}
+	}
 
-         if (dto.getPwd() == null) {
-            dto = MemberDTO.builder().id(m.getId()).pwd(m.getPwd()).email(dto.getEmail()).tel(dto.getTel()).build();
-         }
+	// 회원 정보 수정
+	public void updateProfile(Long mNum, MemberDTO dto) throws FindException {
+		Optional<Member> optM = mr.findById(mNum);
+		if (!optM.isPresent()) {
+			throw new FindException();
+		} else {
+			Member m = optM.get();
 
-         if (dto.getEmail() == null) {
-            dto = MemberDTO.builder().id(m.getId()).pwd(dto.getPwd()).email(m.getEmail()).tel(dto.getTel()).build();
-         }
+			if (dto.getPwd() == null) {
+				dto = MemberDTO.builder().id(m.getId()).pwd(m.getPwd()).email(dto.getEmail()).tel(dto.getTel()).build();
+			}
 
-         if (dto.getTel() == null) {
-            dto = MemberDTO.builder().id(m.getId()).pwd(dto.getPwd()).email(dto.getEmail()).tel(m.getTel()).build();
-         }
+			if (dto.getEmail() == null) {
+				dto = MemberDTO.builder().id(m.getId()).pwd(dto.getPwd()).email(m.getEmail()).tel(dto.getTel()).build();
+			}
 
-         m.updateMember(dto);
+			if (dto.getTel() == null) {
+				dto = MemberDTO.builder().id(m.getId()).pwd(dto.getPwd()).email(dto.getEmail()).tel(m.getTel()).build();
+			}
 
-         mr.save(m);
-      }
+			m.updateMember(dto);
 
-   }
+			mr.save(m);
+		}
 
-   // 회원 탈퇴시 id null로 변경
-   public void updateIdNull(Long mNum) throws FindException {
-      Optional<Member> optM = mr.findById(mNum);
-      if (!optM.isPresent())
-         throw new FindException();
-      else {
-         Member m = optM.get();
+	}
 
-         MemberDTO dto = MemberDTO.builder().id(null).pwd(m.getPwd()).email(m.getEmail()).tel(m.getTel())
+	// 회원 탈퇴시 id null로 변경
+	public void updateIdNull(Long mNum) throws FindException {
+		Optional<Member> optM = mr.findById(mNum);
+		if (!optM.isPresent())
+			throw new FindException();
+		else {
+			Member m = optM.get();
 
-               .outCk(-1).build();
+			MemberDTO dto = MemberDTO.builder().id(null).pwd(m.getPwd()).email(m.getEmail()).tel(m.getTel())
 
-         m.updateMember(dto);
+					.outCk(-1).build();
 
-         mr.save(m);
-      }
-   }
+			m.updateMember(dto);
 
-   // 회원 탈퇴 여부 확인
-   public Integer checkOutTerms(Long mNum) throws FindException {
-      Optional<Member> optM = mr.findById(mNum);
+			mr.save(m);
+		}
+	}
 
-      if (!optM.isPresent())
-         throw new FindException();
-      else {
-         return mr.checkOutTerms(mNum);
-      }
+	// 회원 탈퇴 여부 확인
+	public Integer checkOutTerms(Long mNum) throws FindException {
+		Optional<Member> optM = mr.findById(mNum);
 
-   }
+		if (!optM.isPresent())
+			throw new FindException();
+		else {
+			return mr.checkOutTerms(mNum);
+		}
 
-   // 회원 삭제
-   public void deleteMember(Long mNum) throws RemoveException, FindException {
-      Optional<Member> optM = mr.findById(mNum);
+	}
 
-      if (!optM.isPresent())
-         throw new FindException();
-      else {
-         Member m = optM.get();
-         if (m.getId() == null && m.getOutCk() == -1) {
-            mr.deleteById(mNum);
-         } else {
-            throw new RemoveException();
-         }
-      }
-   }
+	// 회원 삭제
+	public void deleteMember(Long mNum) throws RemoveException, FindException {
+		Optional<Member> optM = mr.findById(mNum);
+
+		if (!optM.isPresent())
+			throw new FindException();
+		else {
+			Member m = optM.get();
+			if (m.getId() == null && m.getOutCk() == -1) {
+				mr.deleteById(mNum);
+			} else {
+				throw new RemoveException();
+			}
+		}
+	}
 }
