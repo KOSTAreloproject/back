@@ -1,67 +1,48 @@
 package com.my.relo.container;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.support.WebBindingInitializer;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
+@PropertySource("classpath:application.properties")
 @Configuration
-//@ComponentScan(basePackages = {"com.my.customer.control",
-//		"com.my.product.control",
-//		"com.my.cart.control",
-//		"com.my.order.control",
-//		"com.my.board.control",
-//		"com.my.advice"
-//		})
-//Adding this annotation to an 
-//@Configuration class 
-//imports the Spring MVCconfiguration 
-//from WebMvcConfigurationSupport
-@EnableWebMvc  //WebApplicationContext컨테이너용 설정클래스이다
-public class MyServletContext 
-        implements WebMvcConfigurer{
+@EnableWebMvc // WebApplicationContext컨테이너용 설정클래스이다
+public class MyServletContext implements WebMvcConfigurer {
+
+	@Value("${client.ip}")
+	private String clientIp;
+
+	@Value("${client.port}")
+	private String clientPort;
 
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
-		registry.addMapping("/**")
-		    .allowedOrigins("http://192.168.0.43:5500")
-		    .allowCredentials(true)
-		    .allowedMethods("GET", "POST", "PUT", "DELETE");
-	}
-	
-	
-    
-//	@Bean
-//	public InternalResourceViewResolver viewResolver() {
-//		InternalResourceViewResolver irvr = new InternalResourceViewResolver();
-//		irvr.setPrefix("/WEB-INF/views/");
-//		irvr.setSuffix(".jsp");
-//		return irvr;
-//	}
-	@Bean
-    public ModelMapper modelMapper(){
-        return new ModelMapper();
-    }
 
-	@Bean 
+		registry.addMapping("/**").allowedOrigins("http://" + clientIp + ":" + clientPort)
+//      .allowedHeaders("*")
+				.allowCredentials(true).allowedMethods("GET", "POST", "PUT", "DELETE");
+	}
+
+//   @Bean
+//   public InternalResourceViewResolver viewResolver() {
+//      InternalResourceViewResolver irvr = new InternalResourceViewResolver();
+//      irvr.setPrefix("/static/");
+//      irvr.setSuffix(".html");
+//      return irvr;
+//   }
+
+	@Bean
 	public CommonsMultipartResolver multipartResolver() {
 		CommonsMultipartResolver cmr = new CommonsMultipartResolver();
 		cmr.setDefaultEncoding("UTF-8");
-		cmr.setMaxUploadSize(100 * 1024);
-		cmr.setMaxUploadSizePerFile(10*1024);
+		cmr.setMaxUploadSize(20 * 1024 * 1024);
+		cmr.setMaxUploadSizePerFile(5 * 1024 * 1024);
 		return cmr;
 	}
-	
+
 }

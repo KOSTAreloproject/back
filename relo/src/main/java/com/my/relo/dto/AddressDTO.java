@@ -9,33 +9,35 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Getter@Setter
-@AllArgsConstructor@NoArgsConstructor@ToString
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 
 public class AddressDTO {
-	
+
 	private Long addrNum;
 
 	private Long mNum;
-	
+
 	private String addrName;
-	
+
 	private String addrPostNum;
-	
+
 	private String addrTel;
-	
+
 	private String addr;
-	
+
 	private String addrDetail;
-	
+
 	private String addrRecipient;
-	
+
 	private Integer addrType;
-	
-	
+
 	@Builder
 	public AddressDTO(String addr, String addrDetail, String addrName, String addrPostNum, String addrRecipient,
-			String addrTel, Long mNum, Integer addrType) {
+			Long addrNum, String addrTel, Long mNum, Integer addrType) {
 		this.addr = addr;
 		this.addrDetail = addrDetail;
 		this.addrName = addrName;
@@ -44,12 +46,12 @@ public class AddressDTO {
 		this.addrTel = addrTel;
 		this.mNum = mNum;
 		this.addrType = addrType;
+		this.addrNum = addrNum;
 	}
-	
+
 	public Address toEntity() {
-		return Address.builder()
-				.addrNum(addrNum).addr(addr).addrDetail(addrDetail).addrName(addrName)
-				.addrPostNum(addrPostNum).addrRecipient(addrRecipient)
-				.addrTel(addrTel).addrType(addrType).mNum(mNum).build();
+		return Address.builder().addrNum(addrNum).addr(addr).addrDetail(addrDetail).addrName(addrName)
+				.addrPostNum(addrPostNum).addrRecipient(addrRecipient).addrTel(addrTel).addrType(addrType).mNum(mNum)
+				.build();
 	}
 }

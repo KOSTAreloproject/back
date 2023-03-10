@@ -76,7 +76,7 @@ public class MemberController {
 
 			HttpSession session = request.getSession();
 			session.setAttribute("logined", dto.getMnum());
-			session.setAttribute("loginId", id);
+
 			return new ResponseEntity<>(HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -87,12 +87,13 @@ public class MemberController {
 	@GetMapping("checklogined")
 	public ResponseEntity<?> checkLogined(HttpSession session) throws FindException {
 		Long mNum = (Long) session.getAttribute("logined");
+
 		if (mNum != null) {
 			MemberDTO dto = ms.detailMember(mNum);
 			int type = dto.getType();
 			return new ResponseEntity<>(type, HttpStatus.OK);
 		} else {
-			return new ResponseEntity<>("no", HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
 

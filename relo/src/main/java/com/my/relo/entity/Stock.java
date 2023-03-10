@@ -15,6 +15,9 @@ import javax.persistence.Table;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Fetch;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -45,6 +48,7 @@ public class Stock {
     private Long sNum;
     
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "m_num")
     private Member member;
     

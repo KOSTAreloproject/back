@@ -20,43 +20,44 @@ public class ControllerAdvice {
 
 	@ExceptionHandler(FindException.class)
 	@ResponseBody
-	public ResponseEntity<?> findExceptionHandler(FindException e){
+	public ResponseEntity<?> findExceptionHandler(FindException e) {
 		System.out.println("----- FindException ControllerAdvice--------");
 		e.printStackTrace();
 		Map<String, String> map = new HashMap<>();
 		map.put("msg", e.getMessage());
 		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "application/json;charset=UTF-8"); //"text/html;charset=utf-8"
+		headers.add("Content-Type", "application/json;charset=UTF-8"); // "text/html;charset=utf-8"
 
 		return new ResponseEntity<>(map, headers, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-	
+
 	@ExceptionHandler(AddException.class)
 	@ResponseBody
-	public ResponseEntity<?> addExceptionHandler(AddException e){
+	public ResponseEntity<?> addExceptionHandler(AddException e) {
 		System.out.println("-----AddException ControllerAdvice--------");
 		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "application/json;charset=UTF-8"); //"text/html;charset=utf-8"
+		headers.add("Content-Type", "application/json;charset=UTF-8"); // "text/html;charset=utf-8"
 
 		return new ResponseEntity<>(e.getMessage(), headers, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-	
+
 	@ExceptionHandler(RemoveException.class)
 	@ResponseBody
-	public ResponseEntity<?> removeExceptionHandler(RemoveException e){
+	public ResponseEntity<?> removeExceptionHandler(RemoveException e) {
 		System.out.println("-----RemoveException ControllerAdvice--------");
 		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "application/json;charset=UTF-8"); //"text/html;charset=utf-8"
+		headers.add("Content-Type", "application/json;charset=UTF-8"); // "text/html;charset=utf-8"
 
 		return new ResponseEntity<>(e.getMessage(), headers, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+
 	@ExceptionHandler(MaxUploadSizeExceededException.class)
 	@ResponseBody
-	public ResponseEntity<?> exceptMaxUploadSize(MaxUploadSizeExceededException e){
+	public ResponseEntity<?> exceptMaxUploadSize(MaxUploadSizeExceededException e) {
 		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "application/json;charset=UTF-8"); //"text/html;charset=utf-8"
-		headers.add("Access-Control-Allow-Origin", "http://192.168.0.37:5500");
-		headers.add("Access-Control-Allow-Credentials", "true");//쿠키허용
+		headers.add("Content-Type", "application/json;charset=UTF-8"); // "text/html;charset=utf-8"
+		headers.add("Access-Control-Allow-Origin", "http://192.168.0.40:5500");
+		headers.add("Access-Control-Allow-Credentials", "true");// 쿠키허용
 		return new ResponseEntity<>("파일크기가 너무 큽니다", headers, HttpStatus.BAD_REQUEST);
 	}
 }

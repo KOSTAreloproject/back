@@ -1,4 +1,5 @@
 package com.my.relo.container;
+
 import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Value;

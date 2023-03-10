@@ -31,47 +31,48 @@ public class AwardController {
 
 	@Autowired
 	private ProductService pService;
+
 	// 회원 낙찰 포기할 경우
-	   @PostMapping(value = "delete", produces = MediaType.APPLICATION_JSON_VALUE)
-	   public ResponseEntity<?> del(@RequestBody Map<String, Long> map, HttpSession session) {
-	      Long logined = (Long) session.getAttribute("logined");
-	      System.out.println(logined);
-	      System.out.println(map.get("anum"));
-	      System.out.println(map.get("pnum"));
-	      System.out.println(map.get("mnum"));
-	      if (logined == null) {                                                                                   
-	         return new ResponseEntity<>("로그인 먼저 하세요", HttpStatus.BAD_REQUEST);
-	      } else {
-	         try {
-	            if (logined != (Long)map.get("mnum")) {
-	               Map map1 = new HashMap();
-	               map1.put("msg", "본인만 낙찰 포기 가능합니다.");
-	               map1.put("status", "-1");
-	               return new ResponseEntity<>(map1, HttpStatus.BAD_REQUEST);
-	            }
-	            
-	            pService.updateProductStatus8((Long)map.get("pnum"));
-	            service.delAward((Long)map.get("anum"));
-	            Map map1 = new HashMap();
-	            map1.put("msg", "낙찰 포기 완료");
-	            map1.put("status", "0");
-	            return new ResponseEntity<>(map1, HttpStatus.OK);
-	         } catch (FindException e) {
-	            // TODO Auto-generated catch block
-	            e.printStackTrace();
-	            Map map1 = new HashMap();
-	            map1.put("msg", "취소 처리 실패");
-	            map1.put("status", "-1");
-	            return new ResponseEntity<>(map1, HttpStatus.INTERNAL_SERVER_ERROR);
-	         } catch (AddException e) {
-	            // TODO Auto-generated catch block
-	            e.printStackTrace();
-	            Map map1 = new HashMap();
-	            map1.put("msg", "취소 처리 실패");
-	            map1.put("status", "-1");
-	            return new ResponseEntity<>(map1, HttpStatus.INTERNAL_SERVER_ERROR);
-	         }
-	      }
+	@PostMapping(value = "delete", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> del(@RequestBody Map<String, Long> map, HttpSession session) {
+		Long logined = (Long) session.getAttribute("logined");
+		System.out.println(logined);
+		System.out.println(map.get("anum"));
+		System.out.println(map.get("pnum"));
+		System.out.println(map.get("mnum"));
+		if (logined == null) {
+			return new ResponseEntity<>("로그인 먼저 하세요", HttpStatus.OK);
+		} else {
+			try {
+				if (!logined.equals(map.get("mnum"))) {
+					Map map1 = new HashMap();
+					map1.put("msg", "본인만 낙찰 포기 가능합니다.");
+					map1.put("status", "-1");
+					return new ResponseEntity<>(map1, HttpStatus.OK);
+				}
+
+				pService.updateProductStatus(map.get("pnum"), 8);
+				service.delAward(map.get("anum"));
+				Map map1 = new HashMap();
+				map1.put("msg", "낙찰 포기 완료");
+				map1.put("status", "0");
+				return new ResponseEntity<>(map1, HttpStatus.OK);
+			} catch (FindException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				Map map1 = new HashMap();
+				map1.put("msg", "취소 처리 실패");
+				map1.put("status", "-1");
+				return new ResponseEntity<>(map1, HttpStatus.INTERNAL_SERVER_ERROR);
+			} catch (AddException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				Map map1 = new HashMap();
+				map1.put("msg", "취소 처리 실패");
+				map1.put("status", "-1");
+				return new ResponseEntity<>(map1, HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}
 	}
 
 	// 낙찰상품 목록 - 관리자용
