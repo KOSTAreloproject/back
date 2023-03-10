@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -191,6 +192,75 @@ public class AuctionController {
 				} else {
 					map.put("status", "0");
 					map.put("list", list);
+					return new ResponseEntity<>(list, HttpStatus.OK);
+				}
+
+			} catch (FindException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				Map map = new HashMap();
+				map.put("msg", "에러");
+				map.put("status", "-2");
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+		}
+	}
+	
+	
+	// 회원 경매 진행 중 목록 페이징
+	@GetMapping(value = "list/ing/{currentPage}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> ingListPaging(HttpSession session, @PathVariable Integer currentPage) throws FindException {
+		Long mNum = (Long) session.getAttribute("logined");
+		if (mNum == null) {
+			return new ResponseEntity<>("로그인하세요", HttpStatus.BAD_REQUEST);
+		} else {
+			
+			try {
+				Map<String, Object> res = service.getIngBymNum(mNum, currentPage);
+				List<AuctionDTO> list = (List<AuctionDTO>) res.get("list");
+
+				Map map = new HashMap();
+				if (list.size() == 0) {
+					map.put("msg", "입찰 내역이 없습니다.");
+					map.put("status", "-1");
+					return new ResponseEntity<>(map, HttpStatus.OK);
+				} else {
+					map.put("status", "0");
+					map.put("res", res);
+					return new ResponseEntity<>(map, HttpStatus.OK);
+				}
+
+			} catch (FindException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				Map map = new HashMap();
+				map.put("msg", "에러");
+				map.put("status", "-2");
+				return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
+			}
+		}
+	}
+	
+	// 회원 경매 종료 목록 페이징
+	@GetMapping(value = "/list/end/{currentPage}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> endlist(HttpSession session, @PathVariable Integer currentPage) {
+		Long mNum = (Long) session.getAttribute("logined");
+		if (mNum == null) {
+			return new ResponseEntity<>("로그인하세요", HttpStatus.BAD_REQUEST);
+		} else {
+			try {
+				Map<String, Object> res = service.getIngBymNum(mNum, currentPage);
+				List<AuctionDTO> list = (List<AuctionDTO>) res.get("list");
+
+				Map map = new HashMap();
+
+				if (list.size() == 0) {
+					map.put("msg", "경매 종료 내역이 없습니다.");
+					map.put("status", "-1");
+					return new ResponseEntity<>(map, HttpStatus.OK);
+				} else {
+					map.put("status", "0");
+					map.put("res", res);
 					return new ResponseEntity<>(list, HttpStatus.OK);
 				}
 

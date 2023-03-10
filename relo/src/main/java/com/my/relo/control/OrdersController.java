@@ -17,8 +17,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.my.relo.dto.AuctionDTO;
+import com.my.relo.dto.MemberDTO;
 import com.my.relo.dto.OrdersDTO;
 import com.my.relo.exception.FindException;
+import com.my.relo.service.MemberService;
 import com.my.relo.service.OrderDeliveryService;
 import com.my.relo.service.OrdersService;
 
@@ -30,6 +33,9 @@ public class OrdersController {
 	@Autowired
 	private OrderDeliveryService odService;
 
+	@Autowired
+	private MemberService mService;
+	
 	// 회원 주문 목록
 	@GetMapping(value = "list", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> list(HttpSession session) {
@@ -98,7 +104,7 @@ public class OrdersController {
 			// 관리자인지 확인하는 문구 추가하기
 
 			try {
-				list = service.getListBypStatus();
+				list = service.getListBydStatus();
 				if (list.size() == 0) {
 					Map map = new HashMap();
 					map.put("msg", "회원들의 구매확정 내역이 없습니다.");
@@ -106,6 +112,76 @@ public class OrdersController {
 					return new ResponseEntity<>(map, HttpStatus.OK);
 				} else {
 					return new ResponseEntity<>(list, HttpStatus.OK);
+				}
+
+			} catch (FindException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+		}
+	}
+	
+	// 회원 주문 목록 페이징
+	@GetMapping(value = "list/paging/{currentPage}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> pagingList(HttpSession session, @PathVariable Integer currentPage) {
+		Long mNum = (Long) session.getAttribute("logined");
+		if (mNum == null) {
+			Map map = new HashMap();
+			map.put("msg", "로그인하세요");
+			return new ResponseEntity<>(map, HttpStatus.OK);
+		} else {
+			List<OrdersDTO> list = new ArrayList<>();
+
+			try {
+				
+				Map<String, Object> res = service.getPagingBymNum(mNum, currentPage);
+				list = (List<OrdersDTO>) res.get("list");
+
+				if (list.size() == 0) {
+					Map map = new HashMap();
+					map.put("msg", "구매 이력이 없습니다.");
+					map.put("status", "-1");
+					return new ResponseEntity<>(map, HttpStatus.OK);
+				} else {
+					return new ResponseEntity<>(res, HttpStatus.OK);
+				}
+
+			} catch (FindException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+		}
+	}
+	
+	// 관리자용, 회원들의 구매확정 목록 페이징
+	@GetMapping(value = "list/confirm/{currentPage}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> confirmPaging(HttpSession session, @PathVariable Integer currentPage) throws FindException {
+		Long mNum = (Long) session.getAttribute("logined");
+		if (mNum == null) {
+			return new ResponseEntity<>("로그인하세요", HttpStatus.BAD_REQUEST);
+		} else {
+			List<OrdersDTO> list = new ArrayList<>();
+
+			// 관리자인지 확인하는 문구 추가하기
+			MemberDTO m = mService.detailMember(mNum);
+			if (m.getType()==0) {
+				Map map = new HashMap();
+				map.put("msg", "관리자만 볼 수 있습니다.");
+				return new ResponseEntity<>(map, HttpStatus.OK);
+			}
+			try {
+				Map<String, Object> res = service.getPagingBydStatus(currentPage);
+				list = (List<OrdersDTO>) res.get("list");
+
+				if (list.size() == 0) {
+					Map map = new HashMap();
+					map.put("msg", "회원들의 구매확정 내역이 없습니다.");
+					map.put("status", "-1");
+					return new ResponseEntity<>(map, HttpStatus.OK);
+				} else {
+					return new ResponseEntity<>(res, HttpStatus.OK);
 				}
 
 			} catch (FindException e) {

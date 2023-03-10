@@ -2,11 +2,17 @@ package com.my.relo.service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.my.relo.dto.AddressDTO;
@@ -110,7 +116,62 @@ public class AuctionService {
 			throw new FindException(e.getMessage());
 		}
 	}
+	
+	// 회원의 경매참여 내역 중 경매 진행 중인 항목 페이징
+	public Map<String, Object> getIngBymNum(Long mNum, int currentPage) throws FindException {
+		Pageable sortedByaDateDesc = PageRequest.of(currentPage - 1, 10, Sort.by("aDate").descending());
 
+		Page<Auction> p = ar.findIngByMNum(mNum, sortedByaDateDesc);
+		List<Auction> listA = p.getContent();
+		int totalPage = p.getTotalPages();
+		
+		List<AuctionDTO> list = new ArrayList<>();
+		for (Auction a : listA) {
+			AuctionDTO dto = AuctionDTO.builder().aNum(a.getANum()).aDate(a.getADate()).aPrice(a.getAPrice())
+					.pNum(a.getProduct().getPNum()).sNum(a.getProduct().getStock().getSNum())
+					.sGrade(a.getProduct().getStock().getSGrade()).sBrand(a.getProduct().getStock().getSBrand())
+					.sColor(a.getProduct().getStock().getSColor()).sName(a.getProduct().getStock().getSName())
+					.sizeCategoryName(a.getProduct().getStock().getSizes().getSizeCategoryName())
+					.pEndDate(a.getProduct().getPEndDate()).build();
+			list.add(dto);
+		}
+		Map<String, Object> res = new HashMap<>();
+		res.put("totalPage", totalPage);
+		res.put("list", list);
+		return res;
+	}
+
+	// 회원의 경매참여 내역 중 마감일 지난 항목 페이징
+	public Map<String, Object> getEndBymNum(Long mNum, int currentPage) throws FindException {
+		Pageable sortedByaDateDesc = PageRequest.of(currentPage - 1, 10, Sort.by("aDate").descending());
+
+		Page<Auction> p = ar.findEndByMNum(mNum, sortedByaDateDesc);
+		List<Auction> listA = p.getContent();
+		int totalPage = p.getTotalPages();
+
+		List<AuctionDTO> list = new ArrayList<>();
+		for (Auction a : listA) {
+			AuctionDTO dto = AuctionDTO.builder().aNum(a.getANum()).mNum(a.getMNum()).pNum(a.getProduct().getPNum())
+					.pEndDate(a.getProduct().getPEndDate())
+					.aTime(a.getAward() != null ? a.getAward().getATime() : null)
+					.sNum(a.getProduct().getStock().getSNum()).sGrade(a.getProduct().getStock().getSGrade())
+					.sColor(a.getProduct().getStock().getSColor()).sBrand(a.getProduct().getStock().getSBrand())
+					.sName(a.getProduct().getStock().getSName())
+					.sizeCategoryName(a.getProduct().getStock().getSizes().getSizeCategoryName())
+					.aPrice(a.getAPrice()).pStatus(a.getProduct().getPStatus()).aDate(a.getADate())
+					.awNum(a.getAward() != null ? a.getAward().getANum() : null).build();
+
+			list.add(dto);
+		}
+		Map<String, Object> res = new HashMap<>();
+		res.put("totalPage", totalPage);
+		res.put("list", list);
+		
+		return res;
+
+	}
+	
+	//결제 버튼 클릭시 띄워줄 주문 정보 GET
 	public OrderInfoDTO getOrderInfo(Long mNum, Long pNum, Long aNum) throws FindException {
 		try {
 			List<Object[]> list = new ArrayList<>();
