@@ -49,7 +49,7 @@ public interface ZzimRepository extends CrudRepository<Zzim, ZzimEmbedded> {
 	void deleteZzim(@Param("mNum") Long mNum, @Param("pNum") Long pNum);
 
 	/**
-	 * 상품이 삭제되었을 때 모든 회원에게서 찜을 삭제
+	 * 상품이 삭제되었을 때 모든 회원에게서 찜을 삭제한다
 	 * 
 	 * @param pNum : 상품번호
 	 */

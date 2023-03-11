@@ -29,6 +29,6 @@ public class Zzim {
 	@MapsId("pNum")
 	@ManyToOne
 	@JoinColumn(name = "p_num")
-	private Product product; // 상품번호
+	private Product product; // 상품 번호
 
 }

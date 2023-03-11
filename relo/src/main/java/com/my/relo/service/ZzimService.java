@@ -113,7 +113,7 @@ public class ZzimService {
 	}
 
 	/**
-	 * 상품이 삭제되었을 때 모든 회원에게서 찜목록을 삭제 한다
+	 * 상품이 삭제되었을 때 모든 회원에게서 찜목록을 삭제한다
 	 * 
 	 * @throws RemoveException
 	 */
