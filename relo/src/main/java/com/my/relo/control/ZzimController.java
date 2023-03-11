@@ -28,7 +28,7 @@ public class ZzimController {
 	@Autowired
 	private ZzimService service;
 
-	// 찜 목록 보기
+	// 찜 목록보기
 	@GetMapping(value = "{cp}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> MyZzimList(HttpServletRequest request, @PathVariable(name = "cp") int cp)
 			throws FindException {
