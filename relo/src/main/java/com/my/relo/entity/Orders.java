@@ -32,7 +32,7 @@ public class Orders implements Serializable{
 	@Column(name="a_num")
 	private Long aNum;
 	
-	@OneToOne(optional=true, fetch = FetchType.LAZY,  cascade=CascadeType.ALL)
+	@OneToOne(optional=true, cascade=CascadeType.ALL)
 	@MapsId
 	@JoinColumn(name="a_num", referencedColumnName = "a_num")
 	private Award award;
