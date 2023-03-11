@@ -29,7 +29,7 @@ public class ZzimService {
 	private ZzimRepository zr;
 
 	/**
-	 * 회원의 찜목록을 본다
+	 * 회원의 찜목록을 본다.
 	 * 
 	 * @param mNum : 회원번호
 	 * @return 회원의 찜 목록

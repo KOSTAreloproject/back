@@ -40,8 +40,8 @@ public interface ZzimRepository extends CrudRepository<Zzim, ZzimEmbedded> {
 	/**
 	 * 나의 찜목록에서 삭제한다.
 	 * 
-	 * @param mNum : 회원번호
-	 * @param pNum : 상품번호
+	 * @param mNum :회원번호
+	 * @param pNum :상품번호
 	 */
 	@Modifying
 	@Transactional
