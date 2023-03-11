@@ -29,8 +29,8 @@ public interface ZzimRepository extends CrudRepository<Zzim, ZzimEmbedded> {
 	/**
 	 * 나의 찜목록에 추가한다.
 	 * 
-	 * @param mNum : 회원번호
-	 * @param pNum : 상품번호
+	 * @param mNum : 회원 번호
+	 * @param pNum : 상품 번호
 	 */
 	@Transactional
 	@Modifying

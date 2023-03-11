@@ -36,7 +36,7 @@ public class ZzimService {
 	 * @throws FindException
 	 */
 	public Map<String, Object> readZzimList(Long mNum, int currentPage) throws FindException {
-		Pageable pb = PageRequest.of((currentPage - 1), 10);
+		Pageable pb = PageRequest.of((currentPage - 1), 5);
 		Page<Object[]> resultList = zr.findByMNum(mNum, pb);
 		List<Object[]> list = resultList.getContent();
 		int totalpage = resultList.getTotalPages();
@@ -85,7 +85,7 @@ public class ZzimService {
 	}
 
 	/**
-	 * 회원의 찜목록에 추가한다
+	 * 회원의 찜목록에 추가한다.
 	 * 
 	 * @param mNum : 회원번호
 	 * @param pNum : 상품번호

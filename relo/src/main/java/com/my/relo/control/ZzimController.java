@@ -28,7 +28,7 @@ public class ZzimController {
 	@Autowired
 	private ZzimService service;
 
-	// 찜목록
+	// 찜 목록 보기
 	@GetMapping(value = "{cp}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> MyZzimList(HttpServletRequest request, @PathVariable(name = "cp") int cp)
 			throws FindException {
@@ -38,7 +38,7 @@ public class ZzimController {
 		return new ResponseEntity<>(map, HttpStatus.OK);
 	}
 
-	// 찜 추가
+	// 찜 목록에 추가하기
 	@PostMapping(value = "{pNum}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> addMyZzimList(HttpServletRequest request, @PathVariable(name = "pNum") Long pNum)
 			throws AddException {
@@ -54,7 +54,7 @@ public class ZzimController {
 		return new ResponseEntity<>(map, HttpStatus.OK);
 	}
 
-	// 찜 삭제
+	// 찜 목록에서 삭제하기
 	@DeleteMapping(value = "{pNum}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> delMyZzimList(HttpSession session, @PathVariable(name = "pNum") Long pNum)
 			throws RemoveException {

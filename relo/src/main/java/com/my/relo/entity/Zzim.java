@@ -24,11 +24,11 @@ public class Zzim {
 	@MapsId("mnum")
 	@ManyToOne
 	@JoinColumn(name = "m_num")
-	private Member member; // 멤버번호
+	private Member member; // 멤버 번호
 
 	@MapsId("pNum")
 	@ManyToOne
 	@JoinColumn(name = "p_num")
-	private Product product; // 상품번호
+	private Product product; // 상품 번호
 
 }
