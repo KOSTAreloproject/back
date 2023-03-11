@@ -85,7 +85,7 @@ public class ZzimService {
 	}
 
 	/**
-	 * 회원의 찜목록에 추가한다.
+	 * 회원의 찜목록에 추가한다
 	 * 
 	 * @param mNum : 회원번호
 	 * @param pNum : 상품번호

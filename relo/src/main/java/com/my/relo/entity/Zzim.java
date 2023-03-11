@@ -24,7 +24,7 @@ public class Zzim {
 	@MapsId("mnum")
 	@ManyToOne
 	@JoinColumn(name = "m_num")
-	private Member member; // 멤버번호
+	private Member member; // 멤버 번호
 
 	@MapsId("pNum")
 	@ManyToOne

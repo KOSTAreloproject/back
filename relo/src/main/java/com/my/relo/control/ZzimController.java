@@ -54,7 +54,7 @@ public class ZzimController {
 		return new ResponseEntity<>(map, HttpStatus.OK);
 	}
 
-	// 찜 목록에서 삭제하기
+	// 찜목록에서 삭제하기
 	@DeleteMapping(value = "{pNum}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> delMyZzimList(HttpSession session, @PathVariable(name = "pNum") Long pNum)
 			throws RemoveException {

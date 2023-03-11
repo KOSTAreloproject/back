@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 @Embeddable
 public class ZzimEmbedded implements Serializable {
 
+	
 	private static final long serialVersionUID = -1842248313818646189L;
 
 	private Long mnum;
