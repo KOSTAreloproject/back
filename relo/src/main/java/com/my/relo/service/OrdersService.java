@@ -168,6 +168,7 @@ public class OrdersService {
 		for (Orders o : listO) {
 			OrdersDTO dto = OrdersDTO.builder().aNum(o.getANum())
 					.pNum(o.getAward().getAuction().getProduct().getPNum())
+					.mNum(o.getAward().getAuction().getMNum())
 					.sNum(o.getAward().getAuction().getProduct().getStock().getSNum())
 					.sColor(o.getAward().getAuction().getProduct().getStock().getSColor())
 					.sBrand(o.getAward().getAuction().getProduct().getStock().getSBrand())
