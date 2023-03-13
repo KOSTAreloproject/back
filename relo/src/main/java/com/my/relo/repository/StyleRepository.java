@@ -53,7 +53,7 @@ public interface StyleRepository extends CrudRepository<Style, Long>{
 			+ "        from style_tag t\n"
 			+ "        where hash_name = ?1\n"
 			+ "        order by style_num desc\n"
-			+ "        )t on (t.style_num = s.style_num)", nativeQuery = true)
+			+ "        )t on (t.style_num = s.style_num) order by s.style_num desc", nativeQuery = true)
 	public List<Style> listByHashName(String hashName);
 
 	/**
