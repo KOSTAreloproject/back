@@ -86,6 +86,7 @@ public class AwardService {
 					.aNum(a.getAuction().getANum())
 					.aDate(a.getAuction().getADate())
 					.aTime(a.getATime())
+					.mNum(a.getAuction().getMNum())
 					.awNum(a.getANum())
 					.aPrice(a.getAuction().getAPrice())
 					.pNum(a.getAuction().getProduct().getPNum())
