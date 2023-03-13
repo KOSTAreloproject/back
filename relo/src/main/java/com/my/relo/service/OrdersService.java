@@ -155,12 +155,12 @@ public class OrdersService {
 		return res;
 	}
 	
-	// 관리자 구매확정 목록 페이징버전
+	// 관리자 구매확정요청(배송완료) 목록 페이징버전
 	public Map<String, Object> getPagingBydStatus(int currentPage) throws FindException {
 
-		Pageable sortedBydCompleteDayDesc = PageRequest.of(currentPage - 1, 5, Sort.by("d_complete_day").descending());
+		Pageable sortedByoDateDesc = PageRequest.of(currentPage - 1, 5, Sort.by("o_date").descending());
 
-		Page<Orders> p = or.findConfirmedBydStatus3(sortedBydCompleteDayDesc);
+		Page<Orders> p = or.findConfirmedBydStatus2(sortedByoDateDesc);
 		List<Orders> listO = p.getContent();
 		int totalPage = p.getTotalPages();
 
@@ -177,6 +177,7 @@ public class OrdersService {
 					.sizeCategoryName(
 							o.getAward().getAuction().getProduct().getStock().getSizes().getSizeCategoryName())
 					.aPrice(o.getAward().getAuction().getAPrice()).oDate(o.getODate())
+					.oDate(o.getODate())
 					.dStatus(o.getODelivery().getDStatus()).dCompleteDay(o.getODelivery().getDCompleteDay())
 					.build();
 			list.add(dto);
