@@ -21,15 +21,16 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
 	//@Modifying    insert, update, delete
 		//@Transactional      update, delete
 		
-		//판매자 판매내역 진행중 페이지
+	//판매자 판매내역 진행중 페이지
 
-		@Query(value = "select p.S_NAME,s.SIZE_CATEGORY_NAME,p.P_STATUS,p.P_NUM,p.S_BRAND,p.S_NUM \r\n"
-				+ "from P_INFO p INNER JOIN sizes s on p.size_category_num = s.size_category_num\r\n"
-				+ "where p.M_NUM = :mNum"
-				, countQuery = "select count(*) from P_INFO where M_NUM = :mNum", nativeQuery = true)
-		public Page<Object[]> selectByIdProduct(@Param("mNum")Long mNum,Pageable pageable);
+    @Query(value = "select p.S_NAME,s.SIZE_CATEGORY_NAME,p.P_STATUS,p.P_NUM,p.S_BRAND,p.S_NUM \r\n"
+          + "from P_INFO p INNER JOIN sizes s on p.size_category_num = s.size_category_num\r\n"
+          + "where p.M_NUM = :mNum and p.p_status = 4"
+          , countQuery = "select count(*) from P_INFO where M_NUM = :mNum", nativeQuery = true)
+    public Page<Object[]> selectByIdProduct(@Param("mNum")Long mNum,Pageable pageable);
 		
 		
+    
 		//판매자 판매내역 진행중 페이지 (경매참여내역 x)
 		@Query(value = "select p.s_name,s.SIZE_CATEGORY_NAME,p.P_STATUS,P_END_DATE,p.s_hope_price,p.s_grade,p.s_brand,p.s_num\r\n"
 				+ "from p_info p INNER JOIN sizes s on p.size_category_num = s.size_category_num\r\n"
