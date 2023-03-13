@@ -22,8 +22,7 @@ import com.my.relo.repository.MemberRepository;
 @Service
 public class EmailServiceImpl implements EmailService {
 
-	final String[] arr = { "~", "․", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "-", "+", "=", "[", "]",
-			"|", "\"", ";", ":", "‘", "“", "<", ">", ",", "?", "/" };
+	final String[] arr = { "!", "@", "#", "$", "%", "/", "^", "&", "+", "=" };
 
 	@Autowired
 	JavaMailSender emailSender;
@@ -152,7 +151,7 @@ public class EmailServiceImpl implements EmailService {
 
 	public void payRequestMessage(Map<String, Object> map) throws Exception {
 		MimeMessage message = emailSender.createMimeMessage();
-		Long mnum = Long.valueOf(map.get("mnum").toString()) ;
+		Long mnum = Long.valueOf(map.get("mnum").toString());
 		String sName = map.get("sname").toString();
 		Integer aPrice = Integer.valueOf(map.get("aprice").toString());
 
@@ -185,10 +184,10 @@ public class EmailServiceImpl implements EmailService {
 		message.setFrom(new InternetAddress("relokosta@gmail.com", "RELO"));// 보내는 사람
 		emailSender.send(message);
 	}
-	
+
 	public void payConfirmMessage(Map<String, Object> map) throws Exception {
 		MimeMessage message = emailSender.createMimeMessage();
-		Long mnum = Long.valueOf(map.get("mnum").toString()) ;
+		Long mnum = Long.valueOf(map.get("mnum").toString());
 		String sName = map.get("sname").toString();
 		Integer aPrice = Integer.valueOf(map.get("aprice").toString());
 
