@@ -103,19 +103,19 @@ public interface OrdersRepository extends CrudRepository<Orders, Long> {
 	 * @return List<Orders>
 	 */
 	@Query(value="select a.a_num, p.p_num, s.m_num, s.s_name, a.m_num as buy_m_num, o.o_date, o.o_memo, o.imp_uid, od.d_complete_day, a.a_price\r\n"
-			+ "from order_delivery od, stock s, product p, auction a, orders o\r\n"
-			+ "where od.d_status=3\r\n"
+			+ "from orders o, order_delivery od, stock s, product p, auction a\r\n"
+			+ "where od.d_status=2\r\n"
 			+ "and s.s_num=p.s_num\r\n"
 			+ "and p.p_num=a.p_num\r\n"
 			+ "and a.a_num=o.a_num\r\n"
 			+ "and o.a_num=od.a_num", 
 			countQuery = "select count(*)\r\n"
 					+ "from stock s, product p, auction a, orders o, order_delivery od\r\n"
-					+ "where od.d_status=3\r\n"
+					+ "where od.d_status=2\r\n"
 					+ "and s.s_num=p.s_num\r\n"
 					+ "and p.p_num=a.p_num\r\n"
 					+ "and a.a_num=o.a_num\r\n"
 					+ "and o.a_num=od.a_num", nativeQuery = true)
-	Page<Orders> findConfirmedBydStatus3(Pageable pageable);
+	Page<Orders> findConfirmedBydStatus2(Pageable pageable);
 	
 }
