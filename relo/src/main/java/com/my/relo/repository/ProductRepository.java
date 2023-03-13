@@ -26,7 +26,7 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
     @Query(value = "select p.S_NAME,s.SIZE_CATEGORY_NAME,p.P_STATUS,p.P_NUM,p.S_BRAND,p.S_NUM \r\n"
           + "from P_INFO p INNER JOIN sizes s on p.size_category_num = s.size_category_num\r\n"
           + "where p.M_NUM = :mNum and p.p_status = 4"
-          , countQuery = "select count(*) from P_INFO where M_NUM = :mNum", nativeQuery = true)
+          , countQuery = "select count(*) from P_INFO where M_NUM = :mNum and p_status = 4", nativeQuery = true)
     public Page<Object[]> selectByIdProduct(@Param("mNum")Long mNum,Pageable pageable);
 		
 		
