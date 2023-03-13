@@ -10,6 +10,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.hibernate.internal.build.AllowSysOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -151,9 +152,10 @@ public class EmailServiceImpl implements EmailService {
 
 	public void payRequestMessage(Map<String, Object> map) throws Exception {
 		MimeMessage message = emailSender.createMimeMessage();
-		Long mnum = (Long) map.get("mnum");
-		String sName = map.get("sName").toString();
-		Integer aPrice = (Integer) map.get("aPrice");
+		Long mnum = Long.valueOf(map.get("mnum").toString()) ;
+		String sName = map.get("sname").toString();
+		Integer aPrice = Integer.valueOf(map.get("aprice").toString());
+
 		Optional<Member> m = mr.findById(mnum);
 		Member member = m.get();
 		message.addRecipients(RecipientType.TO, member.getEmail());// 보내는 대상
@@ -186,10 +188,10 @@ public class EmailServiceImpl implements EmailService {
 	
 	public void payConfirmMessage(Map<String, Object> map) throws Exception {
 		MimeMessage message = emailSender.createMimeMessage();
-		Long mnum = (Long) map.get("mnum");
-		String sName = map.get("sName").toString();
-		Integer aPrice = (Integer) map.get("aPrice");
-		String dCompleteDay = map.get("dCompleteDay").toString();
+		Long mnum = Long.valueOf(map.get("mnum").toString()) ;
+		String sName = map.get("sname").toString();
+		Integer aPrice = Integer.valueOf(map.get("aprice").toString());
+
 		Optional<Member> m = mr.findById(mnum);
 		Member member = m.get();
 		message.addRecipients(RecipientType.TO, member.getEmail());// 보내는 대상
@@ -211,8 +213,6 @@ public class EmailServiceImpl implements EmailService {
 		msgg += "<div style='font-size:130%'>";
 		msgg += "결제 금액 : <strong>";
 		msgg += aPrice + "</strong></div><br/> ";
-		msgg += "배송 완료일 : <strong>";
-		msgg += dCompleteDay + "</strong></div><br/> ";
 		msgg += "</div>";
 		msgg += "<p style='font-size:10px'> *본 메일은 발신 전용입니다. <br/>더 궁금하신 내용은 고객센터로 문의주시면 신속하게 답변드리겠습니다.</p>";
 		msgg += "<p style='font-size:10px'> *고객센터 : 1234-5678(평일 11:00 - 18:00)</p></div>";
