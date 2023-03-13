@@ -64,30 +64,34 @@ public class StockReturnService {
 
    public Map<String, Object> selectByIdStockReturn(Long mNum, int currentPage) throws FindException {
 
-      Address a = ar.findByAddrType(mNum);
-
       Pageable pageable = PageRequest.of(currentPage - 1, 5, Sort.by("sr_start_date"));
       Page<Object[]> pageSRList = srr.listById(mNum, pageable);
       List<Object[]> List = pageSRList.getContent();
+      
+      if(!List.isEmpty()) {
+    	  
+    	  List<StockReturnDTO> list = new ArrayList<>();
+    	  for (Object[] obj : List) {
+    		  StockReturnDTO dto = StockReturnDTO.builder()
+    				  .sNum(Long.valueOf(String.valueOf(obj[0])))
+    				  .sName(String.valueOf(obj[1]))
+    				  .sBrand(String.valueOf(obj[2]))
+    				  .sizeCategoryName(String.valueOf(obj[3]))
+    				  .srStatus(Integer.valueOf(String.valueOf(obj[4])))
+    				  .build();
+    		  
+    		  list.add(dto);
+    		  
+    	  }
+    	  Map<String, Object> resultMap = new HashMap<>();
+    	  resultMap.put("list", list);
+    	  resultMap.put("totalPageNum", pageSRList.getTotalPages());
+    	  
+    	  return resultMap;
 
-      List<StockReturnDTO> list = new ArrayList<>();
-      for (Object[] obj : List) {
-         StockReturnDTO dto = StockReturnDTO.builder()
-        		.sNum(Long.valueOf(String.valueOf(obj[0])))
-               .sName(String.valueOf(obj[1]))
-               .sBrand(String.valueOf(obj[2]))
-               .sizeCategoryName(String.valueOf(obj[3]))
-               .srStatus(Integer.valueOf(String.valueOf(obj[4])))
-               .build();
-
-         list.add(dto);
+      }else {
+    	  throw new FindException("반송중인 상품이 없습니다.");
       }
-
-      Map<String, Object> resultMap = new HashMap<>();
-      resultMap.put("list", list);
-      resultMap.put("totalPageNum", pageSRList.getTotalPages());
-
-      return resultMap;
    }
    
    public  Map<String, Object> selectByIdStockReturnDetail(Long mNum,Long sNum) throws FindException {

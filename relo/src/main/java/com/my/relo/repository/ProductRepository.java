@@ -59,12 +59,12 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
 		public List<Object[]> selectByEndProductDetail(@Param("mNum")Long mNum);
 		
 		// SHOP -> 상품 클릭 시 상품 상세 - 상품 정보
-		   @Query(value = "SELECT p.p_num, s.s_num, s.m_num, s_brand, s_name, s_type, s_color, s_grade, s_origin_price, s_hope_price, nvl(a.max_price,0) as max_price, sz.size_category_name, manager_comment, p.p_end_date\r\n"
-		         + "FROM product p\r\n" + "JOIN stock s ON p.s_num = s.s_num\r\n"
-		         + "JOIN sizes sz ON s.size_category_num = sz.size_category_num\r\n"
-		         + "LEFT OUTER JOIN (SELECT p_num, max(a_price) as max_price FROM auction GROUP BY p_num) a ON p.p_num = a.p_num\r\n"
-		         + "WHERE p_status = 4 AND p.p_num = :pNum", nativeQuery = true)
-		   public List<Object[]> selectShopProductDetail(@Param("pNum") Long pNum);
+        @Query(value = "SELECT p.p_num, s.s_num, s.m_num, s_brand, s_name, s_type, s_color, s_grade, s_origin_price, s_hope_price, nvl(a.max_price,0) as max_price, sz.size_category_name, manager_comment, p.p_end_date\r\n"
+              + "FROM product p\r\n" + "JOIN stock s ON p.s_num = s.s_num\r\n"
+              + "JOIN sizes sz ON s.size_category_num = sz.size_category_num\r\n"
+              + "LEFT OUTER JOIN (SELECT p_num, max(a_price) as max_price FROM auction GROUP BY p_num) a ON p.p_num = a.p_num\r\n"
+              + "WHERE p_status in (4, 6, 7, 9) AND p.p_num = :pNum", nativeQuery = true)
+        public List<Object[]> selectShopProductDetail(@Param("pNum") Long pNum);
 
 		   // SHOP -> 상품 클릭 시 상품 상세 - 최근 입찰 내역
 		   @Query(value = "SELECT * FROM (SELECT rownum rn, t.* FROM\r\n"
