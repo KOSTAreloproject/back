@@ -57,4 +57,37 @@ public class MailController {
 		}
 	}
 
+	@PostMapping("pay-request")
+	public ResponseEntity<?> payRequest(HttpSession session, @RequestBody Map<String, Object> map)
+			throws FindException {
+
+		Long mNum = (Long) session.getAttribute("logined");
+		if (mNum == null) {
+			throw new FindException("로그인을 하세요.");
+		}
+		try {
+			emailService.payRequestMessage(map);
+			return new ResponseEntity<>("전송!", HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("전송실패", HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@PostMapping("pay-confirm")
+	public ResponseEntity<?> payConfirm(HttpSession session, @RequestBody Map<String, Object> map)
+			throws FindException {
+
+		Long mNum = (Long) session.getAttribute("logined");
+		if (mNum == null) {
+			throw new FindException("로그인을 하세요.");
+		}
+		try {
+			emailService.payConfirmMessage(map);
+			return new ResponseEntity<>("전송!", HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>("전송실패", HttpStatus.BAD_REQUEST);
+		}
+	}
 }
