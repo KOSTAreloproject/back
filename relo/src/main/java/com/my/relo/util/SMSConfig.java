@@ -34,11 +34,11 @@ public class SMSConfig {
 		JSONObject toJson = new JSONObject();
 		JSONArray toArr = new JSONArray();
 
-		toJson.put("content", "[RELO] 상품 주문 결제를 위한 본인인증을 완료해주세요 [" + rand + "]"); // 난수와 함께 전송
+		toJson.put("content", "[RELO] 회원가입을 위한 본인인증을 완료해주세요 [" + rand + "]"); // 난수와 함께 전송
 		toJson.put("to", tel);
 		toArr.put(toJson);
 
-		bodyJson.put("content", "결제를 위한 본인인증 전송");
+		bodyJson.put("content", "회원가입을 위한 본인인증 전송");
 		bodyJson.put("type", "sms"); // 메시지 Type (sms | lms)
 		bodyJson.put("contentType", "COMM");
 		bodyJson.put("countryCode", "82");
