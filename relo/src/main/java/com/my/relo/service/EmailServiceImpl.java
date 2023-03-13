@@ -1,5 +1,6 @@
-package com.my.relo.service; 
+package com.my.relo.service;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
@@ -126,25 +127,98 @@ public class EmailServiceImpl implements EmailService {
 			throw new IllegalArgumentException();
 		}
 	}
+
+	public void shareMessage(Map<String, Object> map) throws MessagingException {
+		MimeMessage message = emailSender.createMimeMessage();
+
+		Long mnum = (Long) map.get("mnum");
+		Optional<Member> m = mr.findById(mnum);
+		Member member = m.get();
+		message.addRecipients(RecipientType.TO, member.getEmail());// 보내는 대상
+
+		String writerId = (String) map.get("writerId");
+		message.setSubject(writerId + "님의 게시물 | RELO");
+
+		String hashList = (String) map.get("hashList");
+		String msgg = "";
+		msgg += hashList + "<br/><br/>";
+		String url = (String) map.get("url");
+		msgg += url;
+		message.setText(msgg, "UTF-8", "HTML");
+		emailSender.send(message);
+
+	}
+
+	public void payRequestMessage(Map<String, Object> map) throws Exception {
+		MimeMessage message = emailSender.createMimeMessage();
+		Long mnum = (Long) map.get("mnum");
+		String sName = map.get("sName").toString();
+		Integer aPrice = (Integer) map.get("aPrice");
+		Optional<Member> m = mr.findById(mnum);
+		Member member = m.get();
+		message.addRecipients(RecipientType.TO, member.getEmail());// 보내는 대상
+
+		message.setSubject("[RELO] 결제 요청");// 제목
+
+		String msgg = "";
+		msgg += "<div align='center'>";
+		msgg += "<h3> 안녕하세요 RELO입니다.<br/>상품 배송을 위한 결제 요청 메일입니다.</h3>";
+		msgg += "<br>";
+		msgg += "<p>상품 배송을 위해 결제 부탁 드립니다.</p>";
+		msgg += "<br>";
+		msgg += "<br>";
+		msgg += "<div align='center' style='font-family:verdana';>";
+		msgg += "<h3 style='color:blue;'>상품 정보</h3>";
+		msgg += "<div style='font-size:130%'>";
+		msgg += "상품명 : <strong>";
+		msgg += sName + "</strong></div><br/> ";
+		msgg += "<div style='font-size:130%'>";
+		msgg += "결제 요청 금액 : <strong>";
+		msgg += aPrice + "</strong></div><br/> ";
+		msgg += "</div>";
+		msgg += "<p style='font-size:10px'> *본 메일은 발신 전용입니다. <br/>더 궁금하신 내용은 고객센터로 문의주시면 신속하게 답변드리겠습니다.</p>";
+		msgg += "<p style='font-size:10px'> *고객센터 : 1234-5678(평일 11:00 - 18:00)</p></div>";
+
+		message.setText(msgg, "UTF-8", "HTML");// 내용
+		message.setFrom(new InternetAddress("relokosta@gmail.com", "RELO"));// 보내는 사람
+		emailSender.send(message);
+	}
 	
-	 public void shareMessage(Map<String, Object> map) throws MessagingException {
-		   MimeMessage message = emailSender.createMimeMessage();
-		   
-		   Long mnum= (Long) map.get("mnum");
-		   Optional<Member> m = mr.findById(mnum);
-		   Member member = m.get();
-		   message.addRecipients(RecipientType.TO, member.getEmail());// 보내는 대상
-		   
-		   String writerId = (String)map.get("writerId");
-		   message.setSubject(writerId+"님의 게시물 | RELO");
-		   
-		   String hashList = (String)map.get("hashList");
-		   String msgg = "";
-		   msgg += hashList+"<br/><br/>";
-		   String url = (String)map.get("url");
-		   msgg +=  url;
-		   message.setText(msgg, "UTF-8", "HTML");
-		   emailSender.send(message);
-		   
-	   }
+	public void payConfirmMessage(Map<String, Object> map) throws Exception {
+		MimeMessage message = emailSender.createMimeMessage();
+		Long mnum = (Long) map.get("mnum");
+		String sName = map.get("sName").toString();
+		Integer aPrice = (Integer) map.get("aPrice");
+		String dCompleteDay = map.get("dCompleteDay").toString();
+		Optional<Member> m = mr.findById(mnum);
+		Member member = m.get();
+		message.addRecipients(RecipientType.TO, member.getEmail());// 보내는 대상
+
+		message.setSubject("[RELO] 결제 요청");// 제목
+
+		String msgg = "";
+		msgg += "<div align='center'>";
+		msgg += "<h3> 안녕하세요 RELO입니다.<br/>정산을 위한 구매확정 요청 메일입니다.</h3>";
+		msgg += "<br>";
+		msgg += "<p>금액 정산을 위해 구매확정 부탁 드립니다.</p>";
+		msgg += "<br>";
+		msgg += "<br>";
+		msgg += "<div align='center' style='font-family:verdana';>";
+		msgg += "<h3 style='color:blue;'>상품 정보</h3>";
+		msgg += "<div style='font-size:130%'>";
+		msgg += "상품명 : <strong>";
+		msgg += sName + "</strong></div><br/> ";
+		msgg += "<div style='font-size:130%'>";
+		msgg += "결제 금액 : <strong>";
+		msgg += aPrice + "</strong></div><br/> ";
+		msgg += "배송 완료일 : <strong>";
+		msgg += dCompleteDay + "</strong></div><br/> ";
+		msgg += "</div>";
+		msgg += "<p style='font-size:10px'> *본 메일은 발신 전용입니다. <br/>더 궁금하신 내용은 고객센터로 문의주시면 신속하게 답변드리겠습니다.</p>";
+		msgg += "<p style='font-size:10px'> *고객센터 : 1234-5678(평일 11:00 - 18:00)</p></div>";
+
+		message.setText(msgg, "UTF-8", "HTML");// 내용
+		message.setFrom(new InternetAddress("relokosta@gmail.com", "RELO"));// 보내는 사람
+		emailSender.send(message);
+	}
 }
