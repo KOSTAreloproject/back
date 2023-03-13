@@ -16,7 +16,7 @@ public interface StockRepository extends CrudRepository<Stock, Long> {
 	@Query(value = "select s.s_num,s.s_name,si.SIZE_CATEGORY_NAME ,s.s_status,s.s_grade,s.s_brand\r\n"
 			+ "from stock s INNER JOIN sizes si on s.size_category_num = si.size_category_num\r\n"
 			+ "where s.M_NUM=:mNum and (s.S_STATUS = 1 or s.S_STATUS = 2 or s.S_STATUS = 3 or s.S_STATUS = 5)"
-			, countQuery = "select count(*) from stock where M_NUM=:mNum and (S_STATUS = 1 or S_STATUS = 2 or S_STATUS = 3 or s.S_STATUS = 5)", nativeQuery = true) 
+			, countQuery = "select count(*) from stock where M_NUM=:mNum and (S_STATUS = 1 or S_STATUS = 2 or S_STATUS = 3 or S_STATUS = 5)", nativeQuery = true) 
 	public Page<Object[]> selectById(@Param("mNum")Long mNum,Pageable pageable);
 	
 	
