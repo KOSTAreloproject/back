@@ -48,7 +48,20 @@ public class StockController {
 	@Autowired
 	StockService stockService;
 
-
+	@GetMapping("check")
+	public ResponseEntity<?> StockCheck(HttpSession session,Integer ck) throws FindException{
+		
+		Long mNum = (Long) session.getAttribute("logined");
+		if (mNum == null) {
+			throw new FindException("로그인하세요");
+		}
+		
+		if(ck == 3) {
+			return new ResponseEntity<>(HttpStatus.OK);
+		}else {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
 
 	@PostMapping("add")
 	public ResponseEntity<?> StockAdd(HttpSession session, StockDTO stock,
@@ -130,7 +143,7 @@ public class StockController {
 		if (mNum == null) {
 			throw new AddException("로그인하세요");
 		}
-
+		System.out.println("sNum: " + sNum);
 		boolean flag = stockService.updateByCancleSStatus5(sNum, mNum);
 
 		return new ResponseEntity<>(flag,HttpStatus.OK);
@@ -150,6 +163,8 @@ public class StockController {
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 
 	}
+	
+	
 
 	@GetMapping("detailById")
 	public ResponseEntity<?> detailById(Long sNum, HttpSession session) throws FindException {
