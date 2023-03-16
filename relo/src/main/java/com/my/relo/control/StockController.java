@@ -13,8 +13,6 @@ import java.util.StringTokenizer;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -30,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.view.RedirectView;
 
 import com.my.relo.dto.StockDTO;
 import com.my.relo.entity.Stock;
@@ -40,7 +37,6 @@ import com.my.relo.service.StockService;
 
 import net.coobird.thumbnailator.Thumbnailator;
 
-
 @RestController
 @RequestMapping("stock/*")
 public class StockController {
@@ -49,16 +45,16 @@ public class StockController {
 	StockService stockService;
 
 	@GetMapping("check")
-	public ResponseEntity<?> StockCheck(HttpSession session,Integer ck) throws FindException{
-		
+	public ResponseEntity<?> StockCheck(HttpSession session, Integer ck) throws FindException {
+
 		Long mNum = (Long) session.getAttribute("logined");
 		if (mNum == null) {
 			throw new FindException("로그인하세요");
 		}
-		
-		if(ck == 3) {
+
+		if (ck == 3) {
 			return new ResponseEntity<>(HttpStatus.OK);
-		}else {
+		} else {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
@@ -143,10 +139,10 @@ public class StockController {
 		if (mNum == null) {
 			throw new AddException("로그인하세요");
 		}
-		System.out.println("sNum: " + sNum);
+
 		boolean flag = stockService.updateByCancleSStatus5(sNum, mNum);
 
-		return new ResponseEntity<>(flag,HttpStatus.OK);
+		return new ResponseEntity<>(flag, HttpStatus.OK);
 
 	}
 
@@ -163,8 +159,6 @@ public class StockController {
 		return new ResponseEntity<>(resultMap, HttpStatus.OK);
 
 	}
-	
-	
 
 	@GetMapping("detailById")
 	public ResponseEntity<?> detailById(Long sNum, HttpSession session) throws FindException {
